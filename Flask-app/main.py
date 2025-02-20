@@ -5,7 +5,9 @@ from controllers.worker_controller import Worker_controller
 
 app = Flask(__name__)
 CORS(app,origins="*")
-
+app.route('/')
+def home():
+    return "BEM-VINDO A MINHA API"
 app.route('/user-validate', methods=["POST"])
 def user_validade():
     return False
