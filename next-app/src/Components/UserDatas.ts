@@ -2,11 +2,12 @@ import { redirect } from 'next/navigation'
 
 
 
-export function create_data_user(email:string,usercode:string,userremember:string):void{    
-    if (userremember == 'true'){
+export function acess_data_user(email:string,usercode:string,userremember:boolean):void{    
+    if (userremember){
         localStorage.setItem('email',email)
         localStorage.setItem('userCode',usercode)
         localStorage.setItem('userRemember','true')
+        
     }
     else{
         sessionStorage.setItem('email',email)
@@ -14,5 +15,5 @@ export function create_data_user(email:string,usercode:string,userremember:strin
         sessionStorage.setItem('userRemember','false')
     }
     
-    redirect('/home')
+
 }

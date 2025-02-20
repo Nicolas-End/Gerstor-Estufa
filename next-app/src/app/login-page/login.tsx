@@ -1,4 +1,4 @@
-import { create_data_user } from "@/Components/UserDatas";
+import { acess_data_user } from "@/Components/UserDatas";
 
 import React, { useState } from "react";
 
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
           Remember me
         </label>
         <button className="bg-[#512779] text-white rounded w-60 h-8 shadow-lg  transition delay-150 duration-300 ease-in-out hover:bg-[#642e97] hover:-translate-y-1 hover:scale-110"
-        onClick={() => create_data_user(email,code,rememberuser)}>
+        onClick={() => acess_data_user(email,code,rememberuser)}>
           Login
         </button>
 
