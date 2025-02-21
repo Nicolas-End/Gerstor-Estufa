@@ -1,3 +1,4 @@
+
 import { acess_data_user } from "@/Components/UserDatas";
 
 import React, { useState } from "react";
@@ -52,12 +53,9 @@ const Login: React.FC = () => {
         />
         </label>
 
-        <label className="flex items-center mb-2 text-sm accent-green-500">
-          <input type="checkbox" className="mr-2 p-3" onChange={(e)=>{setRememberUser(e.target.checked)}}/>
-          Remember me
-        </label>
+
         <button className="bg-[#512779] text-white rounded w-60 h-8 shadow-lg  transition delay-150 duration-300 ease-in-out hover:bg-[#642e97] hover:-translate-y-1 hover:scale-110"
-        onClick={() => acess_data_user(email,code,rememberuser)}>
+        onClick={() => acess_data_user(email,code,password)}>
           Login
         </button>
 

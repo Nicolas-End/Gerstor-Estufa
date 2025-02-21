@@ -1,19 +1,27 @@
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/router';
+import acess_acount from './acess_acount';
 
+export function acess_data_user(email: string, id: string, password: string): void {    
+  const router = useRouter();
 
-
-export function acess_data_user(email:string,usercode:string,userremember:boolean):void{    
-    if (userremember){
-        localStorage.setItem('email',email)
-        localStorage.setItem('userCode',usercode)
-        localStorage.setItem('userRemember','true')
+  acess_acount(email, id, password)
+    .then(data => {
+      if (data.status === 'ok') {
+        console.log('Login bem-sucedido');
+        // Armazenando os dados no localStorage
+        localStorage.setItem('email', email);
+        localStorage.setItem('id', id);
+        localStorage.setItem('userRemember', 'true');
         
-    }
-    else{
-        sessionStorage.setItem('email',email)
-        sessionStorage.setItem('userCode',usercode)
-        sessionStorage.setItem('userRemember','false')
-    }
-    
 
+        // Redirecionando para a página inicial após login
+        
+        router.push('/home');
+      } else {
+        console.log('Falha ao acessar a conta:', data.message);
+      }
+    })
+    .catch(error => {
+      console.log('Erro ao acessar a conta:', error);
+    });
 }
