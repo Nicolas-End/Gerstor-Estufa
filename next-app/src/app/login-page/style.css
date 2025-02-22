@@ -28,19 +28,33 @@
 @keyframes bounce-smooth {
     0% {
         transform: translateY(0);
-        background: rgba(0, 0, 0, 0.3); /* Sombra mais escura no início */
-        opacity: 1; /* Opacidade total */
+        
     }
     50% {
         transform: translateY(-20px) scale(1.1); /* Aumenta a altura e a escala da imagem */
-        background: rgba(0, 0, 0, 0.1); /* Sombra mais clara no topo */
-        opacity: 0.5; /* Diminui a opacidade da sombra */
+        
     }
     100% {
         transform: translateY(0);
-        background: rgba(0, 0, 0, 0.3); /* Sombra mais escura ao descer */
-        opacity: 1; /* Retorna a opacidade total */
+        
     }
+}
+
+@keyframes opacity {
+  0% {
+    background: rgba(0, 0, 0, 0.3); /* Sombra mais escura no início */
+    opacity: 1; /* Opacidade total */
+      
+  }
+  50% {
+    background: rgba(0, 0, 0, 0.1); /* Sombra mais clara no topo */
+    opacity: 0.5; /* Diminui a opacidade da sombra */
+      
+  }
+  100% {
+    background: rgba(0, 0, 0, 0.3); /* Sombra mais escura ao descer */
+    opacity: 1; /* Retorna a opacidade total */
+  }
 }
 
   /* CSS para garantir que inputs e botão tenham o mesmo tamanho */
@@ -48,60 +62,5 @@
     width: 65%; /* Define a largura como 100% do contêiner pai */
 }
   
-  /* Responsividade geral */
-  @media (max-width: 768px) {
-    .login-container {
-      width: 100%;
-      padding: 5px;
-    }
-  
-    .form-input {
-      width: 100%;
-    }
-  
-    .logo-image {
-      width: 80%;
-    }
-  
-    .logo-container {
-      width: 100%;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .login-container {
-      width: 50%;
-      padding: 20px;
-    }
-  
-    .form-input {
-      width: 80%;
-    }
-  
-    .logo-image {
-      width: 60%;
-    }
-  
-    .logo-container {
-      width: 50%;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .login-container {
-      width: 30%;
-    }
-  
-    .form-input {
-      width: 60%;
-    }
-  
-    .logo-image {
-      width: 50%;
-    }
-  
-    .logo-container {
-      width: 50%;
-    }
-  }
+ 
   

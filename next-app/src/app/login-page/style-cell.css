@@ -1,0 +1,56 @@
+ /* Responsividade geral */
+ @media (max-width: 768px) {
+    .login-container {
+      width: 100%;
+      padding: 5px;
+    }
+  
+    .form-input {
+      width: 100%;
+    }
+  
+    .logo-image {
+      width: 80%;
+    }
+  
+    .logo-container {
+      width: 100%;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .login-container {
+      width: 50%;
+      padding: 20px;
+    }
+  
+    .form-input {
+      width: 80%;
+    }
+  
+    .logo-image {
+      width: 60%;
+    }
+  
+    .logo-container {
+      width: 50%;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .login-container {
+      width: 30%;
+    }
+  
+    .form-input {
+      width: 60%;
+    }
+  
+    .logo-image {
+      width: 50%;
+    }
+  
+    .logo-container {
+      width: 50%;
+    }
+  }

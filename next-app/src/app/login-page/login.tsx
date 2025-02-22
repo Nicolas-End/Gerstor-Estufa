@@ -4,6 +4,7 @@ import { redirect, useRouter } from 'next/navigation';
 
 import React, { useState } from "react";
 import './style.css';
+import './style-cell.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -55,6 +56,20 @@ const Login: React.FC = () => {
           </button>
         </div>
 
+        <div className="hidden md:flex itens-center justify-center w-4/5 bg-[#f8aad1]">
+          <div className="real">
+            <img src="next-app/public/Logo.png" alt="Logo" className="w-full h-auto" />
+            {/* Contêiner da imagem */}
+            <div className="w-1/2 flex items-center justify-center bg-pink-300">
+              <div className="relative">
+                  <img src="next-app/public/Logo.png" alt="Logo" className="logo-image animate-bounce-smooth" />
+                  <div className="logo-shadow">
+                    {/*Sombra abaixo da imagem*/}
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         </div>
       </div>
