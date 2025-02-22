@@ -1,7 +1,7 @@
 
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import acess_acount from './acess_acount';
-import { redirect, useRouter } from 'next/navigation';
+
 
 
 export function acess_data_user(email: string, id: string, password: string,router:AppRouterInstance): void {    

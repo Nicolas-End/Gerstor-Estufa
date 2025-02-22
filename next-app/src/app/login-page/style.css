@@ -10,7 +10,7 @@
 
 /* Sombra abaixo da imagem com transição de opacidade */
 .logo-shadow {
-    width: 100%; /* Deve ser a mesma largura da imagem */
+    width: 50%; /* Deve ser a mesma largura da imagem */
     height: 20px; /* Altura da sombra */
     background: rgba(0, 0, 0, 0.3); /* Cor da sombra */
     border-radius: 50%; /* Bordas arredondadas para um efeito mais suave */
