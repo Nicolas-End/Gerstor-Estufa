@@ -1,5 +1,7 @@
 
 import { acess_data_user } from "@/Components/UserDatas";
+import { redirect, useRouter } from 'next/navigation';
+
 import React, { useState } from "react";
 import './style.css';
 
@@ -7,7 +9,8 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
-  const [rememberuser, setRememberUser ] = useState(false);
+  const router = useRouter();
+  
 
   return (
     <div className="flex h-screen bg-gradient-to-r from-purple-600 to-pink-300 items-center justify-center">
@@ -47,7 +50,7 @@ const Login: React.FC = () => {
 
           
           <button className="full-width bg-pink-500 text-white rounded-lg py-3 shadow-lg transition transform hover:bg-pink-600 hover:-translate-y-1"
-            onClick={() => acess_data_user(email, code, password)}>
+            onClick={() => acess_data_user(email, code, password,router)}>
             Login
           </button>
         </div>

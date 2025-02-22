@@ -22,12 +22,14 @@ def user_validade():
 
         if returnApi:  
 
-            return jsonify({'status': 'ok'}), 200  
+            return jsonify({'status': 'ok'}), 201 
         
-        print(returnApi)
-        print(responseApi)
-        return jsonify({'status': responseApi}), 400  
-
+        
+        if responseApi == "Wrong Password":
+            return jsonify({'status': 'Wrongpassword'}), 201  
+        
+        return jsonify({'status':'noexist'}),201
+    
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500 

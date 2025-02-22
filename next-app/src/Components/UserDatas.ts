@@ -1,27 +1,33 @@
-import { useRouter } from 'next/router';
+
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import acess_acount from './acess_acount';
+import { redirect, useRouter } from 'next/navigation';
 
-export function acess_data_user(email: string, id: string, password: string): void {    
-  const router = useRouter();
 
-  acess_acount(email, id, password)
-    .then(data => {
-      if (data.status === 'ok') {
-        console.log('Login bem-sucedido');
+export function acess_data_user(email: string, id: string, password: string,router:AppRouterInstance): void {    
+
+
+
+    acess_acount(email, id, password)
+        .then(data => {
+        if (data.status === 'ok') {
+            console.log('Login bem-sucedido');
         // Armazenando os dados no localStorage
-        localStorage.setItem('email', email);
-        localStorage.setItem('id', id);
-        localStorage.setItem('userRemember', 'true');
-        
+            localStorage.setItem('email', email);
+            localStorage.setItem('id', id);
+            localStorage.setItem('userRemember', 'true');
 
-        // Redirecionando para a página inicial após login
-        
-        router.push('/home');
-      } else {
-        console.log('Falha ao acessar a conta:', data.message);
-      }
+            router.push('/home')
+
+        } else if (data.status === 'Wrongpassword'){
+            console.log('Senha Errada');
+            alert('A senha está incorreta')
+        }
+        else{
+            alert('Usuario não encontrado')
+        }
     })
     .catch(error => {
-      console.log('Erro ao acessar a conta:', error);
+        console.log('Erro ao acessar a conta:', error);
     });
 }
