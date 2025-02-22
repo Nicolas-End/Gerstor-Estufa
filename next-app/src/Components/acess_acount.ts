@@ -8,7 +8,7 @@ interface ApiResponse {
 
 export default function acess_acount(email: string, id: string, password: string): Promise<ApiResponse> {
 
-  return axios.post('http://127.0.0.1:5000/worker-validate', {
+  return axios.post('https://gerenciador-empresarial-1cfr.vercel.app/worker-validate', {
     email: email,
     id: id,
     password: password
