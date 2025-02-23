@@ -1,0 +1,66 @@
+/* Aumentando a imagem e a sombra */
+/* Aumentando a imagem */
+.logo-image {
+    width: 100%; /* Aumenta a largura da imagem para 100% do contêiner */
+    max-width: 400px; /* Define um tamanho máximo para a imagem */
+    display: block; /* Garante que a imagem seja tratada como um bloco */
+    margin: 0 auto; /* Centraliza a imagem */
+    transition: transform 0.3s ease; /* Transição suave para o aumento */
+}
+
+/* Sombra abaixo da imagem com transição de opacidade */
+.logo-shadow {
+    width: 50%; /* Deve ser a mesma largura da imagem */
+    height: 20px; /* Altura da sombra */
+    background: rgba(0, 0, 0, 0.3); /* Cor da sombra */
+    border-radius: 50%; /* Bordas arredondadas para um efeito mais suave */
+    position: relative; /* Para posicionar a sombra */
+    top: 10px; /* Move a sombra para cima, para que fique abaixo da imagem */
+    margin: 0 auto; /* Centraliza a sombra */
+    transition: background 0.3s ease, opacity 0.3s ease; /* Transição suave para a cor e opacidade da sombra */
+}
+
+/* Efeito de sombra dinâmico durante a animação */
+.animate-bounce-smooth {
+    animation: bounce-smooth 2s ease-in-out infinite;
+}
+
+@keyframes bounce-smooth {
+    0% {
+        transform: translateY(0);
+        
+    }
+    50% {
+        transform: translateY(-20px) scale(1.1); /* Aumenta a altura e a escala da imagem */
+        
+    }
+    100% {
+        transform: translateY(0);
+        
+    }
+}
+
+@keyframes opacity {
+  0% {
+    background: rgba(0, 0, 0, 0.3); /* Sombra mais escura no início */
+    opacity: 1; /* Opacidade total */
+      
+  }
+  50% {
+    background: rgba(0, 0, 0, 0.1); /* Sombra mais clara no topo */
+    opacity: 0.5; /* Diminui a opacidade da sombra */
+      
+  }
+  100% {
+    background: rgba(0, 0, 0, 0.3); /* Sombra mais escura ao descer */
+    opacity: 1; /* Retorna a opacidade total */
+  }
+}
+
+  /* CSS para garantir que inputs e botão tenham o mesmo tamanho */
+.full-width {
+    width: 65%; /* Define a largura como 100% do contêiner pai */
+}
+  
+ 
+  
