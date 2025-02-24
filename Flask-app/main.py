@@ -11,6 +11,7 @@ def home():
     return "BEM-VINDO A MINHA API"
 
 @app.route('/worker-validate', methods=["POST"])
+# Valida o usuario para o login
 def user_validade():
     try:
         response = request.get_json() 
@@ -37,6 +38,7 @@ def user_validade():
 @app.route('/add-worker', methods=['POST'])
 def create_new_worker():
     try:
+        # adiciona um novo trabalhador ao banco de dados
         response = request.get_json()  
         worker_name = response['name']
         worker_id = response['id']

@@ -1,4 +1,4 @@
-import { acess_data_user } from "@/Components/UserDatas";
+import { validateWorkerLogin } from "@/Components/Worker";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import "./style.css";
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
           />
           <button
             className=" fontDM mt-4 full-width md:w-2/3 border-solid-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:-translate-y-1"
-            onClick={() => acess_data_user(email, code, password, router)}
+            onClick={() => validateWorkerLogin(email, code, password, router)}
           >
             Login
           </button>
