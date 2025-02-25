@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import os
 load_dotenv()
-
+# faz a Conexão com o Banco de dados  Mongo DB
 class DataBase:
     def __init__(self):
         self.uri_name = os.getenv('URI_MONGO')

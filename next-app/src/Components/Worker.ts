@@ -1,15 +1,18 @@
 
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import acess_acount from './acess_acount';
+import validateAcount from './Worker_Controller/validate_worker';
 
 
 
-export function acess_data_user(email: string, id: string, password: string,router:AppRouterInstance): void {    
+export function validateWorkerLogin(email: string, id: string, password: string,router:AppRouterInstance): void {    
 
 
-
-    acess_acount(email, id, password)
+    // se a requisição no validate_worker der certo ele retorna 
+    // cria alguns localStorage caso contratio da um 
+    // fedback ao usuario
+    validateAcount(email, id, password)
         .then(data => {
+        
         if (data.status === 'ok') {
             console.log('Login bem-sucedido');
         // Armazenando os dados no localStorage

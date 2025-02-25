@@ -13,11 +13,13 @@ class Worker_controller:
 
     def add_new_Worker(self,name,id,role,email,password):
         try:
+            # filtro para verificar se o usuario ja existe
             worker_filter = {"id":id,"company_email":email}
 
             if self.coll.find_one(worker_filter):
                 return 'Id already exist',False
         
+            # se n exister criptografa a senha do usuario
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             worker_datas = {
@@ -30,6 +32,7 @@ class Worker_controller:
 
             self.coll.insert_one(worker_datas)
             return 'ok',True
+        
         except Exception as e:
             print('Error: ',e)
             return 'Error',False,
@@ -37,13 +40,15 @@ class Worker_controller:
     def validate_worker(self,id,email,password):
         try: 
             
+            # pega o dados do usuario e verifica se ele existe no banco de dados
             worker_datas = {
                 'id':id,
                 'company_email':email,
             }
-
             worker = self.coll.find_one(worker_datas)
         
+            # se ele exister verifica se a senha dele esta correta caso sim 
+            # retorna um feedback de ok para o sistema
             if worker:
                 if bcrypt.checkpw(password.encode('utf-8'), worker["password"]):
                     return 'ok',True
