@@ -43,14 +43,14 @@ const Login: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button
-            className=" fontDM mt-4 full-width md:w-2/3 border-solid-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:-translate-y-1"
+            className=" fontDM mt-4 full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
             onClick={() => validateWorkerLogin(email, code, password, router)}
           >
             Login
           </button>
 
           <Link
-            className="fontDM full-width md:w-2/3 bg-[#2b192e] text-[#f5e8da] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#2b192e] hover:-translate-y-1"
+            className="fontDM full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#f5e8da] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#2b192e] hover:text-[#f5e8da]  hover:-translate-y-1"
             href="/">
             Registre-se
           </Link>
