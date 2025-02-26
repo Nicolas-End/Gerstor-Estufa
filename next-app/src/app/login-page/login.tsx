@@ -15,7 +15,7 @@ const Login: React.FC = () => {
     <>
     <head> 
       <title>
-        Login Page
+        Login - Today
       </title>
     </head>
     <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
