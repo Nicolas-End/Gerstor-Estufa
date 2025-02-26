@@ -21,6 +21,9 @@ const Login: React.FC = () => {
     <>
       <head>
         <title>Login - Today</title>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
       </head>
       <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
         <div className="flex w-4/5 h-4/5 bg-white shadow-2xl rounded-lg overflow-hidden">
@@ -64,8 +67,13 @@ const Login: React.FC = () => {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
                 onClick={PasswordVisible}
               >
-                {isVisible ? "🚫" : "👁️"}
+                {isVisible ? (
+                  <i className="fa-regular fa-eye-slash"></i> // ícone de olho cortado
+                ) : (
+                  <i className="fa-regular fa-eye"></i> // ícone de olho
+                )}
               </button>
+
             </div>
 
             {/* Botão de Login */}
