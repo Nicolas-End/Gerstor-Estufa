@@ -1,10 +1,12 @@
 "use client"; // Adicione isso se estiver usando hooks do React (useState, useEffect, etc.)
 
 import { useRouter } from "next/navigation";
+
 import React, { useState } from "react";
 import "./style.css";
 import "./style-cell.css";
 import Link from "next/link";
+import { registerNewAdm } from "@/Components/Worker";
 
 const RegisterPage = () => {
   // Estados para os campos do formulário
@@ -25,6 +27,8 @@ const RegisterPage = () => {
       alert("As senhas não coincidem!");
       return;
     }
+
+    registerNewAdm(email,password)
     // Lógica de registro (pode ser uma chamada à API, por exemplo)
     console.log("Registrando usuário:", { email, password });
     router.push("/login"); // Redireciona para a página de login após o registro

@@ -1,7 +1,7 @@
 
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import validateAcount from './Worker_Controller/validate_worker';
-
+import validateAcount from './User_controller/validate_worker';
+import addNewAdmToDataBase from './User_controller/create_New_Adm';
 
 
 export function validateWorkerLogin(email: string, id: string, password: string,router:AppRouterInstance): void {    
@@ -21,6 +21,28 @@ export function validateWorkerLogin(email: string, id: string, password: string,
             localStorage.setItem('userRemember', 'true');
 
             router.push('/home')
+
+        } else if (data.status === 'Wrongpassword'){
+            console.log('Senha Errada');
+            alert('A senha está incorreta')
+        }
+        else{
+            alert('Usuario não encontrado')
+        }
+    })
+    .catch(error => {
+        console.log('Erro ao acessar a conta:', error);
+    });
+}
+
+
+export function registerNewAdm(email:string,password:string): void{
+    const adm_id = '1'
+    addNewAdmToDataBase(email,password,adm_id)
+    .then(data => {
+        
+        if (data.status === 'ok') {
+            console.log('Cadastr bem-sucedido');
 
         } else if (data.status === 'Wrongpassword'){
             console.log('Senha Errada');
