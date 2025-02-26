@@ -3,28 +3,25 @@
 /*font-family: "Roboto", serif;*/
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* Aumentando a imagem e a sombra */
-
-/* Aumentando a imagem */
 .logo-image {
-  width: 100%; /* Aumenta a largura da imagem para 100% do contêiner */
-  max-width: 600px; /* Tamanho máximo da imagem */
-  height: auto; /* Mantém a proporção da imagem */
-  display: block; /* Garante que a imagem seja tratada como um bloco */
-  margin: 0 auto; /* Centraliza a imagem */
-  animation: bounce-smooth 2s ease-in-out infinite; /* Animação de bounce */
+  width: 100%; 
+  max-width: 600px; 
+  height: auto; 
+  display: block; 
+  margin: 0 auto; 
+  animation: bounce-smooth 2s ease-in-out infinite; 
 }
 
 /* Sombra abaixo da imagem */
 .logo-shadow {
-  width: 50%; /* Largura da sombra (proporcional à imagem) */
-  height: 20px; /* Altura da sombra */
-  background: rgba(0, 0, 0, 0.3); /* Cor inicial da sombra (preto com 30% de opacidade) */
-  border-radius: 50%; /* Bordas arredondadas para um efeito mais suave */
-  position: relative; /* Para posicionar a sombra */
-  top: 10px; /* Move a sombra para cima, para que fique abaixo da imagem */
-  margin: 0 auto; /* Centraliza a sombra */
-  animation: shadow-opacity 2s ease-in-out infinite; /* Animação de opacidade */
+  width: 50%; 
+  height: 20px; 
+  background: rgba(0, 0, 0, 0.3); 
+  border-radius: 50%; 
+  position: relative; 
+  top: 10px; 
+  margin: 0 auto; 
+  animation: shadow-opacity 2s ease-in-out infinite; 
 }
 
 /* Animação de bounce para a imagem */
@@ -43,16 +40,16 @@
 /* Animação de opacidade para a sombra */
 @keyframes shadow-opacity {
   0% {
-      background: rgba(0, 0, 0, 0.3); /* Preto com 30% de opacidade */
-      transform: scale(1); /* Sombra no tamanho original */
+      background: rgba(0, 0, 0, 0.3); 
+      transform: scale(1); 
   }
   50% {
-      background: rgba(248, 170, 209, 0); /* Cor de fundo do contêiner (#f8aad1) com 0% de opacidade */
-      transform: scale(1.5); /* Sombra aumenta 50% */
+      background: rgba(248, 170, 209, 0); 
+      transform: scale(1.5); 
   }
   100% {
-      background: rgba(0, 0, 0, 0.3); /* Preto com 30% de opacidade */
-      transform: scale(1); /* Sombra volta ao tamanho original */
+      background: rgba(0, 0, 0, 0.3); 
+      transform: scale(1); 
   }
 }
 
