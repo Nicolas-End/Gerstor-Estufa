@@ -19,6 +19,9 @@ const Login: React.FC = () => {
     <>
       <head>
         <title>Login - Today</title>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
       </head>
       <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
         <div className="flex w-4/5 h-4/5 bg-white shadow-2xl rounded-lg overflow-hidden">
@@ -48,7 +51,6 @@ const Login: React.FC = () => {
               <input
                 value={password}
                 type={isVisible ? "text" : "password"}
-                placeholder="* * * * * * * * *"
                 className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -57,8 +59,13 @@ const Login: React.FC = () => {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
                 onClick={PasswordVisible}
               >
-                {isVisible ? "🚫" : "👁️"}
+                {isVisible ? (
+                  <i className="fa-regular fa-eye-slash"></i> // ícone de olho cortado
+                ) : (
+                  <i className="fa-regular fa-eye"></i> // ícone de olho
+                )}
               </button>
+
             </div>
             <button
               className=" fontDM mt-4 full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
