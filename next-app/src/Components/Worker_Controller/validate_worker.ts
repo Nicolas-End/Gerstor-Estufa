@@ -1,5 +1,5 @@
 import axios from 'axios';
-/* Interfaca Serve para o formato de reposta da api*/
+/* Interface Serve para o formato de reposta da api*/
 interface ApiResponse {
   status: string;
   message?: string;

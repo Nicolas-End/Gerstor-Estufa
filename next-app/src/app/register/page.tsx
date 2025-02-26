@@ -34,102 +34,92 @@ const RegisterPage = () => {
     <>
       <head>
         <title>Registro - Today</title>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+      
       </head>
       <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
-        <div className="flex w-4/5 h-4/5 bg-white shadow-2xl rounded-lg overflow-hidden relative">
-          {/* Contêiner do formulário */}
-          <div className="w-full md:w-1/2 bg-[#f5e8da] text-[#2b192e] p-10 flex flex-col justify-center z-10">
-            <div className="flex items-center mb-6">
-              <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
-              <h1 className="text-4xl font-bold fontDM">Today</h1>
-            </div>
-            <p className="text-sm mb-8 fontRobo">Crie sua conta</p>
+        
+        <div className="w-full max-w-md bg-[#f5e8da] text-[#2b192e] p-8 rounded-lg shadow-2xl">
+          <div className="flex items-center mb-6">
+            <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
+            <h1 className="text-4xl font-bold fontDM">Today</h1>
+          </div>
+          <p className="text-sm mb-8 fontRobo">Crie sua conta</p>
 
-            {/* Campo de Email */}
-            <label className="text-sm mb-2 fontRobo">Email:</label>
+          {/* Campo de Email */}
+          <label className="text-sm mb-2 fontRobo">Email:</label>
+          <input
+            value={email}
+            type="email"
+            className="w-full mb-4 p-3 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          {/* Campo de Senha */}
+          <label className="text-sm mb-2 fontRobo">Senha:</label>
+          <div className="relative mb-4">
             <input
-              value={email}
-              type="email"
-              className="full-width mb-4 p-3 md:w-2/3 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Digite seu email"
+              value={password}
+              type={isVisible ? "text" : "password"}
+              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+              onChange={(e) => setPassword(e.target.value)}
             />
-
-            {/* Campo de Senha */}
-            <label className="text-sm mb-2 fontRobo">Senha:</label>
-            <div className="relative md:w-2/3 mb-4">
-              <input
-                value={password}
-                type={isVisible ? "text" : "password"}
-                className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Digite sua senha"
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
-                onClick={PasswordVisible}
-              >
-                {isVisible ? "🚫" : "👁️"}
-              </button>
-            </div>
-
-            {/* Campo de Confirmação de Senha */}
-            <label className="text-sm mb-2 fontRobo">Confirme a Senha:</label>
-            <div className="relative md:w-2/3 mb-4">
-              <input
-                value={confirmPassword}
-                type={isVisible ? "text" : "password"}
-                className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirme sua senha"
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
-                onClick={PasswordVisible}
-              >
-                {isVisible ? "🚫" : "👁️"}
-              </button>
-            </div>
-
-            {/* Botão de Registro */}
             <button
-              className="fontDM mt-4 full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
-              onClick={handleRegister}
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
+              onClick={PasswordVisible}
             >
-              Registrar
+               {isVisible ? (
+                  <i className="fa-regular fa-eye-slash"></i> // ícone de olho cortado
+                ) : (
+                  <i className="fa-regular fa-eye"></i> // ícone de olho
+                )}
             </button>
+          </div>
 
-            {/* Link para a página de Login */}
-            <Link
-              href="/login"
-              className="fontDM full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#f5e8da] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+          {/* Campo de Confirmação de Senha */}
+          <label className="text-sm mb-2 fontRobo">Confirme a Senha:</label>
+          <div className="relative mb-6">
+            <input
+              value={confirmPassword}
+              type={isVisible ? "text" : "password"}
+              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
+              onClick={PasswordVisible}
             >
-              Já tem uma conta? Faça login
-            </Link>
+              {isVisible ? (
+                  <i className="fa-regular fa-eye-slash"></i> // ícone de olho 
+                ) : (
+                  <i className="fa-regular fa-eye"></i> // ícone de olho
+                )}
+            </button>
           </div>
 
-          {/* Contêiner da logo de fundo */}
-          <div className="hidden md:flex items-center justify-center w-1/2 bg-[#2b192e] absolute right-0 top-0 bottom-0 z-0">
-            <div className="flex items-center justify-center w-full h-full">
-              <div className="relative">
-                <img
-                  src="/Logo.png"
-                  alt="Logo"
-                  className="logo-image animate-bounce-smooth opacity-50"
-                />
-                <div className="logo-shadow">
-                  {/* Sombra abaixo da imagem */}
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Botão de Registro */}
+          <button
+            className="w-full fontDM border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+            onClick={handleRegister}
+          >
+            Registrar
+          </button>
+
+          {/* Link para a página de Login */}
+          <Link
+            href="/login"
+            className="block w-full text-center fontDM border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#f5e8da] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+          >
+            Já tem uma conta? Faça login
+          </Link>
         </div>
       </div>
     </>
   );
 };
 
-// Exportação padrão do componente
 export default RegisterPage;

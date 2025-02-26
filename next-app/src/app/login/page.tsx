@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { validateWorkerLogin } from "@/Components/Worker";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -11,10 +11,24 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Estado para controlar o carregamento
   const router = useRouter();
 
   const PasswordVisible = () => {
     setIsVisible(!isVisible);
+  };
+
+  const handleLogin = async () => {
+    setIsLoading(true); // Ativa o estado de carregamento
+
+    try {
+      // Simula uma requisição ao banco de dados
+      await validateWorkerLogin(email, code, password, router);
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+    } finally {
+      setIsLoading(false); // Desativa o estado de carregamento, independentemente do resultado
+    }
   };
 
   return (
@@ -23,7 +37,8 @@ const Login: React.FC = () => {
         <title>Login - Today</title>
         <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
       </head>
       <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
         <div className="flex w-4/5 h-4/5 bg-white shadow-2xl rounded-lg overflow-hidden">
@@ -73,15 +88,23 @@ const Login: React.FC = () => {
                   <i className="fa-regular fa-eye"></i> // ícone de olho
                 )}
               </button>
-
             </div>
 
             {/* Botão de Login */}
             <button
               className="fontDM mt-4 full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
-              onClick={() => validateWorkerLogin(email, code, password, router)}
+              onClick={handleLogin}
+              disabled={isLoading} // Desabilita o botão durante o carregamento
             >
-              Login
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <span className="mr-2">Só um momento...</span>
+                  {/* Spinner de carregamento */}
+                  <i className="fas fa-spinner fa-spin"></i>
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
 
             {/* Link para a página de Registro */}
