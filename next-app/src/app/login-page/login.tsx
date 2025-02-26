@@ -12,6 +12,12 @@ const Login: React.FC = () => {
   const router = useRouter();
 
   return (
+    <>
+    <head> 
+      <title>
+        Login Page
+      </title>
+    </head>
     <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
       <div className="flex w-4/5 h-4/5 bg-white shadow-2xl rounded-lg overflow-hidden">
         {/* Contêiner do formulário */}
@@ -68,6 +74,8 @@ const Login: React.FC = () => {
         </div>
       </div>
     </div>
+
+    </>
   );
 };
 
