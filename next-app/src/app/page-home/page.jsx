@@ -17,7 +17,7 @@ const Navbar = () => {
           <a href="#" className="hover:text-[#2b192e] mt-2 fontPop">Home</a>
           <a href="/about" className="hover:text-[#2b192e] mt-2 fontPop">Sobre</a>
           <div className="flex space-x-4">
-            <a href="/services" className="bg-[#6c5ce7] text-white px-4 py-2 rounded-lg hover:bg-[#4b4de7] transition">Registre-se</a>
+            <a href="./register" className="bg-[#6c5ce7] text-white px-4 py-2 rounded-lg hover:bg-[#4b4de7] transition">Registre-se</a>
             <a href="./login" className="bg-[#00b894] text-white px-4 py-2 rounded-lg hover:bg-[#009b74] transition">Entrar</a>
           </div>
         </div>
