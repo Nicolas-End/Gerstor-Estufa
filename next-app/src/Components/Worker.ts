@@ -36,23 +36,21 @@ export function validateWorkerLogin(email: string, id: string, password: string,
 }
 
 
-export function registerNewAdm(email:string,password:string): void{
-    const adm_id = '1'
-    addNewAdmToDataBase(email,password,adm_id)
-    .then(data => {
-        
-        if (data.status === 'ok') {
-            console.log('Cadastr bem-sucedido');
+export async function registerNewAdm(email: string, password: string) {
+    const adm_id = '1';
+    try {
+        // espera a resposta da Api e retorna como data
+        const data = await addNewAdmToDataBase(email, adm_id, password);
 
-        } else if (data.status === 'Wrongpassword'){
-            console.log('Senha Errada');
-            alert('A senha está incorreta')
+        if (data.status === 'ok') {
+            return 'ok';
+        } else if (data.status === 'Adm Already Exist') {
+            return "Adm Already Exist";
+        } else {
+            return "Algum Erro";
         }
-        else{
-            alert('Usuario não encontrado')
-        }
-    })
-    .catch(error => {
+    } catch (error) {
         console.log('Erro ao acessar a conta:', error);
-    });
+        return "Erro na requisição";
+    }
 }

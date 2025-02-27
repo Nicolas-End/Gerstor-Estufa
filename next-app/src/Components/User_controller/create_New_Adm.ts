@@ -8,8 +8,8 @@ interface ApiResponse{
 
 export default function addNewAdmToDataBase( 
     email: string,
+    id:string,
     password: string,
-    id:string
 ): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) =>{
 

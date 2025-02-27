@@ -1,6 +1,8 @@
 "use client"; // Adicione isso se estiver usando hooks do React (useState, useEffect, etc.)
 
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import React, { useState } from "react";
 import "./style.css";
@@ -9,6 +11,7 @@ import Link from "next/link";
 import { registerNewAdm } from "@/Components/Worker";
 
 const RegisterPage = () => {
+
   // Estados para os campos do formulário
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,16 +25,20 @@ const RegisterPage = () => {
   };
 
   // Função para lidar com o registro
-  const handleRegister = () => {
+  const  handleRegister = async () => {
     if (password !== confirmPassword) {
       alert("As senhas não coincidem!");
       return;
     }
 
-    registerNewAdm(email,password)
+    const reponse = await registerNewAdm(email,password)
+
+    if (reponse == 'ok'){
+      console.log("Registrando usuário:", { email, password });
+      router.push("/login");
+  }
     // Lógica de registro (pode ser uma chamada à API, por exemplo)
-    console.log("Registrando usuário:", { email, password });
-    router.push("/login"); // Redireciona para a página de login após o registro
+     // Redireciona para a página de login após o registro
   };
 
   return (

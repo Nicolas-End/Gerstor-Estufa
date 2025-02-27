@@ -14,10 +14,10 @@ class Adm_controller:
     def add_new_Adm(self,id,email,password):
         try:
             # filtro para verificar se o usuario ja existe
-            adm_filter = {"id":id,"company_email":email}
+            adm_exist = {"id":id,"company_email":email}
 
-            if self.coll.find_one(adm_filter):
-                return 'Id already exist',False
+            if self.coll.find_one(adm_exist):
+                return 'Adm Already Exist',False
         
             # se n exister criptografa a senha do usuario
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())

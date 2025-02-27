@@ -12,29 +12,34 @@ def home():
     return "BEM-VINDO A MINHA API"
 
 
-@app.rout('/add-new-Adm', methods=['POST'])
+@app.route('/add-new-Adm', methods=['POST'])
 def add_new_Adm():
-    request = request.get_json()
-    adm_id = request['id']
-    adm_email = request['email']
-    adm_password = request['password']
+    try: 
+        response = request.get_json()
+        adm_id = response['id']
+        adm_email = response['email']
+        adm_password = response['password']
 
-    responseApi, returnApi = Adm_controller().add_new_Adm(adm_id,adm_email,adm_password)
+        print(adm_id)
+        print(adm_email)
+        print(adm_password)
+        responseApi, returnApi = Adm_controller().add_new_Adm(adm_id,adm_email,adm_password)
 
-    if returnApi:
-        
-        return jsonify({'status':'ok'}),201
+        if returnApi:
+            return jsonify({'status':'ok'}),201
 
-    return jsonify({'status': responseApi}), 201  
+        return jsonify({'status': responseApi}), 201
+    except Exception as e:
+        print('Error: ',e)
 
 @app.route('/worker-validate', methods=["POST"])
 # Valida o usuario para o login
 def user_validade():
     try:
-        request = request.get_json() 
-        worker_id = request['id']
-        worker_email = request['email']
-        worker_password = request['password']
+        response = request.get_json() 
+        worker_id = response['id']
+        worker_email = response['email']
+        worker_password = response['password']
 
         responseApi, returnApi = Worker_controller().validate_worker(worker_id, worker_email, worker_password)
 
@@ -56,12 +61,12 @@ def user_validade():
 def create_new_worker():
     try:
         # adiciona um novo trabalhador ao banco de dados
-        request = request.get_json()  
-        worker_name = request['name']
-        worker_id = request['id']
-        worker_role = request['role']
-        worker_email = request['email']
-        worker_password = request['password']
+        response = request.get_json()  
+        worker_name = response['name']
+        worker_id = response['id']
+        worker_role = response['role']
+        worker_email = response['email']
+        worker_password = response['password']
         
         # Chama a função para adicionar um novo worker
         responseApi, returnApi = Worker_controller().add_new_Worker(worker_name, worker_id, worker_role, worker_email, worker_password)
