@@ -50,9 +50,9 @@ const RegisterPage = () => {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
       
       </head>
-      <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
+      <div className="flex h-screen bg-gradient-to-r from-[#fff] to-[#2b192e] items-center justify-center">
         
-        <div className="w-full max-w-md bg-[#f5e8da] text-[#2b192e] p-8 rounded-lg shadow-2xl">
+        <div className="w-full max-w-md bg-[#fff] text-[#2b192e] p-8 rounded-lg shadow-2xl">
           <div className="flex items-center mb-6">
             <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
             <h1 className="text-4xl font-bold fontDM">Today</h1>
@@ -64,7 +64,7 @@ const RegisterPage = () => {
           <input
             value={email}
             type="email"
-            className="w-full mb-4 p-3 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+            className="w-full mb-4 p-3 rounded bg-[#2b192e] text-[#fff] shadow-md"
             onChange={(e) => setEmail(e.target.value)}
           />
 
@@ -74,12 +74,12 @@ const RegisterPage = () => {
             <input
               value={password}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#fff] shadow-md"
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#fff] hover:text-white"
               onClick={PasswordVisible}
             >
                {isVisible ? (
@@ -96,12 +96,12 @@ const RegisterPage = () => {
             <input
               value={confirmPassword}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#fff] shadow-md"
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#fff] hover:text-white"
               onClick={PasswordVisible}
             >
               {isVisible ? (
@@ -114,7 +114,7 @@ const RegisterPage = () => {
 
           {/* Botão de Registro */}
           <button
-            className="w-full fontDM border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+            className="w-full fontDM border-2 border-solid border-[#2b192e] bg-[#fff] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#fff] hover:-translate-y-1"
             onClick={handleRegister}
           >
             Registrar
@@ -123,7 +123,7 @@ const RegisterPage = () => {
           {/* Link para a página de Login */}
           <Link
             href="/login"
-            className="block w-full text-center fontDM border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#f5e8da] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+            className="block w-full text-center fontDM border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#fff] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#2b192e] hover:text-[#fff] hover:-translate-y-1"
           >
             Já tem uma conta? Faça login
           </Link>

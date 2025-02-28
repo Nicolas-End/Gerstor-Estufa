@@ -40,10 +40,10 @@ const Login: React.FC = () => {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
       </head>
-      <div className="flex h-screen bg-gradient-to-r from-[#f5e8da] to-[#2b192e] items-center justify-center">
+      <div className="flex h-screen bg-gradient-to-r from-[#fff] to-[#2b192e] items-center justify-center">
         <div className="flex w-4/5 h-4/5 bg-white shadow-2xl rounded-lg overflow-hidden">
           {/* Contêiner do formulário */}
-          <div className="md:w-1/2 w-full bg-[#f5e8da] text-[#2b192e] p-10 flex flex-col justify-center">
+          <div className="md:w-1/2 w-full bg-[#fff] text-[#2b192e] p-10 flex flex-col justify-center">
             <div className="flex items-center mb-6">
               <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
               <h1 className="text-4xl font-bold fontDM">Today</h1>
@@ -55,7 +55,7 @@ const Login: React.FC = () => {
             <input
               value={email}
               type="email"
-              className="full-width mb-4 p-3 md:w-2/3 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+              className="full-width mb-4 p-3 md:w-2/3 rounded bg-[#2b192e] text-[#fff] shadow-md"
               onChange={(e) => setEmail(e.target.value)}
             />
 
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
             <input
               value={code}
               type="text"
-              className="full-width md:w-2/3 mb-4 p-3 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+              className="full-width md:w-2/3 mb-4 p-3 rounded bg-[#2b192e] text-[#fff] shadow-md"
               onChange={(e) => setCode(e.target.value)}
             />
 
@@ -74,12 +74,12 @@ const Login: React.FC = () => {
               <input
                 value={password}
                 type={isVisible ? "text" : "password"}
-                className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#f5e8da] shadow-md"
+                className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#fff] shadow-md"
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#f5e8da] hover:text-white"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#fff] hover:text-white"
                 onClick={PasswordVisible}
               >
                 {isVisible ? (
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
 
             {/* Botão de Login */}
             <button
-              className="fontDM mt-4 full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#f5e8da] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+              className="fontDM mt-4 full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#fff] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#fff] hover:-translate-y-1"
               onClick={handleLogin}
               disabled={isLoading} // Desabilita o botão durante o carregamento
             >
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
             {/* Link para a página de Registro */}
             <Link
               href="/register" // Caminho absoluto para a página de registro
-              className="fontDM full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#f5e8da] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#2b192e] hover:text-[#f5e8da] hover:-translate-y-1"
+              className="fontDM full-width md:w-2/3 border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#fff] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#2b192e] hover:text-[#fff] hover:-translate-y-1"
             >
               Registre-se
             </Link>
