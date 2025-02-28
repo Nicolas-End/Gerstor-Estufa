@@ -1,9 +1,6 @@
 "use client"; // Adicione isso se estiver usando hooks do React (useState, useEffect, etc.)
 
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import React, { useState } from "react";
 import "./style.css";
 import "./style-cell.css";
