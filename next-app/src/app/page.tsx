@@ -1,6 +1,6 @@
 'use client'
 
-import Login from "./login-page/login";
+import Login from "./login/page";
 
 const Home: React.FC = () => {
   return (

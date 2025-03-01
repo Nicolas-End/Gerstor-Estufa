@@ -19,7 +19,7 @@ class Worker_controller:
             if self.coll.find_one(worker_filter):
                 return 'Id already exist',False
         
-            # se n exister criptografa a senha do usuario
+            # Criptgrafa a senha
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             worker_datas = {

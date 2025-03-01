@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from controllers.worker_controller import Worker_controller
+from controllers.adm_controller import Adm_controller
 
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -9,6 +10,24 @@ CORS(app, origins="*")
 @app.route('/')
 def home():
     return "BEM-VINDO A MINHA API"
+
+
+@app.route('/add-new-Adm', methods=['POST'])
+def add_new_Adm():
+    try: 
+        response = request.get_json()
+        adm_id = response['id']
+        adm_email = response['email']
+        adm_password = response['password']
+
+        responseApi, returnApi = Adm_controller().add_new_Adm(adm_id,adm_email,adm_password)
+
+        if returnApi:
+            return jsonify({'status':'ok'}),201
+
+        return jsonify({'status': responseApi}), 201
+    except Exception as e:
+        print('Error: ',e)
 
 @app.route('/worker-validate', methods=["POST"])
 # Valida o usuario para o login
@@ -51,7 +70,7 @@ def create_new_worker():
         
         if returnApi:  # Sucesso
             return jsonify({'status': 'ok'}), 201  # Retorna status 201 para sucesso
-        return jsonify({'status': responseApi}), 400  # Erro (status 400)
+        return jsonify({'status': responseApi}), 201  # Erro (status 400)
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 500 para erro interno
