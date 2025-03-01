@@ -1,5 +1,7 @@
-'use client';
+"use client";
 import { validateWorkerLogin } from "@/Components/Worker";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import "./style.css";
@@ -14,16 +16,25 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false); // Estado para controlar o carregamento
   const router = useRouter();
 
+  function MostrarAlerta(text: string) {
+    toast(text, {
+      style: {
+        backgroundColor: "#2b192e",
+        color: "#fff",
+        fontFamily: "Arial, sans-serif",
+      },
+    });
+  }
   const PasswordVisible = () => {
     setIsVisible(!isVisible);
   };
 
   const handleLogin = async () => {
-    await setIsLoading(true);// Ativa o estado de carregamento
-    if (email == "" || password == "" || code == ""){
-      alert ("Preencha Todos os Campos")
-      setIsLoading(false)
-      return
+    await setIsLoading(true); // Ativa o estado de carregamento
+    if (email == "" || password == "" || code == "") {
+      MostrarAlerta("Preencha Todos os Campos");
+      setIsLoading(false);
+      return;
     }
     try {
       // Simula uma requisição ao banco de dados
@@ -92,6 +103,16 @@ const Login: React.FC = () => {
                   <i className="fa-regular fa-eye"></i> // ícone de olho
                 )}
               </button>
+              <ToastContainer
+                position="top-left"
+                autoClose={4000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+              />
             </div>
 
             {/* Botão de Login */}
