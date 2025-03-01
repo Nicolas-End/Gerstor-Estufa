@@ -20,9 +20,6 @@ def add_new_Adm():
         adm_email = response['email']
         adm_password = response['password']
 
-        print(adm_id)
-        print(adm_email)
-        print(adm_password)
         responseApi, returnApi = Adm_controller().add_new_Adm(adm_id,adm_email,adm_password)
 
         if returnApi:

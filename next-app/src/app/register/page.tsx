@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import "./style-cell.css";
 import Link from "next/link";
@@ -20,22 +22,30 @@ const RegisterPage = () => {
   const PasswordVisible = () => {
     setIsVisible(!isVisible);
   };
-
+  function MostrarAlerta(text: string) {
+    toast(text, {
+      style: {
+        backgroundColor: "#2b192e",
+        color: "#fff",
+        fontFamily: "Arial, sans-serif",
+      },
+    });
+  }
   // Função para lidar com o registro
   const  handleRegister = async () => {
     if (password == "" || email == ""){
-      alert ("Preencha Todos os Campos")
+      MostrarAlerta('Preencha Todos os Campos')
       return
     }
     if (password !== confirmPassword) {
-      alert("As senhas não coincidem!");
+      MostrarAlerta("As senhas não coincidem!");
       return;
     }
 
     const reponse = await registerNewAdm(email,password)
 
     if (reponse == 'ok'){
-      console.log("Registrando usuário:", { email, password });
+      MostrarAlerta('Registrando o Novo Usuario')
       router.push("/login");
   }
     // Lógica de registro (pode ser uma chamada à API, por exemplo)
@@ -111,6 +121,16 @@ const RegisterPage = () => {
                   <i className="fa-regular fa-eye"></i> // ícone de olho
                 )}
             </button>
+            <ToastContainer
+                position="top-left"
+                autoClose={4000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+              />
           </div>
 
           {/* Botão de Registro */}

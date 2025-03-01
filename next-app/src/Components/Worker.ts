@@ -2,7 +2,8 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import validateAcount from './User_controller/validate_worker';
 import addNewAdmToDataBase from './User_controller/create_New_Adm';
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export async function validateWorkerLogin(email: string, id: string, password: string,router:AppRouterInstance) {    
 
@@ -13,7 +14,13 @@ export async function validateWorkerLogin(email: string, id: string, password: s
     try{
         const data = await validateAcount(email, id, password)
         if (data.status === 'ok') {
-            console.log('Login bem-sucedido');
+            toast("Login Bem Sucedido", {
+                style: {
+                  backgroundColor: "#2b192e",
+                  color: "#fff",
+                  fontFamily: "Arial, sans-serif",
+                },
+              });
         // Armazenando os dados no localStorage
             localStorage.setItem('email', email);
             localStorage.setItem('id', id);
@@ -21,13 +28,24 @@ export async function validateWorkerLogin(email: string, id: string, password: s
 
             router.push('/home')
 
-        } else if (data.status === 'Wrongpassword'){
-            console.log('Senha Errada');
-            alert('A senha está incorreta')
+        } else if (data.status === 'Wrong Password'){
+            toast('Senha Incorreta', {
+                style: {
+                  backgroundColor: "#2b192e",
+                  color: "#fff",
+                  fontFamily: "Arial, sans-serif",
+                },
+              });
         }
         else{
-            console.log('ta vindo Aqui')
-            alert('Usuario não encontrado')
+            toast('Usuario não encontrado', {
+                style: {
+                  backgroundColor: "#2b192e",
+                  color: "#fff",
+                  fontFamily: "Arial, sans-serif",
+                },
+              });
+            
         }
     }
     catch (error){
