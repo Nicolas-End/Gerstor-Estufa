@@ -23,6 +23,10 @@ const RegisterPage = () => {
 
   // Função para lidar com o registro
   const  handleRegister = async () => {
+    if (password == "" || email == ""){
+      alert ("Preencha Todos os Campos")
+      return
+    }
     if (password !== confirmPassword) {
       alert("As senhas não coincidem!");
       return;

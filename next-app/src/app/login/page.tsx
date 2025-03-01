@@ -19,15 +19,19 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    setIsLoading(true); // Ativa o estado de carregamento
-
+    await setIsLoading(true);// Ativa o estado de carregamento
+    if (email == "" || password == "" || code == ""){
+      alert ("Preencha Todos os Campos")
+      setIsLoading(false)
+      return
+    }
     try {
       // Simula uma requisição ao banco de dados
       await validateWorkerLogin(email, code, password, router);
     } catch (error) {
       console.error("Erro ao fazer login:", error);
     } finally {
-      setIsLoading(false); // Desativa o estado de carregamento, independentemente do resultado
+      await setIsLoading(false); // Desativa o estado de carregamento, independentemente do resultado
     }
   };
 

@@ -4,15 +4,14 @@ import validateAcount from './User_controller/validate_worker';
 import addNewAdmToDataBase from './User_controller/create_New_Adm';
 
 
-export function validateWorkerLogin(email: string, id: string, password: string,router:AppRouterInstance): void {    
+export async function validateWorkerLogin(email: string, id: string, password: string,router:AppRouterInstance) {    
 
 
     // se a requisição no validate_worker der certo ele retorna 
     // cria alguns localStorage caso contratio da um 
     // fedback ao usuario
-    validateAcount(email, id, password)
-        .then(data => {
-        
+    try{
+        const data = await validateAcount(email, id, password)
         if (data.status === 'ok') {
             console.log('Login bem-sucedido');
         // Armazenando os dados no localStorage
@@ -27,12 +26,14 @@ export function validateWorkerLogin(email: string, id: string, password: string,
             alert('A senha está incorreta')
         }
         else{
+            console.log('ta vindo Aqui')
             alert('Usuario não encontrado')
         }
-    })
-    .catch(error => {
-        console.log('Erro ao acessar a conta:', error);
-    });
+    }
+    catch (error){
+        return 'Erro'
+    }
+
 }
 
 
