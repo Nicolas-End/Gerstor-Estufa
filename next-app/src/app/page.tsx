@@ -1,11 +1,11 @@
 'use client'
 
-import Login from "./login/page";
+import App from './page-home/page'
 
 const Home: React.FC = () => {
   return (
     <div>
-      <Login />
+      <App />
     </div>
   );
 };

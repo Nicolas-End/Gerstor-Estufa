@@ -34,5 +34,5 @@ class Adm_controller:
         
         except Exception as e:
             print('Error: ',e)
-            return 'Error',False,
+            return 'Error',False
     

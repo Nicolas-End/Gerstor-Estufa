@@ -19,11 +19,12 @@ const Login: React.FC = () => {
   function MostrarAlerta(text: string) {
     toast(text, {
       style: {
-        backgroundColor: "#2b192e",
-        color: "#fff",
+        backgroundColor: "#fff",
+        color: "#2b192e",
         fontFamily: "Arial, sans-serif",
       },
     });
+    // mensagem para retornar resposta do serve para o usuario
   }
   const PasswordVisible = () => {
     setIsVisible(!isVisible);
@@ -38,7 +39,15 @@ const Login: React.FC = () => {
     }
     try {
       // Simula uma requisição ao banco de dados
-      await validateWorkerLogin(email, code, password, router);
+      const response = await validateWorkerLogin(email, code, password, router);
+
+      if (response == 'wrong Pass'){
+        MostrarAlerta('A senha esta incorreta')
+      }
+      else{
+        MostrarAlerta('Usuario não encontrado')
+      }
+
     } catch (error) {
       console.error("Erro ao fazer login:", error);
     } finally {
@@ -104,7 +113,7 @@ const Login: React.FC = () => {
                 )}
               </button>
               <ToastContainer
-                position="top-left"
+                position="top-right"
                 autoClose={4000}
                 hideProgressBar={false}
                 newestOnTop={false}

@@ -42,12 +42,20 @@ const RegisterPage = () => {
       return;
     }
 
-    const reponse = await registerNewAdm(email,password)
+    const response = await registerNewAdm(email,password)
 
-    if (reponse == 'ok'){
+    if (response == 'ok'){
       MostrarAlerta('Registrando o Novo Usuario')
       router.push("/login");
   }
+    else if (response == 'Adm Already Exist'){
+      MostrarAlerta('Esta Conta Já Existe')
+    }
+    else {
+      MostrarAlerta('Opss!! houve um pequeno erro')
+      MostrarAlerta('não se preucupe, não é você sou eu !!')
+
+    }
     // Lógica de registro (pode ser uma chamada à API, por exemplo)
      // Redireciona para a página de login após o registro
   };
