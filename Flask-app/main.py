@@ -1,12 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import jwt
 from dotenv import load_dotenv
+import os
 from controllers.worker_controller import Worker_controller
 from controllers.adm_controller import Adm_controller
 
+load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
-
+secret_key = os.getenv('SUPER_KEY')
 @app.route('/')
 def home():
     return "BEM-VINDO A MINHA API"
@@ -29,9 +32,9 @@ def add_new_Adm():
     except Exception as e:
         print('Error: ',e)
 
-@app.route('/worker-validate', methods=["POST"])
+@app.route('/worker-login', methods=["POST"])
 # Valida o usuario para o login
-def user_validade():
+def user_login():
     try:
         response = request.get_json() 
         worker_id = response['id']
@@ -41,8 +44,16 @@ def user_validade():
         responseApi, returnApi = Worker_controller().validate_worker(worker_id, worker_email, worker_password)
 
         if returnApi:  
-
-            return jsonify({'status': 'ok'}), 201 
+            data_user ={
+                'id':worker_id,
+                'email':worker_email
+            }
+            
+            token = jwt.encode(
+                payload=data_user,
+                key=secret_key
+            ) #um token que contem todos os dados do usuario encriptado
+            return jsonify({'status': 'ok','token':token}), 201 
         
         
         if responseApi == "Wrong Password":

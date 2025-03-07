@@ -1,6 +1,6 @@
 
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import validateAcount from './User_controller/validate_worker';
+import validateAcount from './User_controller/worker-login-validate';
 import addNewAdmToDataBase from './User_controller/create_New_Adm';
 
 
@@ -14,10 +14,10 @@ export async function validateWorkerLogin(email: string, id: string, password: s
         const data = await validateAcount(email, id, password)
         if (data.status === 'ok') {
         // Armazenando os dados no localStorage
-            localStorage.setItem('email', email);
-            localStorage.setItem('id', id);
-            localStorage.setItem('userRemember', 'true');
+            const user_token:string = data.token
+            localStorage.setItem('toke_from_user',user_token);
 
+            
             router.push('/home')
 
         } else if (data.status === 'Wrongpassword'){
