@@ -1,0 +1,82 @@
+.sidebar {
+    background-color: #0a3b2c;
+    width: 10rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .logo {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .logoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .logoCircle {
+    background-color: white;
+    border-radius: 9999px;
+    padding: 0.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logoTitle {
+    color: white;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  
+  .logoSubtitle {
+    color: white;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+  
+  .nav {
+    flex: 1;
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .navItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: white;
+    border-radius: 0.375rem;
+    transition-property: background-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+  
+  .navItem:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .navItemActive {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .footer {
+    margin-top: auto;
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  

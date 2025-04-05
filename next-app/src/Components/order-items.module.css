@@ -1,0 +1,35 @@
+.orderItem {
+    background-color: #0a3b2c;
+    color: white;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+  }
+  
+  .orderName {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  .orderQuantity {
+    display: flex;
+    align-items: center;
+  }
+  
+  .orderCount {
+    background-color: white;
+    color: black;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-weight: 700;
+    margin-right: 0.5rem;
+  }
+  
+  .orderUnit {
+    font-size: 0.875rem;
+  }
+  
+  
