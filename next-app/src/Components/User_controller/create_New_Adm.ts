@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { headers } from 'next/headers';
 import { resolve } from 'path'
 
 interface ApiResponse{
@@ -14,6 +15,7 @@ export default function addNewAdmToDataBase(
     return new Promise<ApiResponse>((resolve) =>{
 
         axios.post<ApiResponse>('http://127.0.0.1:5000/add-new-Adm', {
+
             email,
             id,
             password,

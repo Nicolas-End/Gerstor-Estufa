@@ -4,3 +4,4 @@ python-dotenv
 bcrypt
 pymongo
 pyjwt[crypto]
+cryptography

@@ -16,7 +16,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false); // Estado para controlar o carregamento
   const router = useRouter();
 
-  function MostrarAlerta(text: string) {
+  function ShowAlert(text: string) {
     toast(text, {
       style: {
         backgroundColor: "#fff",
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     await setIsLoading(true); // Ativa o estado de carregamento
     if (email == "" || password == "" || code == "") {
-      MostrarAlerta("Preencha Todos os Campos");
+      ShowAlert("Preencha Todos os Campos");
       setIsLoading(false);
       return;
     }
@@ -42,10 +42,10 @@ const Login: React.FC = () => {
       const response = await validateWorkerLogin(email, code, password, router);
 
       if (response == 'wrong Pass'){
-        MostrarAlerta('A senha esta incorreta')
+        ShowAlert('A senha esta incorreta')
       }
       else{
-        MostrarAlerta('Usuario não encontrado')
+        ShowAlert('Usuario não encontrado')
       }
 
     } catch (error) {
