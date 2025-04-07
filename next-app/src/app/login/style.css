@@ -3,54 +3,61 @@
 /*font-family: "Roboto", serif;*/
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-.logo-image {
-  width: 100%; 
-  max-width: 600px; 
-  height: auto; 
-  display: block; 
-  margin: 0 auto; 
-  animation: bounce-smooth 2s ease-in-out infinite; 
-}
-
-/* Sombra abaixo da imagem */
-.logo-shadow {
-  width: 50%; 
-  height: 20px; 
-  background: rgba(0, 0, 0, 0.3); 
-  border-radius: 50%; 
-  position: relative; 
-  top: 10px; 
-  margin: 0 auto; 
-  animation: shadow-opacity 2s ease-in-out infinite; 
-}
-
 /* Animação de bounce para a imagem */
 @keyframes bounce-smooth {
   0% {
-      transform: translateY(0) scale(1); /* Imagem no tamanho original */
+    transform: translateY(0) scale(1);
   }
-  50% {
-      transform: translateY(-20px) scale(1.2); /* Imagem sobe e aumenta 50% */
+  40% {
+    transform: translateY(-20px) scale(1.5);
+  }
+  60% {
+    transform: translateY(-20px) scale(1.5);
   }
   100% {
-      transform: translateY(0) scale(1); /* Imagem volta ao tamanho original */
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Animação de opacidade para a sombra */
+/* Animação de opacidade e escala para a sombra */
 @keyframes shadow-opacity {
   0% {
-      background: rgba(0, 0, 0, 0.3); 
-      transform: scale(1); 
+    background: rgba(0, 0, 0, 0.3);
+    transform: scale(1);
   }
-  50% {
-      background: rgba(248, 170, 209, 0); 
-      transform: scale(1.5); 
+  40% {
+    background: rgba(248, 170, 209, 0); /* opacidade reduzida */
+    transform: scale(1.75);
+  }
+  60% {
+    background: rgba(248, 170, 209, 0);
+    transform: scale(1.75);
   }
   100% {
-      background: rgba(0, 0, 0, 0.3); 
-      transform: scale(1); 
+    background: rgba(0, 0, 0, 0.3);
+    transform: scale(1);
   }
+}
+
+/* Classe para a imagem */
+.logo-image {
+  width: 100%;
+  max-width: 1700px; /* Tamanho aumentado */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  animation: bounce-smooth 2.5s ease-in-out infinite;
+}
+
+/* Classe para a sombra abaixo da imagem */
+.logo-shadow {
+  margin-top: 20px !important;
+  width: 50%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  margin: 10px auto 0;
+  animation: shadow-opacity 2.5s ease-in-out infinite;
 }
 
 .fontRobo{
