@@ -5,6 +5,7 @@ import json
 import jwt
 from dotenv import load_dotenv
 import os
+from controllers.cripto_controller import Criptography_Controller
 from controllers.worker_controller import Worker_controller
 from controllers.adm_controller import Adm_controller
 
@@ -27,12 +28,11 @@ def home_acess():
         if not token:
             return jsonify({'status':'invalid'}),400
         
-        #processo para descriptografar os dados e tranformar o json n dicionario
-        datas = jwt.decode(token,secret_key, algorithms=['HS256'])
-        decoded_token = fernet.decrypt(datas['data'].encode()).decode()
-        dict_token = json.loads(decoded_token)
+        #processo para descriptografar os dados do usuario 
+        datas_from_user = Criptography_Controller().decripto_datas(token)
        
-        if dict_token['acess'] == True:
+       #verificando se o acesso do usuario é valido
+        if datas_from_user['acess'] == True:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'invalid'}),400
 
@@ -79,12 +79,7 @@ def user_login():
                 'email':worker_email,
                 'acess':True
             }
-            #criptografa os dados em fernet depois colocar dentro de uma jwt codificada
-            data_encrypt = fernet.encrypt(json.dumps(data_user).encode()).decode()
-            token = jwt.encode(
-                payload={'data':data_encrypt},
-                key=secret_key
-            ) #um token que contem todos os dados do usuario encriptado
+            token = Criptography_Controller().cripto_datas(data_user) #criptografa os dados do usuario 
             
             
             return jsonify({'status': 'ok','token':token}), 201 
