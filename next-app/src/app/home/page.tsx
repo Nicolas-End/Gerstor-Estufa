@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { useState } from "react"
 import UserHeader from "@/Components/user-header"
 import { useRouter } from "next/navigation";
+import Sidebar from "@/Components/sidebar"
 
 export default function Home() {
   const router = useRouter();
@@ -38,7 +39,9 @@ export default function Home() {
   }
   else{
   return (
-    <div className="h-full">
+    <div className="flex h-screen bg-white">
+          <Sidebar />
+          <main className="flex-1 overflow-auto">{<div className="h-full">
       <UserHeader />
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-6 text-black">Dashboard</h1>
@@ -60,7 +63,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+    </div>}</main>
     </div>
+    
   )
 }
 }
