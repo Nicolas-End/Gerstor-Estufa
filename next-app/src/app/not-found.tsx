@@ -1,14 +1,12 @@
 'use client'
 
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import getLocalStorage from "@/Components/localStorage";
 
 export default function NotFound() {
   const router = useRouter()
   return (
-    <div className="bg-purple-500 flex flex-col items-center justify-start min-h-screen pt-20 px-4">
+    <div className="bg-green-500 flex flex-col items-center justify-start min-h-screen pt-20 px-4">
       <h1 className="text-gray-800 text-5xl font-bold mb-4">Ops...</h1>
 
       <p className="text-gray-800 text-center mb-6 text-3xl">
@@ -26,10 +24,10 @@ export default function NotFound() {
       </div>
 
       <button
-        className="relative overflow-hidden bg-purple-600 text-white text-lg font-semibold px-8 py-3
+        className="relative overflow-hidden bg-green-600 text-white text-lg font-semibold px-8 py-3
          rounded-full shadow-lg transition-transform duration-300 ease-in-out hover:scale-105
          hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 group"
-         onClick={() => getLocalStorage(router)}
+         onClick={() => router.back()}
       >
         Voltar para Home
       </button>
