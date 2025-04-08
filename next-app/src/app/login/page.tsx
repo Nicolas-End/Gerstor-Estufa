@@ -54,7 +54,7 @@ const Login: React.FC = () => {
   return (
     <>
       <head>
-        <title>Login - Today</title>
+        <title>Login - Controle Verde</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -65,10 +65,15 @@ const Login: React.FC = () => {
           {/* Contêiner do formulário */}
           <div className="md:w-1/2 w-full bg-[#0a2c26] text-[#fff] p-10 flex flex-col justify-center">
             <div className="flex items-center mb-6">
-              <div className="bg-[#fff] rounded-[100%]">
-              <img src="/Logo.png" alt="Logo" className="left-5 w-12 h-12 mr-3" />
+              {/* Círculo branco com logo centralizada */}
+              <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mr-3">
+                <img
+                  src="/Logo.png"
+                  alt="Logo"
+                  className="w-10 h-10 object-contain"
+                />
               </div>
-              <h1 className="text-4xl font-bold fontDM">Controle Verde</h1>
+              <h1 className="text-4xl font-bold fontQuick">Controle Verde</h1>
             </div>
             <p className="text-sm mb-8 fontRobo">Welcome to the site</p>
 
@@ -124,7 +129,7 @@ const Login: React.FC = () => {
 
             {/* Botão de Login */}
             <button
-              className="fontDM mt-4 md:w-2/3 border-2 border-solid border-[#000] bg-[#fff] text-[#000] rounded-lg py-3 shadow-lg transition transform hover:bg-[#000] hover:text-[#fff] hover:-translate-y-1"
+              className="fontDM mt-4 md:w-2/3 border-2 border-solid border-[#fff] bg-[#fff] text-[#000] rounded-lg py-3 shadow-lg transition transform hover:bg-[#0a2c26] hover:text-[#fff] hover:-translate-y-1"
               onClick={handleLogin}
               disabled={isLoading}
             >
@@ -141,7 +146,7 @@ const Login: React.FC = () => {
             {/* Link para a página de Registro */}
             <Link
               href="/register"
-              className="fontDM md:w-2/3 border-2 border-solid border-[#000] bg-[#fff] text-[#000] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#000] hover:text-[#fff] hover:-translate-y-1"
+              className="fontDM md:w-2/3 border-2 border-solid border-[#fff] bg-[#fff] text-[#000] rounded-lg py-3 shadow-lg text-center mt-4 transition transform hover:bg-[#0a2c26] hover:text-[#fff] hover:-translate-y-1"
             >
               Registre-se
             </Link>

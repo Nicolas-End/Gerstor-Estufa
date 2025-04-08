@@ -1,7 +1,7 @@
 /*font-family: "DM Serif Text", serif;*/
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap');
-/*font-family: "Roboto", serif;*/
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* font-family: "Quicksand", sans-serif;*/
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
 /* Animação de bounce para a imagem */
 @keyframes bounce-smooth {
@@ -64,6 +64,6 @@
  font-family: "Roboto", serif;
 }
 
-.fontDM{
-  font-family: "DM Serif Text", serif;
+.fontQuick{
+  font-family: "Quicksand", sans-serif;
 }
