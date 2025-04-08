@@ -33,11 +33,11 @@ export async function validateWorkerLogin(
   }
 }
 
-export async function registerNewAdm(email: string, password: string) {
+export async function registerNewAdm(email: string, password: string,companyName) {
   const adm_id = "1";
   try {
     // espera a resposta da Api e retorna como data
-    const data = await addNewAdmToDataBase(email, adm_id, password);
+    const data = await addNewAdmToDataBase(email, adm_id, password,companyName);
 
     if (data.status === "ok") {
       return "ok";

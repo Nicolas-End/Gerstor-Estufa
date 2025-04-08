@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import Link from "next/link";
-import { registerNewAdm } from "@/Components/Worker";
+import { registerNewAdm } from "@/lib/api";
 
 const RegisterPage = () => {
 
@@ -33,16 +33,16 @@ const RegisterPage = () => {
   }
   // Função para lidar com o registro
   const  handleRegister = async () => {
-    if (password == "" || email == ""){
+    if (password == "" || email == "" || nomeEmpresa == ""){
       MostrarAlerta('Preencha Todos os Campos')
-      return
+      return  
     }
     if (password !== confirmPassword) {
       MostrarAlerta("As senhas não coincidem!");
       return;
     }
 
-    const response = await registerNewAdm(email,password)
+    const response = await registerNewAdm(email,password,nomeEmpresa)
 
     if (response == 'ok'){
       MostrarAlerta('Registrando o Novo Usuario')

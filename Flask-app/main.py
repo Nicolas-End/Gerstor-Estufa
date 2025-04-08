@@ -47,11 +47,12 @@ def home_acess():
 def add_new_Adm():
     try: 
         response = request.get_json()
-        adm_id = response['id']
-        adm_email = response['email']
-        adm_password = response['password']
+        company_id = response['id']
+        company_email = response['email']
+        company_password = response['password']
+        company_name = response['companyName']
 
-        responseApi, returnApi = CompanyController().add_new_Adm(adm_id,adm_email,adm_password)
+        responseApi, returnApi = CompanyController().add_new_Adm(company_id,company_email,company_password,company_name)
 
         if returnApi:
             return jsonify({'status':'ok'}),201
@@ -124,9 +125,8 @@ def quant_delivey():
     
         response,returnTeste = CompanyController().quantidy_deliverys(header['email'])
     
-        if returnTeste:
-            return jsonify({'status':response}),200
-        return jsonify
+        
+        return jsonify({'status':response}),200
     except Exception as e:
         print('Error: ',e)
         return({'status':'error','message': str(e)}),400

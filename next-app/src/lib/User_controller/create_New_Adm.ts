@@ -11,6 +11,7 @@ export default function addNewAdmToDataBase(
     email: string,
     id:string,
     password: string,
+    companyName:string
 ): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) =>{
 
@@ -19,6 +20,7 @@ export default function addNewAdmToDataBase(
             email,
             id,
             password,
+            companyName
           })
           .then(response => {
             resolve(response.data);

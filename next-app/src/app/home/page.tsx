@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link"
-import { validateHomeAcess } from "@/Components/Worker"
+import { validateHomeAcess } from "@/lib/api"
 import { useEffect } from "react"
 import { useState } from "react"
 import UserHeader from "@/Components/user-header"

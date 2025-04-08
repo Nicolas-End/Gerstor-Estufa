@@ -14,7 +14,7 @@ class CompanyController:
         self.worker_coll = self.db[self.worker_collection]
 
 
-    def add_new_Adm(self,id,email,password):
+    def add_new_Adm(self,id,email,password,company_name):
         try:
             # filtro para verificar se o usuario ja existe
             adm_exist = {"id":id,"company_email":email}
@@ -28,6 +28,7 @@ class CompanyController:
             adm_datas = {
                 'id':id,
                 'role':'ADM',
+                'company_name':company_name,
                 'company_email':email,
                 'password':hashed_password
             }
@@ -46,10 +47,11 @@ class CompanyController:
             delivery_filter = {"EmailEntrega": company_email}
             delivery_cursor = deliverys_coll.find(delivery_filter)
             delivery_list = list(delivery_cursor)
+
             if delivery_list:
                 return len(delivery_list), True
             else:
-                return "Not Found", False
+                return 0, True
         except Exception as e:
             print('Error:', e)
             return 'Error', False
