@@ -5,7 +5,7 @@ import bcrypt
 
 load_dotenv()
 
-class Worker_controller:
+class WorkerController:
     def __init__(self):
         self.collection_name = os.getenv('WORKER_COLLECTION')
         self.db = DataBase().database

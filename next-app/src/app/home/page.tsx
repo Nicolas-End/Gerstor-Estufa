@@ -36,8 +36,8 @@ export default function Home() {
     return(
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
       <div className="flex items-center space-x-2">
-        <div className="w-5 h-5 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        <span className="text-lg font-medium">Carregando...</span>
+        <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
+        <span className="text-xl font-medium">Carregando...</span>
       </div>
     </div>
     )

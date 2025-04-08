@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-class Criptography_Controller:
+class CriptographyController:
     def __init__(self):
         self.jwt_password = os.getenv("SUPER_KEY")
         self.fernet_password = os.getenv("FERNET_KEY")

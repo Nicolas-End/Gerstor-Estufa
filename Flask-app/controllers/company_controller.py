@@ -6,7 +6,7 @@ import bcrypt
 
 load_dotenv()
 
-class Adm_controller:
+class CompanyController:
     def __init__(self):
         self.worker_collection = os.getenv('WORKER_COLLECTION')
         self.delivery_collection = os.getenv('DELIVERY_COLLECTION')
@@ -39,7 +39,7 @@ class Adm_controller:
             print('Error: ',e)
             return 'Error',False
     
-    def how_many_deliverys(self, company_email):
+    def quantidy_deliverys(self, company_email):
         try:
             deliverys_coll = self.db[self.delivery_collection]
 

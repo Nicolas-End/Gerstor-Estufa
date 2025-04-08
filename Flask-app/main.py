@@ -5,9 +5,9 @@ import json
 import jwt
 from dotenv import load_dotenv
 import os
-from controllers.cripto_controller import Criptography_Controller
-from controllers.worker_controller import Worker_controller
-from controllers.adm_controller import Adm_controller
+from controllers.cripto_controller import CriptographyController
+from controllers.worker_controller import WorkerController
+from controllers.company_controller import CompanyController
 
 load_dotenv()
 app = Flask(__name__)
@@ -29,7 +29,7 @@ def home_acess():
             return jsonify({'status':'invalid'}),400
         
         #processo para descriptografar os dados do usuario 
-        datas_from_user = Criptography_Controller().decripto_datas(token)
+        datas_from_user = CriptographyController().decripto_datas(token)
        
        #verificando se o acesso do usuario é valido
         if datas_from_user['acess'] == True:
@@ -51,7 +51,7 @@ def add_new_Adm():
         adm_email = response['email']
         adm_password = response['password']
 
-        responseApi, returnApi = Adm_controller().add_new_Adm(adm_id,adm_email,adm_password)
+        responseApi, returnApi = CompanyController().add_new_Adm(adm_id,adm_email,adm_password)
 
         if returnApi:
             return jsonify({'status':'ok'}),201
@@ -71,7 +71,7 @@ def user_login():
         worker_email = response['email']
         worker_password = response['password']
 
-        responseApi, returnApi = Worker_controller().validate_worker(worker_id, worker_email, worker_password)
+        responseApi, returnApi = WorkerController().validate_worker(worker_id, worker_email, worker_password)
 
         if returnApi:  
             data_user ={
@@ -79,7 +79,7 @@ def user_login():
                 'email':worker_email,
                 'acess':True
             }
-            token = Criptography_Controller().cripto_datas(data_user) #criptografa os dados do usuario 
+            token = CriptographyController().cripto_datas(data_user) #criptografa os dados do usuario 
             
             
             return jsonify({'status': 'ok','token':token}), 201 
@@ -106,7 +106,7 @@ def create_new_worker():
         worker_password = response['password']
         
         # Chama a função para adicionar um novo worker
-        responseApi, returnApi = Worker_controller().add_new_Worker(worker_name, worker_id, worker_role, worker_email, worker_password)
+        responseApi, returnApi = WorkerController().add_new_Worker(worker_name, worker_id, worker_role, worker_email, worker_password)
         
         if returnApi:  # Sucesso
             return jsonify({'status': 'ok'}), 201  # Retorna status 201 para sucesso
@@ -117,15 +117,19 @@ def create_new_worker():
 
 @app.route('/quant-delivery',methods=['POST'])
 def quant_delivey():
+    try:
+        token = request.headers.get('Authorization')
     
-    token = request.headers.get('Authorization')
+        header = CriptographyController().decripto_datas(token)
     
-    header = Criptography_Controller().decripto_datas(token)
+        response,returnTeste = CompanyController().quantidy_deliverys(header['email'])
     
-    response,returnTeste = Adm_controller().how_many_deliverys(header['email'])
-    
-    
-    return jsonify({'status':response})
+        if returnTeste:
+            return jsonify({'status':response}),200
+        return jsonify
+    except Exception as e:
+        print('Error: ',e)
+        return({'status':'error','message': str(e)}),400
 
 if __name__ == '__main__':
     app.run(debug=True)
