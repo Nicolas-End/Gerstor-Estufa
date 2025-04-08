@@ -115,5 +115,17 @@ def create_new_worker():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 500 para erro interno
 
+@app.route('/quant-delivery',methods=['POST'])
+def quant_delivey():
+    
+    token = request.headers.get('Authorization')
+    
+    header = Criptography_Controller().decripto_datas(token)
+    
+    response,returnTeste = Adm_controller().how_many_deliverys(header['email'])
+    
+    
+    return jsonify({'status':response})
+
 if __name__ == '__main__':
     app.run(debug=True)

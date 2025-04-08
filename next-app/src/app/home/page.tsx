@@ -10,9 +10,14 @@ import Sidebar from "@/Components/sidebar"
 export default function Home() {
   const router = useRouter();
   const [isLoading,setIsLoading] = useState(true)
+  const DeliveryCounter = () =>{
+    const quant: number = 0
+    
+    return quant
+  }
   const ValidateAcess = async () => {
     try{
-
+      // sistema para validar se o usuario tem permisão a acessar o home
       const can_acess_home = await validateHomeAcess(router)
       if (can_acess_home){
         setIsLoading(false)
@@ -51,7 +56,7 @@ export default function Home() {
             className="bg-[#0a3b2c] text-white p-6 rounded-lg shadow-md hover:bg-[#0d4b38] transition-colors"
           >
             <h2 className="text-xl font-bold mb-2">Pedidos</h2>
-            <p className="text-3xl font-bold">4</p>
+            <p className="text-3xl font-bold">{DeliveryCounter()}</p>
           </Link>
           <div className="bg-[#0a3b2c] text-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-bold mb-2">Estatísticas</h2>
