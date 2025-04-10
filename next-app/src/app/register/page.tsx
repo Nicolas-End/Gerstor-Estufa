@@ -8,6 +8,7 @@ import "./style.css";
 import Link from "next/link";
 import { registerNewCompany } from "@/lib/api";
 
+
 const RegisterPage = () => {
 
   // Estados para os campos do formulário
