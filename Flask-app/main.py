@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from cryptography.fernet import Fernet
-import json
-import jwt
 from dotenv import load_dotenv
 import os
 from controllers.cripto_controller import CriptographyController
@@ -30,10 +28,16 @@ def home_acess():
         
         #processo para descriptografar os dados do usuario 
         datas_from_user = CriptographyController().decripto_datas(token)
-       
+          
        #verificando se o acesso do usuario é valido
         if datas_from_user['acess'] == True:
-            return jsonify({'status':'ok'}),200
+            quantidy_response,return_quantidy = CompanyController().quantidy_deliverys(datas_from_user['email'])
+
+            
+            if return_quantidy:
+
+                return jsonify({'status':'ok','deliveryQuantidy':quantidy_response}),200
+                
         return jsonify({'status':'invalid'}),400
 
     except Exception as e:
@@ -43,7 +47,7 @@ def home_acess():
     
     
 #Sistema pra registrar uma nova estufa
-@app.route('/add-new-Adm', methods=['POST'])
+@app.route('/add-new-company', methods=['POST'])
 def add_new_Adm():
     try: 
         response = request.get_json()
@@ -52,7 +56,7 @@ def add_new_Adm():
         company_password = response['password']
         company_name = response['companyName']
 
-        responseApi, returnApi = CompanyController().add_new_Adm(company_id,company_email,company_password,company_name)
+        responseApi, returnApi = CompanyController().add_new_Company(company_id,company_email,company_password,company_name)
 
         if returnApi:
             return jsonify({'status':'ok'}),201
@@ -115,21 +119,6 @@ def create_new_worker():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 500 para erro interno
-
-@app.route('/quant-delivery',methods=['POST'])
-def quant_delivey():
-    try:
-        token = request.headers.get('Authorization')
-    
-        header = CriptographyController().decripto_datas(token)
-    
-        response,returnTeste = CompanyController().quantidy_deliverys(header['email'])
-    
-        
-        return jsonify({'status':response}),200
-    except Exception as e:
-        print('Error: ',e)
-        return({'status':'error','message': str(e)}),400
 
 if __name__ == '__main__':
     app.run(debug=True)

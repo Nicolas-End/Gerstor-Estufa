@@ -6,11 +6,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import Link from "next/link";
-import { registerNewAdm } from "@/lib/api";
+import { registerNewCompany } from "@/lib/api";
 
 const RegisterPage = () => {
 
   // Estados para os campos do formulário
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,16 +34,19 @@ const RegisterPage = () => {
   }
   // Função para lidar com o registro
   const  handleRegister = async () => {
+    setIsLoading(true)
     if (password == "" || email == "" || nomeEmpresa == ""){
       MostrarAlerta('Preencha Todos os Campos')
+      setIsLoading(false)
       return  
     }
     if (password !== confirmPassword) {
       MostrarAlerta("As senhas não coincidem!");
+      setIsLoading(false)
       return;
     }
 
-    const response = await registerNewAdm(email,password,nomeEmpresa)
+    const response = await registerNewCompany(email,password,nomeEmpresa)
 
     if (response == 'ok'){
       MostrarAlerta('Registrando o Novo Usuario')
@@ -50,10 +54,12 @@ const RegisterPage = () => {
   }
     else if (response == 'Adm Already Exist'){
       MostrarAlerta('Esta Conta Já Existe')
+      setIsLoading(false)
     }
     else {
       MostrarAlerta('Opss!! houve um pequeno erro')
       MostrarAlerta('não se preucupe, não é você sou eu !!')
+      setIsLoading(false)
 
     }
     // Lógica de registro (pode ser uma chamada à API, por exemplo)
@@ -154,9 +160,18 @@ const RegisterPage = () => {
           <button
             className="w-full fontQuick border-2 border-solid border-[#0a2c26] bg-[#0a2c26] text-[#fff] rounded-lg py-3 shadow-lg transition transform hover:bg-[#fff] hover:text-[#000] hover:-translate-y-1"
             onClick={handleRegister}
+            disabled={isLoading}
           >
-            Registrar
+            {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <span className="mr-2">Só um momento...</span>
+                  <i className="fas fa-spinner fa-spin"></i>
+                </div>
+              ) : (
+                "Registrar"
+              )}
           </button>
+          
 
           {/* Link para a página de Login */}
           <Link

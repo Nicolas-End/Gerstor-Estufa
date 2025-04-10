@@ -19,7 +19,7 @@ export default function Sidebar() {
         <div className={styles.logoContainer}>
           <div className={styles.logoCircle}>
             <Image
-              src="/placeholder.svg?height=30&width=30"
+              src="/Logo.png?height=30&width=30"
               alt="Logo"
               width={30}
               height={30}
@@ -27,8 +27,8 @@ export default function Sidebar() {
             />
           </div>
         </div>
-        <div className={styles.logoTitle}>Estafa Fácil</div>
-        <div className={styles.logoSubtitle}>INDUSTRIES</div>
+        <div className={styles.logoTitle}>Contole Verde</div>
+        <div className={styles.logoSubtitle}>Empresas</div>
       </div>
 
       <nav className={styles.nav}>

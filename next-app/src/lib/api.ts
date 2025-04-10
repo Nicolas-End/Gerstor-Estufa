@@ -1,8 +1,9 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import validateAcount from "./User_controller/worker-login-validate";
-import addNewAdmToDataBase from "./User_controller/create_New_Adm";
-import validateHome from "./User_controller/home_acess";
+import validateAcount from "./Controllers/worker-login-validate";
+import addNewCompanyToDataBase from "./Controllers/create_new_nompany";
+import validateHome from "./Controllers/home_acess";
+
 import Router from "next/router";
 
 
@@ -19,10 +20,9 @@ export async function validateWorkerLogin(
     const data = await validateAcount(email, id, password);
     if (data.status === "ok") {
       // Armazenando um token que tem os dados do usuario  no localStorage
-      const user_token:string = data.token;
-      localStorage.setItem("token_from_user", user_token);
-
-      router.push("/home");
+      const user_token:any = data.token;
+      localStorage.setItem("token_from_user", user_token);  
+      return 'ok';
     } else if (data.status === "Wrongpassword") {
       return "wrong Pass";
     } else {
@@ -33,11 +33,11 @@ export async function validateWorkerLogin(
   }
 }
 
-export async function registerNewAdm(email: string, password: string,companyName) {
-  const adm_id = "1";
+export async function registerNewCompany(email: string, password: string,companyName:string) {
+  const company_id = "1";
   try {
     // espera a resposta da Api e retorna como data
-    const data = await addNewAdmToDataBase(email, adm_id, password,companyName);
+    const data = await addNewCompanyToDataBase(email, company_id, password,companyName);
 
     if (data.status === "ok") {
       return "ok";
@@ -64,13 +64,14 @@ export async function validateHomeAcess(router: AppRouterInstance){
     const data = await validateHome()
     if (data.status === "error"){
       router.push('/login')
-      return false
+      return Promise.all([false,0])
     }
     else{
-      return true
+      return Promise.all([true,data.deliveryQuantidy])
     }
   }
   catch(error){
     console.log('Error: ',error)
   }
 }
+

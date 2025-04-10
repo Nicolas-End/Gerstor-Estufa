@@ -39,7 +39,10 @@ const Login: React.FC = () => {
     }
     try {
       const response = await validateWorkerLogin(email, code, password, router);
-      if (response === "wrong Pass") {
+      if (response == "ok"){
+        router.push("/home");
+      }
+      else if (response === "wrong Pass") {
         ShowAlert("A senha esta incorreta");
       } else {
         ShowAlert("Usuario não encontrado");
