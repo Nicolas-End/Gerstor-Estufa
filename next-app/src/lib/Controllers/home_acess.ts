@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 interface ApiResponse{
     'status':string,
     'message'?:string,
-    'deliveryQuantidy'?:number// diz a quantidade de entregas para fazer
+
 }
 
 export default function validateHome(): Promise<ApiResponse> {

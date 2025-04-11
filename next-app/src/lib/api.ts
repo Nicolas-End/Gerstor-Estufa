@@ -3,6 +3,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import validateAcount from "./Controllers/worker-login-validate";
 import addNewCompanyToDataBase from "./Controllers/create_new_nompany";
 import validateHome from "./Controllers/home_acess";
+import CountDeliverys from "./Controllers/getDeliveryQuantidy"
 
 import Router from "next/router";
 
@@ -67,7 +68,7 @@ export async function validateHomeAcess(router: AppRouterInstance){
       return Promise.all([false,0])
     }
     else{
-      return Promise.all([true,data.deliveryQuantidy])
+      return Promise.all([true])
     }
   }
   catch(error){
@@ -75,3 +76,18 @@ export async function validateHomeAcess(router: AppRouterInstance){
   }
 }
 
+export async function countDeliveryQuantidy(){
+  try{
+    const data = await CountDeliverys()
+    if (data.status === 'ok'){
+      return data.count
+    }
+    else{
+      return 0
+    }
+  }
+  catch(error){
+    console.log('Error',error)
+    return 'Error'
+  }
+}

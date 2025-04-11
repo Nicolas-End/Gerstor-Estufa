@@ -18,6 +18,7 @@ fernet = Fernet(os.getenv('FERNET_KEY'))
 def home():
     return "BEM-VINDO A MINHA API"
 
+# Valida se o usuario pode acessar o home
 @app.route('/home-acess', methods=['POST'])
 def home_acess():
     try:
@@ -27,16 +28,11 @@ def home_acess():
             return jsonify({'status':'invalid'}),400
         
         #processo para descriptografar os dados do usuario 
-        datas_from_user = CriptographyController().decripto_datas(token)
+        data_user_is_correct = CriptographyController().decripto_datas(token)
           
        #verificando se o acesso do usuario é valido
-        if datas_from_user['acess'] == True:
-            quantidy_response,return_quantidy = CompanyController().quantidy_deliverys(datas_from_user['email'])
-
-            
-            if return_quantidy:
-
-                return jsonify({'status':'ok','deliveryQuantidy':quantidy_response}),200
+        if data_user_is_correct['acess'] == True:
+                return jsonify({'status':'ok'}),200
                 
         return jsonify({'status':'invalid'}),400
 
@@ -44,7 +40,24 @@ def home_acess():
         print('Error: ',e)
         return jsonify({'status':'invalid'}),400
     
+@app.route('/count-deliverys', methods=['POST'])
+def count_deliverys():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+
+        count, ok = CompanyController().quantidy_deliverys(datas['email'])
+        if not ok:
+            return jsonify({'status': 'error'}), 400
+        
+        return jsonify({'status': 'ok', 'count': count}), 200
     
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({'status': 'error'}), 500
     
 #Sistema pra registrar uma nova estufa
 @app.route('/add-new-company', methods=['POST'])
