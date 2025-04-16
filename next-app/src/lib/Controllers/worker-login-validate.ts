@@ -3,6 +3,7 @@ import axios from 'axios';
 interface ApiResponse {
   status: string;
   message?: string;
+  token?:string;
 }
 
 export default function validateAcount(
@@ -15,7 +16,9 @@ export default function validateAcount(
   /* Na resposta da api ele "return" uma resposta chamada data */
   return new Promise<ApiResponse>((resolve) => {
     //faz um posta para a receber as informações da api
+
     axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/worker-validate', {
+
       email,
       id,
       password,

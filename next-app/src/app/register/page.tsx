@@ -5,17 +5,19 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
-import "./style-cell.css";
 import Link from "next/link";
-import { registerNewAdm } from "@/Components/Worker";
+import { registerNewCompany } from "@/lib/api";
+
 
 const RegisterPage = () => {
 
   // Estados para os campos do formulário
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false); // Estado para visibilidade da senha
+  const [nomeEmpresa, setNomeEmpresa] = useState("");
   const router = useRouter();
 
   // Função para alternar a visibilidade da senha
@@ -33,21 +35,34 @@ const RegisterPage = () => {
   }
   // Função para lidar com o registro
   const  handleRegister = async () => {
-    if (password == "" || email == ""){
+    setIsLoading(true)
+    if (password == "" || email == "" || nomeEmpresa == ""){
       MostrarAlerta('Preencha Todos os Campos')
-      return
+      setIsLoading(false)
+      return  
     }
     if (password !== confirmPassword) {
       MostrarAlerta("As senhas não coincidem!");
+      setIsLoading(false)
       return;
     }
 
-    const reponse = await registerNewAdm(email,password)
+    const response = await registerNewCompany(email,password,nomeEmpresa)
 
-    if (reponse == 'ok'){
+    if (response == 'ok'){
       MostrarAlerta('Registrando o Novo Usuario')
       router.push("/login");
   }
+    else if (response == 'Adm Already Exist'){
+      MostrarAlerta('Esta Conta Já Existe')
+      setIsLoading(false)
+    }
+    else {
+      MostrarAlerta('Opss!! houve um pequeno erro')
+      MostrarAlerta('não se preucupe, não é você sou eu !!')
+      setIsLoading(false)
+
+    }
     // Lógica de registro (pode ser uma chamada à API, por exemplo)
      // Redireciona para a página de login após o registro
   };
@@ -55,37 +70,46 @@ const RegisterPage = () => {
   return (
     <>
       <head>
-        <title>Registro - Today</title>
+        <title>Registro - Controle Verde</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
       
       </head>
-      <div className="flex h-screen bg-gradient-to-r from-[#fff] to-[#2b192e] items-center justify-center">
+      <div className="flex h-screen bg-gradient-to-r from-[#fff] to-[#0a2c26] items-center justify-center">
         
-        <div className="w-full max-w-md bg-[#fff] text-[#2b192e] p-8 rounded-lg shadow-2xl">
+        <div className="w-full max-w-md bg-[#fff] text-[#000] p-8 rounded-lg shadow-2xl">
           <div className="flex items-center mb-6">
             <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
-            <h1 className="text-4xl font-bold fontDM">Today</h1>
+            <h1 className="text-4xl font-bold fontQuick">Controle Verde</h1>
           </div>
           <p className="text-sm mb-8 fontRobo">Crie sua conta</p>
+
+          {/* Campo de Nome da Empresa */}
+          <label className="text-sm mb-2 fontRobo">Nome da Empresa:</label>
+          <input
+            value={nomeEmpresa}
+            type="nome"
+            className="w-full mb-4 p-3 rounded bg-[#0a2c26] text-[#fff] shadow-md"
+            onChange={(e) => setNomeEmpresa(e.target.value)}
+          />
 
           {/* Campo de Email */}
           <label className="text-sm mb-2 fontRobo">Email:</label>
           <input
             value={email}
             type="email"
-            className="w-full mb-4 p-3 rounded bg-[#2b192e] text-[#fff] shadow-md"
+            className="w-full mb-4 p-3 rounded bg-[#0a2c26] text-[#fff] shadow-md"
             onChange={(e) => setEmail(e.target.value)}
           />
-
+          
           {/* Campo de Senha */}
           <label className="text-sm mb-2 fontRobo">Senha:</label>
           <div className="relative mb-4">
             <input
               value={password}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#fff] shadow-md"
+              className="w-full p-3 pr-10 rounded bg-[#0a2c26] text-[#fff] shadow-md"
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
@@ -107,7 +131,7 @@ const RegisterPage = () => {
             <input
               value={confirmPassword}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#2b192e] text-[#fff] shadow-md"
+              className="w-full p-3 pr-10 rounded bg-[#0a2c26] text-[#fff] shadow-md"
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <button
@@ -135,16 +159,25 @@ const RegisterPage = () => {
 
           {/* Botão de Registro */}
           <button
-            className="w-full fontDM border-2 border-solid border-[#2b192e] bg-[#fff] text-[#2b192e] rounded-lg py-3 shadow-lg transition transform hover:bg-[#2b192e] hover:text-[#fff] hover:-translate-y-1"
+            className="w-full fontQuick border-2 border-solid border-[#0a2c26] bg-[#0a2c26] text-[#fff] rounded-lg py-3 shadow-lg transition transform hover:bg-[#fff] hover:text-[#000] hover:-translate-y-1"
             onClick={handleRegister}
+            disabled={isLoading}
           >
-            Registrar
+            {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <span className="mr-2">Só um momento...</span>
+                  <i className="fas fa-spinner fa-spin"></i>
+                </div>
+              ) : (
+                "Registrar"
+              )}
           </button>
+          
 
           {/* Link para a página de Login */}
           <Link
             href="/login"
-            className="block w-full text-center fontDM border-2 border-solid border-[#2b192e] bg-[#2b192e] text-[#fff] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#2b192e] hover:text-[#fff] hover:-translate-y-1"
+            className="block w-full text-center fontQuick border-2 border-solid border-[#0a2c26] bg-[#0a2c26] text-[#fff] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#fff] hover:text-[#000] hover:-translate-y-1"
           >
             Já tem uma conta? Faça login
           </Link>

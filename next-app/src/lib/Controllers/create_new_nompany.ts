@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { headers } from 'next/headers';
 import { resolve } from 'path'
 
 interface ApiResponse{
@@ -6,17 +7,19 @@ interface ApiResponse{
     message?:string
 }
 
-export default function addNewAdmToDataBase( 
+export default function addNewCompanyToDataBase( 
     email: string,
     id:string,
     password: string,
+    companyName:string
 ): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) =>{
 
         axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/add-new-Adm', {
-            email,
+
             id,
             password,
+            companyName
           })
           .then(response => {
             resolve(response.data);

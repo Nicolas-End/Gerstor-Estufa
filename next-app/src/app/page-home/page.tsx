@@ -22,7 +22,7 @@ const Navbar = () => {
           {/* Logo alinhada à esquerda */}
           <div className="flex-shrink-0">
             <a href="#">
-              <img src="Logo com titulo.png" alt="Logo menu" className="h-12" /> {/* Ajuste o tamanho da logo conforme necessário */}
+              <img src="Logo com titulo.png" alt="Logo menu" className="h-12" />
             </a>
           </div>
 

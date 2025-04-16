@@ -3,3 +3,5 @@ flask_cors
 python-dotenv
 bcrypt
 pymongo
+pyjwt[crypto]
+cryptography
