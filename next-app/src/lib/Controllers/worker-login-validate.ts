@@ -17,7 +17,7 @@ export default function validateAcount(
   return new Promise<ApiResponse>((resolve) => {
     //faz um posta para a receber as informações da api
 
-    axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/worker-validate', {
+    axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/worker-login', {
 
       email,
       id,

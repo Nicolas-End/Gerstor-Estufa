@@ -15,7 +15,7 @@ export default function addNewCompanyToDataBase(
 ): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) =>{
 
-        axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/add-new-Adm', {
+        axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/add-new-company', {
 
             id,
             password,
