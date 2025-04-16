@@ -77,12 +77,12 @@ const Login: React.FC = () => {
                   className="w-8 h-8 object-contain"
                 />
               </div>
-              <h1 className="text-3xl font-bold">Controle Verde</h1>
+              <h1 className="text-3xl fontRobo font-bold">Controle Verde</h1>
             </div>
 
-            <p className="text-sm mb-6">Bem-vindo ao sistema</p>
+            <p className="fontQuick text-sm mb-6">Bem-vindo ao sistema</p>
 
-            <label className="text-sm mb-1">Email:</label>
+            <label className="text-sm fontQuick mb-1">Email:</label>
             <input
               value={email}
               type="email"
@@ -90,7 +90,7 @@ const Login: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <label className="text-sm mb-1">Código:</label>
+            <label className="fontQuick text-sm mb-1">Código:</label>
             <input
               value={code}
               type="text"
@@ -98,7 +98,7 @@ const Login: React.FC = () => {
               onChange={(e) => setCode(e.target.value)}
             />
 
-            <label className="text-sm mb-1">Senha:</label>
+            <label className="fontQuick text-sm mb-1">Senha:</label>
             <div className="relative mb-4">
               <input
                 value={password}
@@ -122,7 +122,7 @@ const Login: React.FC = () => {
             <button
               onClick={handleLogin}
               disabled={isLoading}
-              className="w-full py-3 bg-white text-[#0a2c26] font-semibold rounded shadow hover:bg-[#0a2c26] hover:text-white transition duration-200"
+              className="fontRobo w-full py-3 bg-white text-[#0a2c26] font-semibold rounded shadow hover:bg-[#0a2c26] hover:text-white transition duration-200"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -136,7 +136,7 @@ const Login: React.FC = () => {
 
             <Link
               href="/register"
-              className="mt-4 text-center w-full py-3 border border-white text-white font-semibold rounded hover:bg-white hover:text-[#0a2c26] transition duration-200"
+              className=" fontRobo mt-4 text-center w-full py-3 border border-white text-white font-semibold rounded hover:bg-white hover:text-[#0a2c26] transition duration-200"
             >
               Registre-se
             </Link>

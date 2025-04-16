@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Roboto,
+  Quicksand,
+} from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
 
@@ -13,6 +18,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -20,14 +35,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <Head>
-        <title>
-          Seja Bem vindo ao Today
-        </title>
+        <title>Seja Bem-vindo ao Controle Verde</title>
       </Head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${quicksand.variable} antialiased`}
       >
         {children}
       </body>
