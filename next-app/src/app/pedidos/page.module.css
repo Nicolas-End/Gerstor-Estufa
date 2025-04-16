@@ -1,38 +1,95 @@
 .container {
-    height: 100%;
-  }
-  
-  .content {
-    padding: 2rem;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-  
-  .title {
-    font-size: 2.25rem;
-    font-weight: 700;
-  }
-  
-  .count {
-    background-color: #0a3b2c;
-    color: white;
-    border-radius: 9999px;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
-  
+  display: flex;
+  height: 110vh;
+  background-color: #f9f9f9;
+}
+
+.content {
+  padding: 2rem;
+  flex: 1; /* Para ocupar o restante do espaço */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333333; /* Cor mais escura para contraste */
+}
+
+.count {
+  background-color: #0a3b2c;
+  color: white;
+  border-radius: 9999px;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ordersList {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  max-width: 100%;
+  margin-top: 1.5rem;
+}
+
+.orderItem {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.orderItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.orderName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333333;
+}
+
+.orderQuantity {
+  font-size: 1rem;
+  color: #555555;
+}
+
+.orderCount {
+  font-weight: bold;
+}
+
+.orderUnit {
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
   .ordersList {
-    max-width: 48rem;
+    grid-template-columns: 1fr;
   }
-  
-  
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

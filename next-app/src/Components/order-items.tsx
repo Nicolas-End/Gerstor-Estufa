@@ -4,11 +4,12 @@ interface OrderItemProps {
   name: string
   quantity: number
   unit: string
+  minimized?: boolean
 }
 
-export default function OrderItem({ name, quantity, unit }: OrderItemProps) {
+export default function OrderItem({ name, quantity, unit, minimized = false }: OrderItemProps) {
   return (
-    <div className={styles.orderItem}>
+    <div className={`${styles.orderItem} ${minimized ? styles.minimized : ""}`}>
       <div className={styles.orderName}>{name}</div>
       <div className={styles.orderQuantity}>
         <span className={styles.orderCount}>{quantity}</span>
@@ -17,4 +18,3 @@ export default function OrderItem({ name, quantity, unit }: OrderItemProps) {
     </div>
   )
 }
-

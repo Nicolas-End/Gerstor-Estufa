@@ -1,7 +1,7 @@
-import UserHeader from "@/Components/user-header"
+
 import OrderItem from "@/Components/order-items"
 import styles from "./page.module.css"
-
+import Sidebar from "@/Components/sidebar"
 export default function PedidosPage() {
   const orders = [
     { name: "Suculenta", quantity: 20, unit: "Caixas" },
@@ -12,7 +12,7 @@ export default function PedidosPage() {
 
   return (
     <div className={styles.container}>
-      <UserHeader />
+      <Sidebar />
       <div className={styles.content}>
         <div className={styles.header}>
           <h1 className={styles.title}>Pedidos</h1>

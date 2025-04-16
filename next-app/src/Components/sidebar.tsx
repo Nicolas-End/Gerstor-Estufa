@@ -1,37 +1,45 @@
+// Components/sidebar.tsx
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
-import { LayoutDashboard, BarChart2, ShoppingBag, History, Bell, Settings, LogOut, HelpCircle } from "lucide-react"
+import {
+  LayoutDashboard, BarChart2, ShoppingBag, History,
+  Bell, Settings, LogOut, HelpCircle, ChevronLeft, ChevronRight
+} from "lucide-react"
 import styles from "./sidebar.module.css"
 
 export default function Sidebar() {
+  const [minimized, setMinimized] = useState(false)
   const pathname = usePathname()
 
-  const isActive = (path: string) => {
-    return pathname === path ? styles.navItemActive : ""
-  }
+  const isActive = (path: string) => (pathname === path ? styles.navItemActive : "")
+
+  const sidebarClass = minimized
+    ? `${styles.sidebar} ${styles.minimized}`
+    : styles.sidebar
 
   return (
-    <div className={styles.sidebar}>
+    <div className={sidebarClass}>
+      <button className={styles.toggleButton} onClick={() => setMinimized(!minimized)}>
+        {minimized ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+      </button>
+
       <div className={styles.logo}>
         <div className={styles.logoContainer}>
           <div className={styles.logoCircle}>
-            <Image
-              src="/Logo.png?height=30&width=30"
-              alt="Logo"
-              width={30}
-              height={30}
-              className="rounded-full"
-            />
+            <Image src="/Logo.png" alt="Logo" width={30} height={30} />
           </div>
         </div>
-        <div className={styles.logoTitle}>Contole Verde</div>
-        <div className={styles.logoSubtitle}>Empresas</div>
       </div>
 
       <nav className={styles.nav}>
+        <Link href="/home" className={`${styles.navItem} ${isActive("/home")}`}>
+          <LayoutDashboard size={20} />
+          <span>Home</span>
+        </Link>
         <Link href="/" className={`${styles.navItem} ${isActive("/")}`}>
           <LayoutDashboard size={20} />
           <span>Dashboard</span>
@@ -46,7 +54,7 @@ export default function Sidebar() {
         </Link>
         <Link href="/historicos" className={`${styles.navItem} ${isActive("/historicos")}`}>
           <History size={20} />
-          <span>Históricos de dados</span>
+          <span>Histórico</span>
         </Link>
         <Link href="/notificacoes" className={`${styles.navItem} ${isActive("/notificacoes")}`}>
           <Bell size={20} />
@@ -54,7 +62,7 @@ export default function Sidebar() {
         </Link>
         <Link href="/configuracoes" className={`${styles.navItem} ${isActive("/configuracoes")}`}>
           <Settings size={20} />
-          <span>Configurações</span>
+          <span>Configuração</span>
         </Link>
       </nav>
 
@@ -71,4 +79,3 @@ export default function Sidebar() {
     </div>
   )
 }
-
