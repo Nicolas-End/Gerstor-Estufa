@@ -1,6 +1,4 @@
-// Components/sidebar.tsx
 "use client"
-
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -13,20 +11,24 @@ import styles from "./sidebar.module.css"
 
 export default function Sidebar() {
   const [minimized, setMinimized] = useState(false)
+  const [showAccountMenu, setShowAccountMenu] = useState(false)
   const pathname = usePathname()
 
   const isActive = (path: string) => (pathname === path ? styles.navItemActive : "")
-
+  
   const sidebarClass = minimized
     ? `${styles.sidebar} ${styles.minimized}`
     : styles.sidebar
+
+  const toggleAccountMenu = () => {
+    setShowAccountMenu(!showAccountMenu)
+  }
 
   return (
     <div className={sidebarClass}>
       <button className={styles.toggleButton} onClick={() => setMinimized(!minimized)}>
         {minimized ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
       </button>
-
       <div className={styles.logo}>
         <div className={styles.logoContainer}>
           <div className={styles.logoCircle}>
@@ -34,15 +36,10 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-
       <nav className={styles.nav}>
         <Link href="/home" className={`${styles.navItem} ${isActive("/home")}`}>
           <LayoutDashboard size={20} />
           <span>Home</span>
-        </Link>
-        <Link href="/" className={`${styles.navItem} ${isActive("/")}`}>
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
         </Link>
         <Link href="/estatisticas" className={`${styles.navItem} ${isActive("/estatisticas")}`}>
           <BarChart2 size={20} />
@@ -60,22 +57,32 @@ export default function Sidebar() {
           <Bell size={20} />
           <span>Notificações</span>
         </Link>
-        <Link href="/configuracoes" className={`${styles.navItem} ${isActive("/configuracoes")}`}>
-          <Settings size={20} />
-          <span>Configuração</span>
-        </Link>
+        <div className={`${styles.navItem} ${styles.accountItem}`} onClick={toggleAccountMenu}>
+          <div className={styles.profileImageContainer}>
+            <Image 
+              src="/default-avatar.png" 
+              alt="Profile" 
+              width={24} 
+              height={24} 
+              className={styles.profileImage}
+            />
+          </div>
+          <span>Minha Conta</span>
+          
+          {showAccountMenu && (
+            <div className={styles.accountMenu}>
+              <Link href="/logout" className={styles.menuItem}>
+                <LogOut size={16} />
+                <span>Log Out</span>
+              </Link>
+              <Link href="/help" className={styles.menuItem}>
+                <HelpCircle size={16} />
+                <span>Help</span>
+              </Link>
+            </div>
+          )}
+        </div>
       </nav>
-
-      <div className={styles.footer}>
-        <Link href="/logout" className={styles.navItem}>
-          <LogOut size={20} />
-          <span>Log Out</span>
-        </Link>
-        <Link href="/help" className={styles.navItem}>
-          <HelpCircle size={20} />
-          <span>Help</span>
-        </Link>
-      </div>
     </div>
   )
 }
