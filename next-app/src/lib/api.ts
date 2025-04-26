@@ -1,11 +1,10 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import validateAcount from "./Controllers/worker-login-validate";
+import validateAcount from "./Controllers/workerLoginValidate";
 import addNewCompanyToDataBase from "./Controllers/create_new_nompany";
-import validateHome from "./Controllers/home_acess";
+import validateHome from "./Controllers/homeAcess";
 import CountDeliverys from "./Controllers/getDeliveryQuantidy"
-
-import Router from "next/router";
+import getDeliverysToDo from "./Controllers/getDeliverysToDo";
 
 
 export async function validateWorkerLogin(
@@ -89,5 +88,22 @@ export async function countDeliveryQuantidy(){
   catch(error){
     console.log('Error',error)
     return 'Error'
+  }
+}
+
+export async function getDeliverys(){
+  try{
+    const data = await getDeliverysToDo();
+
+    if (data.status === "ok") {
+      return data.deliverys;
+    } else if (data.status === "invalid") {
+      return "invalid";
+    } else {
+      return "error";
+    }
+  } catch (error) {
+    console.log("Erro ao acessar a conta:", error);
+    return "Erro na requisição";
   }
 }
