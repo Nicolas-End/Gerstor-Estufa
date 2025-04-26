@@ -32,7 +32,7 @@ const Navbar = () => {
             <a href="/about" className="text-[#2b192e] hover:text-[#9c47a6] fontPop">Sobre</a>
             <div className="flex space-x-4">
               <a href="./register" className="bg-[#9c47a6] text-[#fff] px-4 py-2 rounded-lg hover:bg-[#56235f] transition">Registre-se</a>
-              <a href="./login" className="bg-[#56235f] text-[#fff] px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Entrar</a>
+              <a href="./home" className="bg-[#56235f] text-[#fff] px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Entrar</a>
             </div>
           </div>
 
@@ -54,7 +54,7 @@ const Navbar = () => {
             <a href="#" className="block hover:text-[#2b192e]">Home</a>
             <a href="/about" className="block hover:text-[#2b192e]">Sobre</a>
             <a href="/services" className="block bg-[#9c47a6] text-white px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Registre-se</a>
-            <a href="./login" className="block bg-[#56235f] text-white px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Entrar</a>
+            <a href="./home" className="block bg-[#56235f] text-white px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Entrar</a>
           </div>
         )}
       </nav>

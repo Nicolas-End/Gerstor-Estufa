@@ -77,8 +77,28 @@ def add_new_Adm():
         return jsonify({'status': responseApi}), 201
     except Exception as e:
         print('Error: ',e)
+        return jsonify({'status':e})
+    
+#retorna os produtos de entregas da empresa
+@app.route('/get-deliverys-products', methods=['POST'])
+def get_deliverys_products():
+    try:
+        
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
 
-
+        deliverys, ok = CompanyController().get_deliverys_products(datas['email'])
+        if not ok:
+            return jsonify({'status': 'error'}), 400
+        
+        return jsonify({'status':'ok','deliverys':deliverys})
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status':e}),400
 
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/worker-login', methods=["POST"])
