@@ -77,6 +77,7 @@ class CompanyController:
                 dict_deliverys = []
                 for i in has_deliverys:
                     deliverys_to_do = {
+                        'id': i['idEntrega'],
                         'Produto': i['TipoProduto'],
                         'Quantidade': i['Quantidade'],
                         'Valor': i['valor'],

@@ -64,16 +64,7 @@ export default function PedidosPage() {
                   <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
                   <span className={styles.orderUnit}>Caixas</span>
                 </div>
-                <p>
-                  <strong>Valor:</strong> R$ {order.Valor}
-                </p>
-                <p>
-                  <strong>Local de Entrega:</strong> {order.LocalEntrega}
-                </p>
-                <p>
-                  <strong>Data:</strong>{" "}
-                  {order.DataEntrega}
-                </p>
+                
               </div>
             ))}
           </div>
