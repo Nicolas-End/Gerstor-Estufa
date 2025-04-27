@@ -92,3 +92,29 @@ class CompanyController:
         except Exception as e:
             print('Error: ', e)
             return 'Error', False
+        
+    def get_especific_delivery(self,company_email,product_id):
+        try:
+            deliverys_coll = self.db[self.delivery_collection]
+    
+ 
+            has_deliverys = deliverys_coll.find_one({"EmailEntrega": company_email, "idEntrega": product_id})
+
+            if has_deliverys:
+
+                delivery_datas = {
+                    'id' : has_deliverys['idEntrega'],
+                    'Produto': has_deliverys['TipoProduto'],
+                    'Quantidade': has_deliverys['Quantidade'],
+                    'Valor': has_deliverys['valor'],
+                    'LocalEntrega': has_deliverys['LocalEntrega'],
+                    'DataEntrega': has_deliverys['dataParaEntrega']
+                }
+
+                return delivery_datas,True
+            else:
+                return 'nothing',False
+          
+        except Exception as e:
+            print('Error: ', e)
+            return 'Error', False

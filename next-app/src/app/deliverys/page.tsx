@@ -1,5 +1,5 @@
 "use client";
-import OrderItem from "@/Components/order-items";
+
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { getDeliverys } from "@/lib/api";
@@ -10,7 +10,9 @@ export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
-  const initializePedidos = async () => {
+
+
+  const initializeDeliverys = async () => {
     try {
       const alreadyValidated = localStorage.getItem("alreadyValidated");
       // Controle para verficar se o usuario ja acessou o home alguma vez
@@ -28,14 +30,9 @@ export default function PedidosPage() {
       router.push("/login");
     }
   };
-  const orders = [
-    { name: "Suculenta", quantity: 20, unit: "Caixas" },
-    { name: "Cactos", quantity: 20, unit: "Caixas" },
-    { name: "Pimenta", quantity: 60, unit: "porta vasos" },
-    { name: "Túia", quantity: 10, unit: "Caixas" },
-  ];
+
   useEffect(() => {
-    initializePedidos();
+    initializeDeliverys();
   }, []);
   if (isLoading) {
     return (
@@ -58,7 +55,8 @@ export default function PedidosPage() {
 
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
-              <div key={index} className={styles.orderItem}>
+              <div key={index} onClick={() => router.push(`delivery/${order.id}`)} className={styles.orderItem}>
+
                 <p className={styles.orderName}>{order.Produto}</p>
                 <div className={styles.orderQuantity}>
                   <span className={styles.orderCount}>{order.Quantidade}</span>{" "}

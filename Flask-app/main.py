@@ -99,7 +99,27 @@ def get_deliverys_products():
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':e}),400
-
+    
+    
+@app.route('/get-especific-delivery', methods=['POST'])
+def get_especific_delivery():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        request_id = request.get_json()['id']
+        
+        datas = CriptographyController().decripto_datas(token)
+        delivery ,ok = CompanyController().get_especific_delivery(datas['email'],request_id)
+        if ok:
+            return jsonify({'status':'ok','deliveryDatas':delivery}),200
+        
+        return jsonify({'status':'error'}),400
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status':e}),400
+    
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/worker-login', methods=["POST"])
 def user_login():
