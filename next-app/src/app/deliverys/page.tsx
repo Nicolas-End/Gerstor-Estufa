@@ -9,21 +9,30 @@ import { useEffect, useState } from "react";
 export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
+  const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]); // Inicializa como array vazio
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-{/*Estado SelectedOrder verifica qual o order selecionado  */}
 
+  // Inicializa os dados dos pedidos
   const initializeDeliverys = async () => {
     try {
       const alreadyValidated = localStorage.getItem("alreadyValidated");
       if (!alreadyValidated) {
         router.push("/login");
+        return;
       }
+
       const deliverys: any = await getDeliverys();
-      if (deliverys == "invalid" || deliverys == "error") {
-        router.push("/login");
+      console.log("Resposta da API: ", deliverys);
+
+      // Verifica se deliverys é um array válido
+      if (!Array.isArray(deliverys)) {
+        console.error("A resposta da API não é um array.");
+        setDeliverysToDo([]); // Se não for um array, define como array vazio
+        setIsLoading(false);
+        return;
       }
-      setDeliverysToDo(deliverys);
+
+      setDeliverysToDo(deliverys); // Atualiza o estado com os pedidos
       setIsLoading(false);
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
@@ -31,10 +40,12 @@ export default function PedidosPage() {
     }
   };
 
+  // Chama a função de inicialização ao montar o componente
   useEffect(() => {
     initializeDeliverys();
   }, []);
 
+  // Carregando...
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
@@ -56,9 +67,9 @@ export default function PedidosPage() {
 
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
-              <div key={index}>
+              <div key={index} className={styles.card}>
                 <div 
-                  onClick={() => setSelectedOrder(order)}
+                  onClick={() => setSelectedOrder(order)} // Altera o pedido selecionado
                   className={styles.orderItem}
                 >
                   <p className={styles.orderName}>{order.Produto}</p>
@@ -68,7 +79,7 @@ export default function PedidosPage() {
                   </div>
                 </div>
 
-                {/* Mostrando os detalhes se o card estiver selecionado */}
+                {/* Exibe os detalhes se o pedido estiver selecionado */}
                 {selectedOrder?.id === order.id && (
                   <div className={styles.details}>
                     <p><strong>Local de Entrega:</strong> {order.LocalEntrega}</p>
