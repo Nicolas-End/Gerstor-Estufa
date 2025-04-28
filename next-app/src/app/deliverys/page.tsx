@@ -69,6 +69,7 @@ export default function PedidosPage() {
             {deliverysToDo.map((order, index) => (
               <div key={index} className={styles.card}>
                 <div 
+                  onDoubleClick={() => router.push(`delivery/${order.id}`)}
                   onClick={() => setSelectedOrder(order)} // Altera o pedido selecionado
                   className={styles.orderItem}
                 >
@@ -83,7 +84,7 @@ export default function PedidosPage() {
                 {selectedOrder?.id === order.id && (
                   <div className={styles.details}>
                     <p><strong>Local de Entrega:</strong> {order.LocalEntrega}</p>
-                    <p><strong>Quantidade de Caixas:</strong> {order.Quantidade}</p>
+                    <p><strong>Data de Entrega: </strong> {order.DataEntrega}</p>
                   </div>
                 )}
               </div>
