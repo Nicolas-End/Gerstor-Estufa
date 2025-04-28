@@ -4,18 +4,18 @@ import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { getDeliverys } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
-
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+{/*Estado SelectedOrder verifica qual o order selecionado  */}
 
   const initializeDeliverys = async () => {
     try {
       const alreadyValidated = localStorage.getItem("alreadyValidated");
-      // Controle para verficar se o usuario ja acessou o home alguma vez
       if (!alreadyValidated) {
         router.push("/login");
       }
@@ -34,6 +34,7 @@ export default function PedidosPage() {
   useEffect(() => {
     initializeDeliverys();
   }, []);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
@@ -55,14 +56,25 @@ export default function PedidosPage() {
 
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
-              <div key={index} onClick={() => router.push(`delivery/${order.id}`)} className={styles.orderItem}>
-
-                <p className={styles.orderName}>{order.Produto}</p>
-                <div className={styles.orderQuantity}>
-                  <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
-                  <span className={styles.orderUnit}>Caixas</span>
+              <div key={index}>
+                <div 
+                  onClick={() => setSelectedOrder(order)}
+                  className={styles.orderItem}
+                >
+                  <p className={styles.orderName}>{order.Produto}</p>
+                  <div className={styles.orderQuantity}>
+                    <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
+                    <span className={styles.orderUnit}>Caixas</span>
+                  </div>
                 </div>
-                
+
+                {/* Mostrando os detalhes se o card estiver selecionado */}
+                {selectedOrder?.id === order.id && (
+                  <div className={styles.details}>
+                    <p><strong>Local de Entrega:</strong> {order.LocalEntrega}</p>
+                    <p><strong>Quantidade de Caixas:</strong> {order.Quantidade}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

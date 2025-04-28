@@ -8,7 +8,7 @@ import { getEscificDelivery } from '@/lib/api';
 import Sidebar from "@/Components/sidebar";
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [deliverysDatas, setDeliveryDatas] = useState<any[]>([]);
+  const [deliverysDatas, setDeliveryDatas] = useState<any[]>([]); [/*Array guarda dados do pedido  */]
   const router = useRouter()
   const params = useParams();
   const id = Number(params.id);
@@ -55,10 +55,7 @@ export default function ProdutoPage() {
 
           <div className={styles.content}>
             {deliverysDatas.map((order, index) => (
-
-
-
-              <div key={index}  >
+           <div key={index}  >
                 <h1 >{order.Produto}</h1>
                 <div>{order.Quantidade}</div>
 

@@ -56,7 +56,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Link
-              href="/pedidos"
+              href="/deliverys"
               className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
             >
               <h2 className="text-xl font-semibold mb-2">Pedidos</h2>

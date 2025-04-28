@@ -97,6 +97,13 @@
   color: #ffffff;
   font-style: italic;
 }
+.details {
+  background-color: #f0f0f0;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
 
 
 @media (max-width: 768px) {
