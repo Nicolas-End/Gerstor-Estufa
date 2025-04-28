@@ -69,14 +69,19 @@ export default function ProdutoPage() {
 
   return (
     <div className={styles.container}>
+      
       <Sidebar />
       <div className={styles.content}>
         {/* Exibe os detalhes do pedido */}
-        <h1>{selectedOrder.Produto}</h1>
-        <div>{selectedOrder.Quantidade}</div>
-        <div>
-          <span>{selectedOrder.Quantidade}</span> <span>Caixas</span>
-        </div>
+      <h1>PEDIDOS</h1>
+        <div className={styles.orderBox}>
+  <h1>{selectedOrder.Produto}</h1>
+  <div className={styles.quantity}>
+    <span>{selectedOrder.Quantidade}</span> <span>Caixas</span>
+  </div>
+</div>
+
+
 
         {/* Exibindo os detalhes adicionais do pedido */}
         <div className={styles.details}>
