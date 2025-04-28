@@ -13,11 +13,12 @@ interface ItemEntry {
 }
 
 export default function DeliveryFormPage() {
-  const router = useRouter(); // Hook para navegação
+  const router = useRouter(); // Navegação
 
   // Estados dos campos principais
   const [customerName, setCustomerName] = useState(""); // Nome do cliente
   const [address, setAddress] = useState("");          // Endereço de entrega
+  const [deliveryDate, setDeliveryDate] = useState(""); // Data de entrega
 
   // Opções de unidade disponíveis
   const unitOptions = ["Caixas", "Vasos", "Garrafas", "Cestas"];
@@ -47,12 +48,17 @@ export default function DeliveryFormPage() {
     setItems(prev => prev.filter(item => item.id !== id));
   };
 
-  // Lida com submissão do formulário
+  // Submissão do formulário
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = { name: customerName, address, items };
-    console.log("Form Data:", formData); // Exibe dados
-    // TODO: enviar formData para API
+    const formData = {
+      name: customerName,
+      address,
+      deliveryDate,
+      items,
+    };
+    console.log("Form Data:", formData);
+    // TODO: enviar para API
   };
 
   return (
@@ -60,13 +66,13 @@ export default function DeliveryFormPage() {
       <Sidebar /> {/* Barra lateral */}
       <div className="flex-1 p-8 flex flex-col">
 
-        {/* Cabeçalho com título e botão voltar */}
+        {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-6 p-4 bg-white rounded-lg shadow">
           <h1 className="text-2xl font-bold text-gray-800">Novo Pedido</h1>
           <button
             type="button"
             onClick={() => router.push('/deliverys')}
-            className="bg-green-900 text-white font-medium py-1 px-4 rounded-lg shadow hover:bg-green-800 transition"
+            className="bg-green-900 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-green-800 transition"
           >
             Voltar
           </button>
@@ -77,8 +83,9 @@ export default function DeliveryFormPage() {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col"
         >
-          {/* Campos Nome e Endereço */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Campos Nome, Endereço e Data de Entrega */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* Nome do cliente */}
             <div>
               <label htmlFor="customerName" className="block text-gray-700 font-medium mb-2">
                 Nome
@@ -88,11 +95,12 @@ export default function DeliveryFormPage() {
                 type="text"
                 value={customerName}
                 onChange={e => setCustomerName(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
                 placeholder="Digite o nome"
                 required
               />
             </div>
+            {/* Endereço */}
             <div>
               <label htmlFor="address" className="block text-gray-700 font-medium mb-2">
                 Endereço
@@ -102,8 +110,22 @@ export default function DeliveryFormPage() {
                 type="text"
                 value={address}
                 onChange={e => setAddress(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
                 placeholder="Digite o endereço"
+                required
+              />
+            </div>
+            {/* Data de Entrega */}
+            <div>
+              <label htmlFor="deliveryDate" className="block text-gray-700 font-medium mb-2">
+                Data de Entrega
+              </label>
+              <input
+                id="deliveryDate"
+                type="date"
+                value={deliveryDate}
+                onChange={e => setDeliveryDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
               />
             </div>
@@ -116,13 +138,13 @@ export default function DeliveryFormPage() {
               <button
                 type="button"
                 onClick={addItem}
-                className="bg-green-900 text-white py-1 px-3 rounded-lg shadow hover:bg-green-800 transition text-sm"
+                className="bg-green-900 text-white py-1 px-3 font-bold rounded-lg shadow hover:bg-green-800 transition text-sm"
               >
                 + Adicionar Item
               </button>
             </div>
 
-            {/* Lista de itens renderizada */}
+            {/* Lista de itens */}
             <div className="space-y-4">
               {items.map(item => (
                 <div
@@ -135,7 +157,7 @@ export default function DeliveryFormPage() {
                     placeholder="Nome do item"
                     value={item.name}
                     onChange={e => updateItem(item.id, 'name', e.target.value)}
-                    className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                    className="bg-green-900 text-white flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-white"
                     required
                   />
                   {/* Quantidade */}
@@ -145,20 +167,20 @@ export default function DeliveryFormPage() {
                     placeholder="Quantidade"
                     value={item.quantity}
                     onChange={e => updateItem(item.id, 'quantity', parseInt(e.target.value) || 1)}
-                    className="w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                    className="bg-green-900 text-white w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-white"
                     required
                   />
                   {/* Unidade */}
                   <select
                     value={item.unit}
                     onChange={e => updateItem(item.id, 'unit', e.target.value)}
-                    className="w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                    className="bg-green-900 text-white w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                   >
                     {unitOptions.map(u => (
                       <option key={u} value={u}>{u}</option>
                     ))}
                   </select>
-                  {/* Botão remover linha */}
+                  {/* Botão remover */}
                   <button
                     type="button"
                     onClick={() => removeItem(item.id)}
