@@ -9,10 +9,9 @@ import { useEffect, useState } from "react";
 export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]); // Inicializa como array vazio
+  const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
-  // Inicializa os dados dos pedidos
   const initializeDeliverys = async () => {
     try {
       const alreadyValidated = localStorage.getItem("alreadyValidated");
@@ -24,15 +23,14 @@ export default function PedidosPage() {
       const deliverys: any = await getDeliverys();
       console.log("Resposta da API: ", deliverys);
 
-      // Verifica se deliverys é um array válido
       if (!Array.isArray(deliverys)) {
         console.error("A resposta da API não é um array.");
-        setDeliverysToDo([]); // Se não for um array, define como array vazio
+        setDeliverysToDo([]);
         setIsLoading(false);
         return;
       }
 
-      setDeliverysToDo(deliverys); // Atualiza o estado com os pedidos
+      setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
@@ -40,12 +38,10 @@ export default function PedidosPage() {
     }
   };
 
-  // Chama a função de inicialização ao montar o componente
   useEffect(() => {
     initializeDeliverys();
   }, []);
 
-  // Carregando...
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
@@ -62,14 +58,24 @@ export default function PedidosPage() {
         <div className={styles.content}>
           <div className={styles.header}>
             <h1 className={styles.title}>Pedidos</h1>
-            <div className={styles.count}>{deliverysToDo.length}</div>
+
+            <div className="flex items-center space-x-4">
+              <div className={styles.count}>{deliverysToDo.length}</div>
+
+              <button
+                onClick={() => router.push("/delivery-form")}
+                className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition"
+              >
+                + Adicionar
+              </button>
+            </div>
           </div>
 
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
               <div key={index} className={styles.card}>
-                <div 
-                  onClick={() => setSelectedOrder(order)} // Altera o pedido selecionado
+                <div
+                  onClick={() => setSelectedOrder(order)}
                   className={styles.orderItem}
                 >
                   <p className={styles.orderName}>{order.Produto}</p>
@@ -79,7 +85,6 @@ export default function PedidosPage() {
                   </div>
                 </div>
 
-                {/* Exibe os detalhes se o pedido estiver selecionado */}
                 {selectedOrder?.id === order.id && (
                   <div className={styles.details}>
                     <p><strong>Local de Entrega:</strong> {order.LocalEntrega}</p>
