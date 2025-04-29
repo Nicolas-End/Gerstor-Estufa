@@ -90,8 +90,8 @@ export default function PedidosPage() {
 
                 {selectedOrder?.id === order.id && (
                   <div className={styles.details}>
-                    <p><strong>Local de Entrega:</strong> {order.LocalEntrega}</p>
-                    <p><strong>Data de Entrega: </strong> {order.DataEntrega}</p>
+                    <p className="text-black"><strong className="text-black">Local de Entrega:</strong> {order.LocalEntrega}</p>
+                    <p className="text-black"><strong className="text-black">Data de Entrega: </strong> {order.DataEntrega}</p>
                   </div>
                 )}
               </div>

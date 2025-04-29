@@ -132,7 +132,7 @@ export default function DeliveryFormPage() {
               </div>
             </div>
 
-            {/* Seção de Itens Dinâmicos */}
+            {/* Seção Dinâmica */}
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
                 <p className="text-gray-700 font-medium">Itens a entregar</p>
