@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-
+import { addNewItemDelivery } from "@/lib/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Define formato de cada item
 interface ItemEntry {
   id: number;
@@ -14,42 +16,50 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
-
+  function ShowAlert(text: string) {
+    toast(text, {
+      style: {
+        backgroundColor: "#fff",
+        color: "#2b192e",
+        fontFamily: "Arial, sans-serif",
+      },
+    });
+  }
   // Estados dos campos principais
-  const [customerName, setCustomerName] = useState(""); // Nome do cliente
-  const [address, setAddress] = useState("");          // Endereço de entrega
-  const [deliveryDate, setDeliveryDate] = useState(""); // Data de entrega
+  const [customerName, setCustomerName] = useState("");
 
-  // Opções de unidade disponíveis
+  const [address, setAddress] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const unitOptions = ["Caixas", "Vasos", "Garrafas", "Cestas"];
-  const [items, setItems] = useState<ItemEntry[]>([]);    // Lista de itens no pedido
+  const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
 
   // Adiciona nova linha de item
   const addItem = () => {
-    setItems(prev => [
+    setItems((prev) => [
       ...prev,
-      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1 }
+      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1 },
     ]);
   };
 
   // Atualiza campo de um item específico
   const updateItem = (
     id: number,
-    field: keyof Omit<ItemEntry, 'id'>,
+    field: keyof Omit<ItemEntry, "id">,
     value: string | number
   ) => {
-    setItems(prev => prev.map(item => 
-      item.id === id ? { ...item, [field]: value } : item
-    ));
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
   };
 
   // Remove item pelo id
   const removeItem = (id: number) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Submissão do formulário
-  const handleSubmit = (e: React.FormEvent) => {
+  // Envia o formulário ao back-end 
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = {
       name: customerName,
@@ -57,8 +67,26 @@ export default function DeliveryFormPage() {
       deliveryDate,
       items,
     };
-    console.log("Form Data:", formData);
-    // TODO: enviar para API
+
+    try {
+      setIsLoading(true)
+      const data = await addNewItemDelivery(formData);
+      if (data === 'ok'){
+        ShowAlert('Entrega Adicionada com Sucesso')
+        setAddress('')
+        setCustomerName('')
+        setDeliveryDate('')
+        setItems([])
+        setIsLoading(false)
+      }
+      else{
+        ShowAlert('Opss.. Houve um erro')
+        ShowAlert('Tente novamente mais tarde')
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
   };
 
   return (
@@ -66,13 +94,12 @@ export default function DeliveryFormPage() {
       <div className="flex h-screen bg-gray-100">
         <Sidebar /> {/* Barra lateral */}
         <div className="flex-1 p-8 flex flex-col">
-
           {/* Cabeçalho */}
           <div className="flex justify-between items-center mb-6 p-4 bg-white rounded-lg shadow">
             <h1 className="text-2xl font-bold text-gray-800">Novo Pedido</h1>
             <button
               type="button"
-              onClick={() => router.push('/deliverys')}
+              onClick={() => router.push("/deliverys")}
               className="bg-green-900 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-green-800 transition"
             >
               Voltar
@@ -88,14 +115,17 @@ export default function DeliveryFormPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {/* Nome do cliente */}
               <div>
-                <label htmlFor="customerName" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="customerName"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Nome
                 </label>
                 <input
                   id="customerName"
                   type="text"
                   value={customerName}
-                  onChange={e => setCustomerName(e.target.value)}
+                  onChange={(e) => setCustomerName(e.target.value)}
                   className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
                   placeholder="Digite o nome"
                   required
@@ -103,14 +133,17 @@ export default function DeliveryFormPage() {
               </div>
               {/* Endereço */}
               <div>
-                <label htmlFor="address" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="address"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Endereço
                 </label>
                 <input
                   id="address"
                   type="text"
                   value={address}
-                  onChange={e => setAddress(e.target.value)}
+                  onChange={(e) => setAddress(e.target.value)}
                   className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
                   placeholder="Digite o endereço"
                   required
@@ -118,14 +151,17 @@ export default function DeliveryFormPage() {
               </div>
               {/* Data de Entrega */}
               <div>
-                <label htmlFor="deliveryDate" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="deliveryDate"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Data de Entrega
                 </label>
                 <input
                   id="deliveryDate"
                   type="date"
                   value={deliveryDate}
-                  onChange={e => setDeliveryDate(e.target.value)}
+                  onChange={(e) => setDeliveryDate(e.target.value)}
                   className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
                   required
                 />
@@ -147,7 +183,7 @@ export default function DeliveryFormPage() {
 
               {/* Lista de itens */}
               <div className="space-y-4">
-                {items.map(item => (
+                {items.map((item) => (
                   <div
                     key={item.id}
                     className="flex flex-col md:flex-row md:items-center md:space-x-4 bg-gray-50 p-4 rounded-lg"
@@ -157,28 +193,40 @@ export default function DeliveryFormPage() {
                       type="text"
                       placeholder="Nome do item"
                       value={item.name}
-                      onChange={e => updateItem(item.id, 'name', e.target.value)}
+                      onChange={(e) =>
+                        updateItem(item.id, "name", e.target.value)
+                      }
                       className="bg-green-900 text-white flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-white"
                       required
                     />
                     {/* Quantidade */}
                     <input
                       type="number"
-                      min={1}
+                      min={0}
                       placeholder="Quantidade"
                       value={item.quantity}
-                      onChange={e => updateItem(item.id, 'quantity', parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        updateItem(
+                          item.id,
+                          "quantity",
+                          parseInt(e.target.value) || 0
+                        )
+                      }
                       className="bg-green-900 text-white w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-white"
                       required
                     />
                     {/* Unidade */}
                     <select
                       value={item.unit}
-                      onChange={e => updateItem(item.id, 'unit', e.target.value)}
+                      onChange={(e) =>
+                        updateItem(item.id, "unit", e.target.value)
+                      }
                       className="bg-green-900 text-white w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                     >
-                      {unitOptions.map(u => (
-                        <option key={u} value={u}>{u}</option>
+                      {unitOptions.map((u) => (
+                        <option key={u} value={u}>
+                          {u}
+                        </option>
                       ))}
                     </select>
                     {/* Botão remover */}
@@ -197,9 +245,18 @@ export default function DeliveryFormPage() {
             {/* Botão Enviar Pedido */}
             <button
               type="submit"
+
               className="mt-auto bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition self-end"
             >
-              Enviar Pedido
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <span className="mr-2">Adicionando Entrega ...</span>
+                  <i className="fas fa-spinner fa-spin"></i>
+                </div>
+              ) : (
+                "Enviar Pedido"
+              )}
+              
             </button>
           </form>
         </div>
@@ -211,6 +268,16 @@ export default function DeliveryFormPage() {
           filter: invert(1) brightness(1);
         }
       `}</style>
+      <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
     </>
   );
 }

@@ -6,6 +6,7 @@ import os
 from controllers.cripto_controller import CriptographyController
 from controllers.worker_controller import WorkerController
 from controllers.company_controller import CompanyController
+from controllers.delivery_controller import DeliveryContoller
 
 load_dotenv()
 app = Flask(__name__)
@@ -49,7 +50,7 @@ def count_deliverys():
         
         datas = CriptographyController().decripto_datas(token)
 
-        count, ok = CompanyController().quantidy_deliverys(datas['email'])
+        count, ok = DeliveryContoller().quantidy_deliverys(datas['email'])
         if not ok:
             return jsonify({'status': 'error'}), 400
         
@@ -90,7 +91,7 @@ def get_deliverys_products():
         
         datas = CriptographyController().decripto_datas(token)
 
-        deliverys, ok = CompanyController().get_deliverys_products(datas['email'])
+        deliverys, ok = DeliveryContoller().get_deliverys_products(datas['email'])
         if not ok:
             return jsonify({'status': 'error'}), 400
         
@@ -107,10 +108,11 @@ def get_especific_delivery():
         token = request.headers.get('Authorization')
         if not token:
             return jsonify({'status': 'invalid'}), 400
+            
         request_id = request.get_json()['id']
-        
+        print(request_id)
         datas = CriptographyController().decripto_datas(token)
-        delivery ,ok = CompanyController().get_especific_delivery(datas['email'],request_id)
+        delivery ,ok = DeliveryContoller().get_especific_delivery(datas['email'],request_id)
         if ok:
             return jsonify({'status':'ok','deliveryDatas':delivery}),200
         
@@ -119,7 +121,28 @@ def get_especific_delivery():
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':e}),400
+
+@app.route('/add-new-delivery',methods=['POST'])
+def add_new_delivery():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        datas = CriptographyController().decripto_datas(token)
+        formsData = request.get_json()['FormsData']
+        itens = formsData['items']
+        address = formsData['address']
+        date = formsData['deliveryDate']
+        name = formsData['name']
+        ok = DeliveryContoller().add_new_delivery(datas['email'],itens,address,date,name)
+        if ok:
+            return jsonify({'status':'ok'}),200
+        return jsonify({'status':'error'}),400
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status':'error'}),500
     
+        
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/worker-login', methods=["POST"])
 def user_login():
@@ -151,6 +174,7 @@ def user_login():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500 
+
 
 @app.route('/add-worker', methods=['POST'])
 def create_new_worker():

@@ -7,7 +7,7 @@ interface ApiResponse{
 
 }
 
-export default function getDelivery(id:number): Promise<ApiResponse> {
+export default function getDelivery(id:string): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) => {
        
       const token = localStorage.getItem('token_from_user')

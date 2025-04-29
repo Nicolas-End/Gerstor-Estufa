@@ -13,7 +13,7 @@ export default function ProdutoPage() {
   const params = useParams();
 
   // Verifica se o ID existe, se não existir torna-se null
-  const id = params?.id ? Number(params.id) : null;
+  const id:any = params?.id ? params.id : null;
 
   // Função para carregar os dados da entrega
   const initializeDeliverys = async () => {

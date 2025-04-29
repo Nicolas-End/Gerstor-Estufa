@@ -24,7 +24,6 @@ export default function PedidosPage() {
       console.log("Resposta da API: ", deliverys);
 
       if (!Array.isArray(deliverys)) {
-        console.error("A resposta da API não é um array.");
         setDeliverysToDo([]);
         setIsLoading(false);
         return;
@@ -74,7 +73,7 @@ export default function PedidosPage() {
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
               <div key={index} className={styles.card}>
-
+                
                 <div 
                   onDoubleClick={() => router.push(`delivery/${order.id}`)}
                   onClick={() => setSelectedOrder(order)} // Altera o pedido selecionado
