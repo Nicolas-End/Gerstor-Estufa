@@ -31,7 +31,7 @@ export default function DeliveryFormPage() {
   const [address, setAddress] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const unitOptions = ["Caixas", "Vasos", "Garrafas", "Cestas"];
+  const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
 
   // Adiciona nova linha de item
@@ -183,6 +183,11 @@ export default function DeliveryFormPage() {
 
               {/* Lista de itens */}
               <div className="space-y-4">
+              {items.length === 0 && (
+                  <p className="text-gray-500 text-center py-4">
+                    Nenhum item adicionado. Clique em "Adicionar Item" para começar.
+                  </p>
+                )}
                 {items.map((item) => (
                   <div
                     key={item.id}
@@ -245,8 +250,8 @@ export default function DeliveryFormPage() {
             {/* Botão Enviar Pedido */}
             <button
               type="submit"
-
-              className="mt-auto bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition self-end"
+              disabled = {items.length === 0 || isLoading}
+              className="mt-auto bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition self-end disabled:bg-gray-400 disabled:cursor-not-allowed "
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
