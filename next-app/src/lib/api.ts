@@ -1,12 +1,12 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import validateAcount from "./Controllers/workerLoginValidate";
-import addNewCompanyToDataBase from "./Controllers/create_new_nompany";
+import addNewCompanyToDataBase from "./Controllers/createNewCompany";
 import validateHome from "./Controllers/homeAcess";
 import CountDeliverys from "./Controllers/getDeliveryQuantidy"
 import getDeliverysToDo from "./Controllers/getDeliverysToDo";
-
-
+import getDelivery from "./Controllers/getEspecificDelivery";
+import AddNewDelivery from "./Controllers/addNewDelivery";
 export async function validateWorkerLogin(
   email: string,
   id: string,
@@ -74,7 +74,7 @@ export async function validateHomeAcess(router: AppRouterInstance){
     console.log('Error: ',error)
   }
 }
-
+// Usado no Home
 export async function countDeliveryQuantidy(){
   try{
     const data = await CountDeliverys()
@@ -104,6 +104,41 @@ export async function getDeliverys(){
     }
   } catch (error) {
     console.log("Erro ao acessar a conta:", error);
+    return "Erro na requisição";
+  }
+}
+
+export async function getEscificDelivery (id:string){
+  try{
+    const data = await getDelivery(id);
+
+    if (data.status === "ok") {
+      return data.deliveryDatas;
+    } else if (data.status === "invalid") {
+      return "invalid";
+    } else {
+      return "error";
+    }
+  } catch (error) {
+    console.log("Erro ao acessar a conta: ", error);
+    return "Erro na requisição";
+  }
+}
+
+export async function addNewItemDelivery (FormsData:any){
+  try{
+
+    const data = await AddNewDelivery(FormsData)
+
+    if (data.status === "ok"){
+
+      return 'ok'
+    }
+    else{
+      return 'error'
+    }
+  } catch (error){
+    console.log("Error ao acessar a conta: ",error);
     return "Erro na requisição";
   }
 }

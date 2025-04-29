@@ -45,7 +45,7 @@ export default function Sidebar() {
           <BarChart2 size={20} />
           <span>Estatísticas</span>
         </Link>
-        <Link href="/pedidos" className={`${styles.navItem} ${isActive("/pedidos")}`}>
+        <Link href="/deliverys" className={`${styles.navItem} ${isActive("/deliverys") || isActive("/delivery-form") || isActive("/delivery") }`}>
           <ShoppingBag size={20} />
           <span>Pedidos</span>
         </Link>

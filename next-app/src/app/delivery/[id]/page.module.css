@@ -1,0 +1,52 @@
+/* page.module.css */
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9; /* Fundo suave */
+  color: #ffffff; /* Cor de texto padrão */
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.orderBox{
+  background-color: #0a3b2c;
+  border: 2px solid #0a2c26;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  width: 100%; /* Adicione isso para a caixa ocupar a largura certa */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+.content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #ffffff; /* Área de conteúdo branca */
+  border-radius: 1rem;
+  margin: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #000000;
+}
+
+.details {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #e6f2ef; /* Verde bem clarinho */
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.details p {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.details strong {
+  color: #0a2c26;
+}
