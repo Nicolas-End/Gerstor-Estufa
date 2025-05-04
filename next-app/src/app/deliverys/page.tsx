@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys } from "@/lib/api";
+import { getDeliverys,validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -14,8 +14,8 @@ export default function PedidosPage() {
 
   const initializeDeliverys = async () => {
     try {
-      const alreadyValidated = localStorage.getItem("alreadyValidated");
-      if (!alreadyValidated) {
+      const can_access_home = await validateHomeAcess(router);
+      if (!can_access_home) {
         router.push("/login");
         return;
       }

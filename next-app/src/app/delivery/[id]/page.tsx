@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getEscificDelivery } from "@/lib/api";
+import { getEscificDelivery, validateHomeAcess } from "@/lib/api";
 import Sidebar from "@/Components/sidebar";
 
 export default function ProdutoPage() {
@@ -18,10 +18,9 @@ export default function ProdutoPage() {
   // Função para carregar os dados da entrega
   const initializeDeliverys = async () => {
     try {
-      const alreadyValidated = localStorage.getItem("alreadyValidated");
-
-      if (!alreadyValidated) {
-        router.push("/login"); // Redireciona para o login se não validado
+      const can_access_home = await validateHomeAcess(router);
+      if (!can_access_home) {
+        router.push("/login");
         return;
       }
 

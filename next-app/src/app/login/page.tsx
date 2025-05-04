@@ -140,6 +140,10 @@ const Login: React.FC = () => {
             >
               Registre-se
             </Link>
+            <Link href="/password-forget" 
+            className="fontRobo text-blue-300 hover:text-white transition duration-150 mt-2">
+            Esqueceu a senha ? 
+            </Link>
           </div>
 
           {/* Imagem (visível apenas em telas médias ou maiores) */}

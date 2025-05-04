@@ -62,11 +62,13 @@ export async function validateHomeAcess(router: AppRouterInstance){
     }
     
     const data = await validateHome()
+    
     if (data.status === "error"){
       router.push('/login')
-      return Promise.all([false,0])
+      return Promise.all([false])
     }
     else{
+      
       return Promise.all([true])
     }
   }

@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { addNewItemDelivery } from "@/lib/api";
+import { addNewItemDelivery,validateHomeAcess } from "@/lib/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 // Define formato de cada item
 interface ItemEntry {
   id: number;
@@ -30,6 +31,8 @@ export default function DeliveryFormPage() {
 
   const [address, setAddress] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
+  const [pageIsLoading, setPageIsLoading] = useState(true)
+
   const [isLoading, setIsLoading] = useState(false);
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
@@ -52,7 +55,20 @@ export default function DeliveryFormPage() {
       prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
   };
-
+  // Inicia a Pagina Form Verifica se o usuario é valido
+  const initializeDeliverForm = async() => {
+    try {
+      const can_access_home = await validateHomeAcess(router);
+      if (!can_access_home) {
+        router.push("/login");
+        return;
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.log("Erro ao iniciar dashboard:", error);
+      router.push("/login");
+    }
+  }
   // Remove item pelo id
   const removeItem = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
@@ -88,7 +104,19 @@ export default function DeliveryFormPage() {
       console.error("Erro na requisição:", error);
     }
   };
-
+  useEffect(() => {
+    initializeDeliverForm();
+  }, []);
+  if (pageIsLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white text-gray-800">
+        <div className="flex items-center space-x-2">
+          <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
+          <span className="text-xl font-medium">Carregando...</span>
+        </div>
+      </div>
+    );
+  } else {
   return (
     <>
       <div className="flex h-screen bg-gray-100">
@@ -285,4 +313,5 @@ export default function DeliveryFormPage() {
         />
     </>
   );
+}
 }

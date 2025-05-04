@@ -30,6 +30,7 @@ def home_acess():
         
         #processo para descriptografar os dados do usuario 
         data_user_is_correct = CriptographyController().decripto_datas(token)
+
           
        #verificando se o acesso do usuario é valido
         if data_user_is_correct['acess'] == True:
@@ -38,8 +39,8 @@ def home_acess():
         return jsonify({'status':'invalid'}),400
 
     except Exception as e:
-        print('Error: ',e)
-        return jsonify({'status':'invalid'}),400
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
     
 @app.route('/count-deliverys', methods=['POST'])
 def count_deliverys():
@@ -49,6 +50,9 @@ def count_deliverys():
             return jsonify({'status': 'invalid'}), 400
         
         datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
 
         count, ok = DeliveryContoller().quantidy_deliverys(datas['email'])
         if not ok:
@@ -57,8 +61,8 @@ def count_deliverys():
         return jsonify({'status': 'ok', 'count': count}), 200
     
     except Exception as e:
-        print("Error:", e)
-        return jsonify({'status': 'error'}), 500
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
     
 #Sistema pra registrar uma nova estufa
 @app.route('/add-new-company', methods=['POST'])
@@ -77,8 +81,8 @@ def add_new_Adm():
 
         return jsonify({'status': responseApi}), 201
     except Exception as e:
-        print('Error: ',e)
-        return jsonify({'status':e})
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
     
 #retorna os produtos de entregas da empresa
 @app.route('/get-deliverys-products', methods=['POST'])
@@ -90,6 +94,8 @@ def get_deliverys_products():
             return jsonify({'status': 'invalid'}), 400
         
         datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
 
         deliverys, ok = DeliveryContoller().get_deliverys_products(datas['email'])
         if not ok:
@@ -98,8 +104,8 @@ def get_deliverys_products():
         return jsonify({'status':'ok','deliverys':deliverys})
     
     except Exception as e:
-        print('Error: ',e)
-        return jsonify({'status':e}),400
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
     
     
 @app.route('/get-especific-delivery', methods=['POST'])
@@ -112,15 +118,19 @@ def get_especific_delivery():
         request_id = request.get_json()['id']
         print(request_id)
         datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
         delivery ,ok = DeliveryContoller().get_especific_delivery(datas['email'],request_id)
+        
         if ok:
             return jsonify({'status':'ok','deliveryDatas':delivery}),200
         
         return jsonify({'status':'error'}),400
     
     except Exception as e:
-        print('Error: ',e)
-        return jsonify({'status':e}),400
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
 
 @app.route('/add-new-delivery',methods=['POST'])
 def add_new_delivery():
@@ -128,19 +138,24 @@ def add_new_delivery():
         token = request.headers.get('Authorization')
         if not token:
             return jsonify({'status': 'invalid'}), 400
+        
         datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400 #dados do usuario sendo descriptografado
+        
         formsData = request.get_json()['FormsData']
         itens = formsData['items']
         address = formsData['address']
         date = formsData['deliveryDate']
-        name = formsData['name']
+        name = formsData['name'] #Pegando os dados do ususario
+        
         ok = DeliveryContoller().add_new_delivery(datas['email'],itens,address,date,name)
         if ok:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400
     except Exception as e:
-        print('Error: ',e)
-        return jsonify({'status':'error'}),500
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
     
         
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
@@ -173,9 +188,24 @@ def user_login():
     
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 500 
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
 
 
+@app.route('/forget-password' ,methods=['POST'])
+def forget_password() :
+    
+    try:
+        
+        user_json = request.get_json()
+        user_email = user_json['id']
+        user_email = user_json['email']
+        new_user_pass = user_json['newPassword']
+        
+        return jsonify({'status':'ok','newPass':new_user_pass})
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
+    
 @app.route('/add-worker', methods=['POST'])
 def create_new_worker():
     try:
@@ -195,7 +225,8 @@ def create_new_worker():
         return jsonify({'status': responseApi}), 201  # Erro (status 400)
 
     except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 500 para erro interno
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
 
 if __name__ == '__main__':
     app.run(debug=True)

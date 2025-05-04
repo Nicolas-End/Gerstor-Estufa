@@ -13,16 +13,16 @@ export default function Home() {
   const [deliveryQuantidy, setDeliveryQuantidy] = useState(0);
   const initializeDashboard = async () => {
     try {
-      const alreadyValidated = localStorage.getItem("alreadyValidated");
-      // Controle para verficar se o usuario ja acessou o home alguma vez
-      if (!alreadyValidated) {
-        const can_access_home = await validateHomeAcess(router);
-        if (!can_access_home) {
-          router.push("/login");
-          return;
-        }
-        localStorage.setItem("alreadyValidated", "true");
+      const can_access_home = await validateHomeAcess(router);
+      if (!can_access_home) {
+        router.push("/login");
+        return;
       }
+
+        
+
+        
+      
       const deliverys_quantidy: any = await countDeliveryQuantidy();
       // Após a verficação do usuario
       // Verifica a quantidade de entregas pendentes a fazer

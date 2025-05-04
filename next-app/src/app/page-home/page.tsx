@@ -77,7 +77,7 @@ const Home = () => {
           Na ToDay, transformamos a complexidade da gestão empresarial em soluções simples e eficazes. Com tecnologia, estratégia e foco no crescimento, ajudamos sua empresa a prosperar todos os dias.
         </p>
         <div className="mt-8">
-          <a href="./login" className="bg-[#56235f] text-[#fff] px-6 py-3 rounded-lg hover:bg-[#2b192e] transition text-lg">Entrar</a> {/* Botão com fonte aumentada */}
+          <a href="./home" className="bg-[#56235f] text-[#fff] px-6 py-3 rounded-lg hover:bg-[#2b192e] transition text-lg">Entrar</a> {/* Botão com fonte aumentada */}
         </div>
       </div>
     </section>
