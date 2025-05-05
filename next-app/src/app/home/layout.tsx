@@ -6,7 +6,7 @@ import Sidebar from "@/Components/sidebar"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Estafa Fácil Industries",
+  title: "Estufa Fácil Industries",
   description: "Plant order management system",
 }
 
