@@ -117,7 +117,12 @@ const Login: React.FC = () => {
                   <i className="fa-regular fa-eye text-black"></i>
                 )}
               </button>
-            </div>
+            </div> <Link href="/password-forget" 
+            className="fontRobo text-green-800 hover:text-white hover:decoration-white transition duration-150 mt-2 underline decoration-green-800">
+            Esqueceu a senha ? 
+            <br />
+            <br />
+            </Link>
 
             <button
               onClick={handleLogin}
@@ -129,6 +134,7 @@ const Login: React.FC = () => {
                   <span className="mr-2">Entrando...</span>
                   <i className="fas fa-spinner fa-spin"></i>
                 </div>
+                
               ) : (
                 "Login"
               )}
@@ -140,10 +146,7 @@ const Login: React.FC = () => {
             >
               Registre-se
             </Link>
-            <Link href="/password-forget" 
-            className="fontRobo text-blue-300 hover:text-white transition duration-150 mt-2">
-            Esqueceu a senha ? 
-            </Link>
+           
           </div>
 
           {/* Imagem (visível apenas em telas médias ou maiores) */}

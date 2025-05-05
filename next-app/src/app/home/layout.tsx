@@ -16,11 +16,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html >
-      <body className={inter.className}>
-        {children}
-      </body>
-    </html>
+    <>
+    {children} {/*Não precisa de tag HTML nem de Tag Body, causa erro de hidratação, somente deixar com Body e HTMl no Layout.tsx raíz */}
+    </>
+
   )
 }
 
