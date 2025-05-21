@@ -26,7 +26,7 @@ export default function NotFound() {
       <button
         className="relative overflow-hidden bg-green-600 text-white text-lg font-semibold px-8 py-3
          rounded-full shadow-lg transition-transform duration-300 ease-in-out hover:scale-105
-         hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 group"
+         hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 group"
          onClick={() => router.back()}
       >
         Voltar para Home

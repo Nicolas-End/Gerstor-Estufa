@@ -59,10 +59,12 @@ export default function DeliveryFormPage() {
   const initializeDeliverForm = async() => {
     try {
       const can_access_home = await validateHomeAcess(router);
+      
       if (!can_access_home) {
         router.push("/login");
         return;
       }
+
       setPageIsLoading(false);
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
@@ -145,7 +147,7 @@ export default function DeliveryFormPage() {
               <div>
                 <label
                   htmlFor="customerName"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-green-900 text-[18px] mb-2"
                 >
                   Nome
                 </label>
@@ -154,8 +156,8 @@ export default function DeliveryFormPage() {
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
-                  placeholder="Digite o nome"
+                  className="text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
+                  placeholder="Digite o nome da entrega"
                   required
                 />
               </div>
@@ -163,7 +165,7 @@ export default function DeliveryFormPage() {
               <div>
                 <label
                   htmlFor="address"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-green-900 text-[18px] mb-2"
                 >
                   Endereço
                 </label>
@@ -172,7 +174,7 @@ export default function DeliveryFormPage() {
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
+                  className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
                   placeholder="Digite o endereço"
                   required
                 />
@@ -181,7 +183,7 @@ export default function DeliveryFormPage() {
               <div>
                 <label
                   htmlFor="deliveryDate"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-green-900 text-[18px] mb-2"
                 >
                   Data de Entrega
                 </label>
@@ -190,7 +192,7 @@ export default function DeliveryFormPage() {
                   type="date"
                   value={deliveryDate}
                   onChange={(e) => setDeliveryDate(e.target.value)}
-                  className="bg-green-900 text-white w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-white"
+                  className=" text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                   required
                 />
               </div>
@@ -199,7 +201,7 @@ export default function DeliveryFormPage() {
             {/* Seção Dinâmica */}
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
-                <p className="text-gray-700 font-medium">Itens a entregar</p>
+                <p className=" text-green-900 text-[18px]">Itens a entregar</p>
                 <button
                   type="button"
                   onClick={addItem}
@@ -212,7 +214,7 @@ export default function DeliveryFormPage() {
               {/* Lista de itens */}
               <div className="space-y-4">
               {items.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">
+                  <p className="text-gray-600 text-center py-4">
                     Nenhum item adicionado. Clique em "Adicionar Item" para começar.
                   </p>
                 )}
@@ -229,9 +231,10 @@ export default function DeliveryFormPage() {
                       onChange={(e) =>
                         updateItem(item.id, "name", e.target.value)
                       }
-                      className="bg-green-900 text-white flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-white"
+                      className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-gray-600"
                       required
                     />
+                    <div className="flex space-x-[150px]">
                     {/* Quantidade */}
                     <input
                       type="number"
@@ -245,16 +248,16 @@ export default function DeliveryFormPage() {
                           parseInt(e.target.value) || 0
                         )
                       }
-                      className="bg-green-900 text-white w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-white"
+                      className="text-black w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                       required
                     />
                     {/* Unidade */}
                     <select
                       value={item.unit}
                       onChange={(e) =>
-                        updateItem(item.id, "unit", e.target.value)
+                      updateItem(item.id, "unit", e.target.value)
                       }
-                      className="bg-green-900 text-white w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                      className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                     >
                       {unitOptions.map((u) => (
                         <option key={u} value={u}>
@@ -262,14 +265,17 @@ export default function DeliveryFormPage() {
                         </option>
                       ))}
                     </select>
-                    {/* Botão remover */}
-                    <button
+                    </div>
+                   <div className="flex justify-center">
+                     {/* Botão remover */}
+                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
                       className="text-red-600 hover:text-red-800 font-medium"
                     >
                       Remover
                     </button>
+                   </div>
                   </div>
                 ))}
               </div>
