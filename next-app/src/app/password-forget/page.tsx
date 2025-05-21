@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
-
+import { RecuperationEmail } from "@/lib/api";
 const ForgetPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,15 +26,30 @@ const ForgetPassword: React.FC = () => {
   }
   const handleEmail = async () => {
     setIsLoading(true)
-    if (password == "" || email == "" || confirmPassword == "" || code == ""){
+    if (password == "" || email == "" || confirmPassword == "" ){
       ShowAlert('Preencha Todos os Campos')
       setIsLoading(false)
       return  
     }
-    if (password !== confirmPassword) {
+    else if (password !== confirmPassword) {
       ShowAlert("As senhas não coincidem!");
       setIsLoading(false)
       return;
+    }
+    else{
+      const response = await RecuperationEmail(email,password)
+      if (response == 'ok'){
+        ShowAlert('Email Enviado com Sucesso')
+        setIsLoading(false)
+      }
+      else if (response == 'noexist'){
+        ShowAlert('Email não cadastrado')
+        setIsLoading(false)
+      }
+      else{
+        ShowAlert('Oopps houve algum erro')
+        setIsLoading(false)
+      }
     }
   }
 
@@ -68,14 +83,7 @@ const ForgetPassword: React.FC = () => {
             className="w-full mb-4 p-3 rounded bg-[#fff] text-[#0a2c26] shadow-md"
             onChange={(e) => setEmail(e.target.value)}
           />
-          {/* Campo do Codigo*/ }
-          <label className="text-sm mb-2 fontRobo">Codigo</label>
-          <input
-            value={code}
-            type="email"
-            className="w-full mb-4 p-3 rounded bg-[#fff] text-[#0a2c26] shadow-md"
-            onChange={(e) => setCode(e.target.value)}
-          />
+
 
           {/* Campo de Senha */}
           <label className="text-sm mb-2 fontRobo">Nova senha:</label>

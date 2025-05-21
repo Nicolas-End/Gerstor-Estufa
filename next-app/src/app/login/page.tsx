@@ -9,7 +9,7 @@ import Link from "next/link";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
+
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -30,13 +30,13 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     setIsLoading(true);
-    if (email === "" || password === "" || code === "") {
+    if (email === "" || password === "") {
       ShowAlert("Preencha Todos os Campos");
       setIsLoading(false);
       return;
     }
     try {
-      const response = await validateWorkerLogin(email, code, password, router);
+      const response = await validateWorkerLogin(email, password, router);
 
       if (response == "ok"){
         router.push("/home");
@@ -89,15 +89,6 @@ const Login: React.FC = () => {
               className="mb-4 p-3 w-full rounded bg-white text-black shadow"
               onChange={(e) => setEmail(e.target.value)}
             />
-
-            <label className="fontQuick text-sm mb-1">Código:</label>
-            <input
-              value={code}
-              type="text"
-              className="mb-4 p-3 w-full rounded bg-white text-black shadow"
-              onChange={(e) => setCode(e.target.value)}
-            />
-
             <label className="fontQuick text-sm mb-1">Senha:</label>
             <div className="relative mb-4">
               <input

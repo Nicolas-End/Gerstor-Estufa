@@ -7,9 +7,9 @@ import CountDeliverys from "./Controllers/getDeliveryQuantidy"
 import getDeliverysToDo from "./Controllers/getDeliverysToDo";
 import getDelivery from "./Controllers/getEspecificDelivery";
 import AddNewDelivery from "./Controllers/addNewDelivery";
+import sendEmailRecupeation from "./Controllers/passRecuperationEmail";
 export async function validateWorkerLogin(
   email: string,
-  id: string,
   password: string,
   router: AppRouterInstance
 ) {
@@ -17,7 +17,7 @@ export async function validateWorkerLogin(
   // cria alguns localStorage caso contratio da um
   // fedback ao usuario
   try {
-    const data = await validateAcount(email, id, password);
+    const data = await validateAcount(email, password);
     if (data.status === "ok") {
       // Armazenando um token que tem os dados do usuario  no localStorage
       const user_token:any = data.token;
@@ -32,7 +32,17 @@ export async function validateWorkerLogin(
     return "Erro";
   }
 }
+export async function RecuperationEmail(email:string,newPassword:string) {
+  try {
+    // espera a resposta da Api e retorna como data
+    const data = await sendEmailRecupeation(email, newPassword);
 
+    return data.status
+  } catch (error) {
+
+    return "Erro na requisição";
+  }
+}
 export async function registerNewCompany(email: string, password: string,companyName:string) {
   const company_id = "1";
   try {

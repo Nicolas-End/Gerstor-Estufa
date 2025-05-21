@@ -10,7 +10,7 @@ export default function validateAcount(
   /* pede as info do trabalhador 
   e retorna uma promisse pois pode demorar */
   email: string,
-  id: string,
+
   password: string
 ): Promise<ApiResponse> {
   /* Na resposta da api ele "return" uma resposta chamada data */
@@ -18,7 +18,7 @@ export default function validateAcount(
     //faz um posta para a receber as informações da api
     axios.post<ApiResponse>('http://127.0.0.1:5000/worker-login', {
       email,
-      id,
+      
       password,
     })
     .then(response => {

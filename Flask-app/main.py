@@ -4,10 +4,10 @@ from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 import os
 from controllers.cripto_controller import CriptographyController
-from controllers.worker_controller import WorkerController
+from controllers.user_controller import UserController
 from controllers.company_controller import CompanyController
 from controllers.delivery_controller import DeliveryContoller
-
+from controllers.email_controller import EmailController
 load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -163,15 +163,13 @@ def add_new_delivery():
 def user_login():
     try:
         response = request.get_json() 
-        worker_id = response['id']
         worker_email = response['email']
         worker_password = response['password']
 
-        responseApi, returnApi = WorkerController().validate_worker(worker_id, worker_email, worker_password)
+        responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
 
         if returnApi:  
             data_user ={
-                'id':worker_id,
                 'email':worker_email,
                 'acess':True
             }
@@ -197,11 +195,18 @@ def forget_password() :
     try:
         
         user_json = request.get_json()
-        user_email = user_json['id']
         user_email = user_json['email']
         new_user_pass = user_json['newPassword']
         
-        return jsonify({'status':'ok','newPass':new_user_pass})
+        user_exist = UserController().find_user(user_email)
+        if not user_exist:
+            return jsonify({'status':'noexist'}),200
+        
+        sent_email = EmailController().send_recuperation_email(user_email,new_user_pass)
+        if sent_email:
+            return jsonify({'status':'ok'}),200
+        else:
+            return jsonify({'status':'error'}),200
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
@@ -218,7 +223,7 @@ def create_new_worker():
         worker_password = response['password']
         
         # Chama a função para adicionar um novo worker
-        responseApi, returnApi = WorkerController().add_new_Worker(worker_name, worker_id, worker_role, worker_email, worker_password)
+        responseApi, returnApi = UserController().add_new_user(worker_name, worker_id, worker_role, worker_email, worker_password)
         
         if returnApi:  # Sucesso
             return jsonify({'status': 'ok'}), 201  # Retorna status 201 para sucesso

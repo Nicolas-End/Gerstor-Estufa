@@ -63,7 +63,7 @@ export default function DeliveryFormPage() {
         router.push("/login");
         return;
       }
-      setIsLoading(false);
+      setPageIsLoading(false);
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
       router.push("/login");
