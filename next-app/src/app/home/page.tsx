@@ -59,10 +59,11 @@ export default function Home() {
               href="/deliverys"
               className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
             >
+              
               <h2 className="text-xl font-semibold mb-2">Pedidos</h2>
               <p className="text-4xl font-bold">{deliveryQuantidy}</p>
+              
             </Link>
-
             <div className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-2">Estatísticas</h2>
               <p className="text-4xl font-bold">12</p>
