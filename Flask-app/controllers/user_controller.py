@@ -70,3 +70,23 @@ class UserController:
             print('Error: ',e)
             return 'Error',False
             
+    def change_user_password(self,company_email,new_password):
+        try:
+            # pega o dados do usuario e verifica se ele existe no banco de dados
+            worker_datas = {
+                'company_email':company_email,
+            }
+            worker = self.coll.find_one(worker_datas)
+        
+            # se ele exister verifica se a senha dele esta correta caso sim 
+            # retorna um feedback de ok para o sistema
+            if worker:
+                
+                self.coll.update_one(worker_datas,{'$set':{'password':new_password}})
+                return True
+            
+            return False
+        
+        except Exception as e:
+            print('Error: ',e)
+            return 'Error',False

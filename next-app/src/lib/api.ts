@@ -8,6 +8,7 @@ import getDeliverysToDo from "./Controllers/getDeliverysToDo";
 import getDelivery from "./Controllers/getEspecificDelivery";
 import AddNewDelivery from "./Controllers/addNewDelivery";
 import sendEmailRecupeation from "./Controllers/passRecuperationEmail";
+import changePassword from "./Controllers/changeUserPassword";
 export async function validateWorkerLogin(
   email: string,
   password: string,
@@ -31,6 +32,17 @@ export async function validateWorkerLogin(
   } catch (error) {
     return "Erro";
   }
+}
+
+export async function validateTokenUser(token:string) {
+  try{
+    const change_pass  = await changePassword(token);
+    return change_pass.status
+  }
+  catch (error) {
+    console.log("Erro ao iniciar dashboard:", error);
+  }
+  
 }
 export async function RecuperationEmail(email:string,newPassword:string) {
   try {

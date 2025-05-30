@@ -3,9 +3,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 import bcrypt
 from config.config import DataBase 
-class ControlerToken:
-    #Abre conexão com o banco de dados
+class ControllerToken:
     def __init__(self):
+        
         self.db = DataBase().database
         self.collection_name = os.getenv("TOKEN_COLLECTION")
     def add_new_password_recuperation_token(self,token,user_email,newpassword):
@@ -47,9 +47,8 @@ class ControlerToken:
 
     def token_verify(self,token,user_email):
         try:
-            
             if not self.collection_name:
-                raise ValueError("UNIKE_TOKEN_COLECTION não está configurado no arquivo .env.")
+                raise ValueError("TOKEN_COLLECTION não está configurado no arquivo .env.")
 
         
             collection = self.db[self.collection_name]
@@ -57,14 +56,14 @@ class ControlerToken:
             user = collection.find_one({'user_email':user_email})
 
             if user:
-
                 if bcrypt.checkpw(token.encode('utf-8'), user["token"]):
-                    return True
+                    
+                    return True, user["new_password"]
                 else:
-                    return False
+                    return False, False
                 
-            return False
+            return False, False
         
         except Exception as e:
             print("Error",e)
-            return False
+            return False,False

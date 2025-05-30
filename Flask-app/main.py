@@ -8,6 +8,7 @@ from controllers.user_controller import UserController
 from controllers.company_controller import CompanyController
 from controllers.delivery_controller import DeliveryContoller
 from controllers.email_controller import EmailController
+from controllers.token_controller import ControllerToken
 load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -210,6 +211,30 @@ def forget_password() :
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
+    
+#sistema para alterar a senha a senha do usuario
+@app.route('/change-password' ,methods=['POST'])
+def change_password() :
+    try:
+        user_json = request.get_json()
+        token = user_json['token']
+        
+        token_data,email = token.split("&")
+        # verifica se o token do usuario é valido
+        token_valid, new_password = ControllerToken().token_verify(token_data,email)
+        if not token_valid:
+            return jsonify({'status':'token_invalid'}),200
+        
+        # se é valido ele muda a senha do usuario
+        changed_password = UserController().change_user_password(email,new_password)
+        
+        if changed_password:
+            return jsonify({'status':'ok'}),200
+        return jsonify({'status':'error0'}),200 
+    
+    except Exception as e: 
+        print('Error:', e)
+        return jsonify({'status':'error'})
     
 @app.route('/add-worker', methods=['POST'])
 def create_new_worker():

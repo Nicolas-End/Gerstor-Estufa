@@ -1,7 +1,7 @@
 import smtplib
 import uuid #cria um token unico
 from email.message import EmailMessage
-from controllers.token_controller import ControlerToken
+from controllers.token_controller import ControllerToken
 import os
 from dotenv import load_dotenv
 
@@ -15,7 +15,7 @@ class EmailController :
     def send_recuperation_email (self,user_email,new_password):
         try: 
             unique_token_acess = str(uuid.uuid4())
-            ControlerToken().add_new_password_recuperation_token(unique_token_acess,user_email,new_password)
+            ControllerToken().add_new_password_recuperation_token(unique_token_acess,user_email,new_password)
             email_to_user =f"""
                 <html>
                     <body>
