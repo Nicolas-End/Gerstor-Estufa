@@ -9,7 +9,7 @@ import Link from "next/link";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
+
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -30,13 +30,13 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     setIsLoading(true);
-    if (email === "" || password === "" || code === "") {
+    if (email === "" || password === "") {
       ShowAlert("Preencha Todos os Campos");
       setIsLoading(false);
       return;
     }
     try {
-      const response = await validateWorkerLogin(email, code, password, router);
+      const response = await validateWorkerLogin(email, password, router);
 
       if (response == "ok"){
         router.push("/home");
@@ -89,15 +89,6 @@ const Login: React.FC = () => {
               className="mb-4 p-3 w-full rounded bg-white text-black shadow"
               onChange={(e) => setEmail(e.target.value)}
             />
-
-            <label className="fontQuick text-sm mb-1">Código:</label>
-            <input
-              value={code}
-              type="text"
-              className="mb-4 p-3 w-full rounded bg-white text-black shadow"
-              onChange={(e) => setCode(e.target.value)}
-            />
-
             <label className="fontQuick text-sm mb-1">Senha:</label>
             <div className="relative mb-4">
               <input
@@ -117,7 +108,12 @@ const Login: React.FC = () => {
                   <i className="fa-regular fa-eye text-black"></i>
                 )}
               </button>
-            </div>
+            </div> <Link href="/password-forget" 
+            className="fontRobo text-green-800 hover:text-white hover:decoration-white transition duration-150 mt-2 underline decoration-green-800">
+            Esqueceu a senha ? 
+            <br />
+            <br />
+            </Link>
 
             <button
               onClick={handleLogin}
@@ -129,6 +125,7 @@ const Login: React.FC = () => {
                   <span className="mr-2">Entrando...</span>
                   <i className="fas fa-spinner fa-spin"></i>
                 </div>
+                
               ) : (
                 "Login"
               )}
@@ -140,6 +137,7 @@ const Login: React.FC = () => {
             >
               Registre-se
             </Link>
+           
           </div>
 
           {/* Imagem (visível apenas em telas médias ou maiores) */}

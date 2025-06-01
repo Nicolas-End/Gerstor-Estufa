@@ -39,14 +39,15 @@ class CompanyController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
-    def get_company_name(self, company_email):
+    def get_company(self, company_email):
         try:
             company = self.worker_coll.find_one( {"company_email": company_email} ) 
 
             if company:
-                return company['company_name'],True
+                return True
             
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
-        
+    
+

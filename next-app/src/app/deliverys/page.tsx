@@ -2,9 +2,11 @@
 
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys } from "@/lib/api";
+import { getDeliverys, validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function PedidosPage() {
   const router = useRouter();
@@ -14,8 +16,8 @@ export default function PedidosPage() {
 
   const initializeDeliverys = async () => {
     try {
-      const alreadyValidated = localStorage.getItem("alreadyValidated");
-      if (!alreadyValidated) {
+      const can_access_home = await validateHomeAcess(router);
+      if (!can_access_home) {
         router.push("/login");
         return;
       }
@@ -39,6 +41,7 @@ export default function PedidosPage() {
 
   useEffect(() => {
     initializeDeliverys();
+    AOS.init();
   }, []);
 
   if (isLoading) {
@@ -72,12 +75,15 @@ export default function PedidosPage() {
 
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
-              <div key={index} className={styles.card}>
-                
-                <div 
+              <div
+                key={index}
+                className={styles.card}
+                data-aos="fade-up"
+                data-aos-duration="3000"
+              >
+                <div
                   onDoubleClick={() => router.push(`delivery/${order.id}`)}
-                  onClick={() => setSelectedOrder(order)} // Altera o pedido selecionado
-
+                  onClick={() => setSelectedOrder(order)}
                   className={styles.orderItem}
                 >
                   <p className={styles.orderName}>{order.Produto}</p>
@@ -89,8 +95,12 @@ export default function PedidosPage() {
 
                 {selectedOrder?.id === order.id && (
                   <div className={styles.details}>
-                    <p className="text-black"><strong className="text-black">Local de Entrega:</strong> {order.LocalEntrega}</p>
-                    <p className="text-black"><strong className="text-black">Data de Entrega: </strong> {order.DataEntrega}</p>
+                    <p className="text-black">
+                      <strong>Local de Entrega:</strong> {order.LocalEntrega}
+                    </p>
+                    <p className="text-black">
+                      <strong>Data de Entrega:</strong> {order.DataEntrega}
+                    </p>
                   </div>
                 )}
               </div>

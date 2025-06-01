@@ -33,6 +33,35 @@
   margin-bottom: 1rem;
   color: #000000;
 }
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0a3b2c;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.produto {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.totalQuantity {
+  text-align: right;
+}
+
+.totalQuantity span:first-child {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: block;
+}
+
+.totalQuantity span:last-child {
+  font-size: 0.875rem;
+}
+
 
 .details {
   margin-top: 2rem;

@@ -29,6 +29,7 @@ export default function Sidebar() {
       <button className={styles.toggleButton} onClick={() => setMinimized(!minimized)}>
         {minimized ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
       </button>
+      
       <div className={styles.logo}>
         <div className={styles.logoContainer}>
           <div className={styles.logoCircle}>

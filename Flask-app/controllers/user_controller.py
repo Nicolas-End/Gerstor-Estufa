@@ -5,13 +5,13 @@ import bcrypt
 
 load_dotenv()
 
-class WorkerController:
+class UserController:
     def __init__(self):
         self.collection_name = os.getenv('WORKER_COLLECTION')
         self.db = DataBase().database
         self.coll = self.db[self.collection_name]
 
-    def add_new_Worker(self,name,id,role,email,password):
+    def add_new_user(self,name,id,role,email,password):
         try:
             # filtro para verificar se o usuario ja existe
             worker_filter = {"id":id,"company_email":email}
@@ -37,12 +37,11 @@ class WorkerController:
             print('Error: ',e)
             return 'Error',False,
     
-    def validate_worker(self,id,email,password):
+    def validate_user(self,email,password):
         try: 
             
             # pega o dados do usuario e verifica se ele existe no banco de dados
             worker_datas = {
-                'id':id,
                 'company_email':email,
             }
             worker = self.coll.find_one(worker_datas)
@@ -60,4 +59,34 @@ class WorkerController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
+    def find_user(self, company_email):
+        try:
+            company = self.coll.find_one( {"company_email": company_email} ) 
+
+            if company:
+                return True
             
+        except Exception as e:
+            print('Error: ',e)
+            return 'Error',False
+            
+    def change_user_password(self,company_email,new_password):
+        try:
+            # pega o dados do usuario e verifica se ele existe no banco de dados
+            worker_datas = {
+                'company_email':company_email,
+            }
+            worker = self.coll.find_one(worker_datas)
+        
+            # se ele exister verifica se a senha dele esta correta caso sim 
+            # retorna um feedback de ok para o sistema
+            if worker:
+                
+                self.coll.update_one(worker_datas,{'$set':{'password':new_password}})
+                return True
+            
+            return False
+        
+        except Exception as e:
+            print('Error: ',e)
+            return 'Error',False

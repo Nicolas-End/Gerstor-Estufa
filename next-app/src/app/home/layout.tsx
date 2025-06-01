@@ -6,7 +6,7 @@ import Sidebar from "@/Components/sidebar"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Estafa Fácil Industries",
+  title: "Estufa Fácil Industries",
   description: "Plant order management system",
 }
 
@@ -16,11 +16,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html >
-      <body className={inter.className}>
-        {children}
-      </body>
-    </html>
+    <>
+    {children} {/*Não precisa de tag HTML nem de Tag Body, causa erro de hidratação, somente deixar com Body e HTMl no Layout.tsx raíz */}
+    </>
+
   )
 }
 

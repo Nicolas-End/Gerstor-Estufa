@@ -10,7 +10,7 @@ export default function validateAcount(
   /* pede as info do trabalhador 
   e retorna uma promisse pois pode demorar */
   email: string,
-  id: string,
+
   password: string
 ): Promise<ApiResponse> {
   /* Na resposta da api ele "return" uma resposta chamada data */
@@ -20,7 +20,7 @@ export default function validateAcount(
     axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/worker-login', {
 
       email,
-      id,
+      
       password,
     })
     .then(response => {
