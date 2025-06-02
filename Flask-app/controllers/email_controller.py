@@ -20,7 +20,7 @@ class EmailController :
                 <html>
                     <body>
                         <p>Para mudar sua senha, acesse o link:</p>
-                        <a href="https://gerenciador-empresarial-1cfr.vercel.app/password-forget/{unique_token_acess}&{user_email}">
+                        <a href="https://gerenciador-empresarial.vercel.app/password-forget/{unique_token_acess}&{user_email}">
                             Mudar Senha
                         </a>
                         <p color="red">Este link será válido apenas por 3 minutos.</p>
