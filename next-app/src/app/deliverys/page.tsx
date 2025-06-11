@@ -39,10 +39,6 @@ export default function PedidosPage() {
     }
   };
 
-  useEffect(() => {
-    initializeDeliverys();
-    AOS.init();
-  }, []);
 
   if (isLoading) {
     return (

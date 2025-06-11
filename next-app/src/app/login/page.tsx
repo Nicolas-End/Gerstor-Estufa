@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
+import Head from 'next/head';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -56,13 +57,14 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <head>
+      <Head>
+  
         <title>Login - Controle Verde</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
-      </head>
+      </Head>
 
       <div className="min-h-screen bg-gradient-to-r from-[#fff] to-[#0a2c26] flex items-center justify-center p-4">
         <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white shadow-2xl rounded-lg overflow-hidden">
