@@ -81,7 +81,7 @@ class UserController:
             # se ele exister verifica se a senha dele esta correta caso sim 
             # retorna um feedback de ok para o sistema
             if worker:
-                
+                # muda a senha do usuario se for valido
                 self.coll.update_one(worker_datas,{'$set':{'password':new_password}})
                 return True
             

@@ -36,6 +36,7 @@ export async function validateWorkerLogin(
 
 export async function validateTokenUser(token:string) {
   try{
+    // envia para o back end para mudar a senha do usuario se for valido o token
     const change_pass  = await changePassword(token);
     return change_pass.status
   }

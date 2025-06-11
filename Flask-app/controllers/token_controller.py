@@ -52,10 +52,11 @@ class ControllerToken:
 
         
             collection = self.db[self.collection_name]
-        
-            user = collection.find_one({'user_email':user_email})
+            # vai no mudar senha e verifica o email do usuario existe
+            user = collection.find_one({'company_email':user_email})
 
             if user:
+                # se o usuario existe ele verifica se o token é valido  e igual no banco de dados
                 if bcrypt.checkpw(token.encode('utf-8'), user["token"]):
                     
                     return True, user["new_password"]
