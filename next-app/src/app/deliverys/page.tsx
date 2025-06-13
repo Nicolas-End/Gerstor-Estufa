@@ -1,5 +1,9 @@
 "use client";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import {faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
@@ -87,6 +91,11 @@ export default function PedidosPage() {
                     <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
                     <span className={styles.orderUnit}>Caixas</span>
                   </div>
+                   <div className="gap-6 flex flex-row-reverse">
+                      <div><button><FontAwesomeIcon icon={faTrash} className="text-white " /></button></div>
+                      <div><button><FontAwesomeIcon icon={faCheck} className="text-white" /></button></div>
+                      <div><button><FontAwesomeIcon icon={faPenToSquare} className="text-white" /></button></div>
+                    </div>
                 </div>
 
                 {selectedOrder?.id === order.id && (  
