@@ -5,15 +5,16 @@ import Sidebar from "@/Components/sidebar";
 import { getDeliverys, validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-
+  useEffect(() => {
+   
+    initializeDeliverys(); 
+  }, []);
   const initializeDeliverys = async () => {
     try {
       const can_access_home = await validateHomeAcess(router);
@@ -74,8 +75,6 @@ export default function PedidosPage() {
               <div
                 key={index}
                 className={styles.card}
-                data-aos="fade-up"
-                data-aos-duration="3000"
               >
                 <div
                   onDoubleClick={() => router.push(`delivery/${order.id}`)}
