@@ -78,7 +78,7 @@ class UserController:
             }
             worker = self.coll.find_one(worker_datas)
         
-            # se ele exister verifica se a senha dele esta correta caso sim 
+            # se ele exister verifica se o usuario existe, caso sim 
             # retorna um feedback de ok para o sistema
             if worker:
                 # muda a senha do usuario se for valido

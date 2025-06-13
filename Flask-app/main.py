@@ -190,7 +190,7 @@ def user_login():
         return jsonify({'status': 'error', 'message': str(e)}), 200 
 
 
-@app.route('/forget-password' ,methods=['POST'])
+@app.route('/send-email-recuperation' ,methods=['POST'])
 def forget_password() :
     
     try:
@@ -204,10 +204,12 @@ def forget_password() :
             return jsonify({'status':'noexist'}),200
         
         sent_email = EmailController().send_recuperation_email(user_email,new_user_pass)
+        
         if sent_email:
             return jsonify({'status':'ok'}),200
         else:
             return jsonify({'status':'error'}),200
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 

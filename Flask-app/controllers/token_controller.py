@@ -8,25 +8,27 @@ class ControllerToken:
         
         self.db = DataBase().database
         self.collection_name = os.getenv("TOKEN_COLLECTION")
-    def add_new_password_recuperation_token(self,token,user_email,newpassword):
+    
+    """
+        Cria um novo token para o usuario mudar a senha
+    """
+    def new_recuperation_token(self,token,user_email,newpassword):
         try:
-
             
             if not self.collection_name:
                 raise ValueError("TOKEN_COLLECTION não está configurado no arquivo .env.")
 
-            #configura a collection que recebera o insert
             collection = self.db[self.collection_name]
-        
 
+            # verifica se o email do usuario ja existe no banco de dados
             if collection.find_one({"company_email":user_email}):
-                #invalida o link anterior se o usuario ja tiver realizado uma outra requesição
                 collection.delete_one({"company_email":user_email})
 
             #limita o tempo que o token ficar valido apenas para 3 minutos dps sera apgado
             collection.create_index(
                 [("date",1)],expireAfterSeconds=180
             )
+            
             hashed_password = bcrypt.hashpw(newpassword.encode('utf-8'), bcrypt.gensalt())
             hashed_token = bcrypt.hashpw(token.encode('utf-8'), bcrypt.gensalt())
 
@@ -44,7 +46,10 @@ class ControllerToken:
             print("Error: ",e)
             return False
 
-
+    """
+        Aqui verifica se o token enviado pelo usuario e valido,
+        se for valido deleta o token e retorna a nova senha
+    """
     def token_verify(self,token,user_email):
         try:
             if not self.collection_name:
@@ -58,7 +63,8 @@ class ControllerToken:
             if user:
                 # se o usuario existe ele verifica se o token é valido  e igual no banco de dados
                 if bcrypt.checkpw(token.encode('utf-8'), user["token"]):
-                    
+                    #se tiver tudo certo deleta o recuperar senha
+                    collection.delete_one({'company_email':user_email})
                     return True, user["new_password"]
                 else:
                     return False, False

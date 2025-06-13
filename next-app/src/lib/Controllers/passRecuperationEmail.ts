@@ -12,7 +12,7 @@ export default function sendEmailRecupeation(email:string,newPassword:string): P
        
 
       axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/forget-password',
+        'http://127.0.0.1:5000/send-email-recuperation',
         {
             email,
             newPassword
