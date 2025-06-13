@@ -101,13 +101,13 @@ const Login: React.FC = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-900 "
                 onClick={PasswordVisible}
               >
                 {isVisible ? (
-                  <i className="fa-regular fa-eye-slash text-black"></i>
+                  <i className="fa-regular fa-eye-slash"></i>
                 ) : (
-                  <i className="fa-regular fa-eye text-black"></i>
+                  <i className="fa-regular fa-eye"></i>
                 )}
               </button>
             </div> <Link href="/password-forget" 
