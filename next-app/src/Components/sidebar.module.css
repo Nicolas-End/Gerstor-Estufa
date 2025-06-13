@@ -7,6 +7,7 @@
   flex-direction: column;
   transition: width 0.3s ease;
   position: relative;
+  z-index: 100000;
 }
 
 .minimized {
