@@ -1,5 +1,6 @@
 "use client";
 
+import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { getDeliverys, validateHomeAcess } from "@/lib/api";
@@ -88,7 +89,7 @@ export default function PedidosPage() {
                   </div>
                 </div>
 
-                {selectedOrder?.id === order.id && (
+                {selectedOrder?.id === order.id && (  
                   <div className={styles.details}>
                     <p className="text-black">
                       <strong>Local de Entrega:</strong> {order.LocalEntrega}
