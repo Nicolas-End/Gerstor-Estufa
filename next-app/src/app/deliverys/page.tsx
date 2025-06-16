@@ -111,7 +111,9 @@ export default function PedidosPage() {
               </div>
             ))}
           </div>
+          
         </div>
+
       </div>
     );
   }

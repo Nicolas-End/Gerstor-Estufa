@@ -227,7 +227,7 @@ def change_password() :
         if not token_valid:
             return jsonify({'status':'token_invalid'}),200
         
-        # se o token do email for valido ele muda a senha do usuario
+        # se o token do email for valido ele muda a senha do usuario                                                                                                        
         changed_password = UserController().change_user_password(email,new_password)
         
         if changed_password:
