@@ -139,7 +139,7 @@ export default function DeliveryFormPage() {
           {/* Formulário de pedido */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col"
+            className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col mb-6"
           >
             {/* Campos Nome, Endereço e Data de Entrega */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
