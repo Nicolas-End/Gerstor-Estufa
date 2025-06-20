@@ -6,6 +6,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+"""
+    Sistema para enviar emails
+"""
 class EmailController :
     def __init__(self):
         self.msg = EmailMessage()

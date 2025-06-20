@@ -3,6 +3,11 @@ from datetime import datetime
 from dotenv import load_dotenv
 import bcrypt
 from config.config import DataBase 
+
+"""
+    Sistema para cirar e controlar tokens para mudar a senha do usuario
+    
+"""
 class ControllerToken:
     def __init__(self):
         

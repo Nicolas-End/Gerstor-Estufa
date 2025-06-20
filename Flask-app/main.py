@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 import os
 from controllers.cripto_controller import CriptographyController
 from controllers.user_controller import UserController
-from controllers.company_controller import CompanyController
 from controllers.delivery_controller import DeliveryContoller
 from controllers.email_controller import EmailController
 from controllers.token_controller import ControllerToken
@@ -75,7 +74,7 @@ def add_new_Adm():
         company_password = response['password']
         company_name = response['companyName']
 
-        responseApi, returnApi = CompanyController().add_new_Company(company_id,company_email,company_password,company_name)
+        responseApi, returnApi = UserController().add_new_Company(company_id,company_email,company_password,company_name)
 
         if returnApi:
             return jsonify({'status':'ok'}),201

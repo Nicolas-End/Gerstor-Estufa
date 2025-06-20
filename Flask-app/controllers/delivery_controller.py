@@ -5,6 +5,10 @@ import os
 
 load_dotenv()
 
+"""
+    Sistema para gestionar e contolar os estoques de entregas
+    da empresa em questão
+"""
 class DeliveryContoller:
     def __init__(self):
         self.delivery_collection = os.getenv('DELIVERY_COLLECTION')
