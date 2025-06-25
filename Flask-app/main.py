@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 import os
 from controllers.cripto_controller import CriptographyController
 from controllers.user_controller import UserController
-from controllers.company_controller import CompanyController
 from controllers.delivery_controller import DeliveryContoller
 from controllers.email_controller import EmailController
 from controllers.token_controller import ControllerToken
@@ -75,7 +74,7 @@ def add_new_Adm():
         company_password = response['password']
         company_name = response['companyName']
 
-        responseApi, returnApi = CompanyController().add_new_Company(company_id,company_email,company_password,company_name)
+        responseApi, returnApi = UserController().add_new_Company(company_id,company_email,company_password,company_name)
 
         if returnApi:
             return jsonify({'status':'ok'}),201
@@ -160,7 +159,7 @@ def add_new_delivery():
     
         
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
-@app.route('/worker-login', methods=["POST"])
+@app.route('/user-login', methods=["POST"])
 def user_login():
     try:
         response = request.get_json() 
@@ -190,7 +189,7 @@ def user_login():
         return jsonify({'status': 'error', 'message': str(e)}), 200 
 
 
-@app.route('/forget-password' ,methods=['POST'])
+@app.route('/send-email-recuperation' ,methods=['POST'])
 def forget_password() :
     
     try:
@@ -204,10 +203,12 @@ def forget_password() :
             return jsonify({'status':'noexist'}),200
         
         sent_email = EmailController().send_recuperation_email(user_email,new_user_pass)
+        
         if sent_email:
             return jsonify({'status':'ok'}),200
         else:
             return jsonify({'status':'error'}),200
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
@@ -225,12 +226,14 @@ def change_password() :
         if not token_valid:
             return jsonify({'status':'token_invalid'}),200
         
-        # se é valido ele muda a senha do usuario
+        # se o token do email for valido ele muda a senha do usuario                                                                                                        
         changed_password = UserController().change_user_password(email,new_password)
         
         if changed_password:
+            
             return jsonify({'status':'ok'}),200
-        return jsonify({'status':'error0'}),200 
+        
+        return jsonify({'status':'error'}),200 
     
     except Exception as e: 
         print('Error:', e)

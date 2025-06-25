@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+"""
+    Sistema para criptografar e descriptografar os dados do usuario
+"""
 class CriptographyController:
     def __init__(self):
         self.jwt_password = os.getenv("SUPER_KEY")

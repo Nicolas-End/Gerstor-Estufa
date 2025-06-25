@@ -1,24 +1,22 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import validateAcount from "./Controllers/workerLoginValidate";
-import addNewCompanyToDataBase from "./Controllers/createNewCompany";
-import validateHome from "./Controllers/homeAcess";
-import CountDeliverys from "./Controllers/getDeliveryQuantidy"
-import getDeliverysToDo from "./Controllers/getDeliverysToDo";
-import getDelivery from "./Controllers/getEspecificDelivery";
-import AddNewDelivery from "./Controllers/addNewDelivery";
-import sendEmailRecupeation from "./Controllers/passRecuperationEmail";
-import changePassword from "./Controllers/changeUserPassword";
+// Faz o controle das entregas da empresa
+import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo  } from "./Controllers/delivery";
+
+// Faz o processo e controle de senha do usuario
+import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
+
+// Faz os preocessos de login, cadastro , acesso do usuario
+import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "./Controllers/user";
 export async function validateWorkerLogin(
   email: string,
   password: string,
-  router: AppRouterInstance
 ) {
   // se a requisição no validate_worker der certo ele retorna
   // cria alguns localStorage caso contratio da um
   // fedback ao usuario
   try {
-    const data = await validateAcount(email, password);
+    const data = await UserLoginAcess(email, password);
     if (data.status === "ok") {
       // Armazenando um token que tem os dados do usuario  no localStorage
       const user_token:any = data.token;
@@ -36,7 +34,8 @@ export async function validateWorkerLogin(
 
 export async function validateTokenUser(token:string) {
   try{
-    const change_pass  = await changePassword(token);
+    // envia para o back end para mudar a senha do usuario se for valido o token
+    const change_pass  = await ChangePassword(token);
     return change_pass.status
   }
   catch (error) {
@@ -44,10 +43,11 @@ export async function validateTokenUser(token:string) {
   }
   
 }
+
 export async function RecuperationEmail(email:string,newPassword:string) {
   try {
     // espera a resposta da Api e retorna como data
-    const data = await sendEmailRecupeation(email, newPassword);
+    const data = await SendEmailRecovery(email, newPassword);
 
     return data.status
   } catch (error) {
@@ -59,7 +59,7 @@ export async function registerNewCompany(email: string, password: string,company
   const company_id = "1";
   try {
     // espera a resposta da Api e retorna como data
-    const data = await addNewCompanyToDataBase(email, company_id, password,companyName);
+    const data = await AddNewCompany(email, company_id, password,companyName);
 
     if (data.status === "ok") {
       return "ok";
@@ -83,7 +83,7 @@ export async function validateHomeAcess(router: AppRouterInstance){
       return false
     }
     
-    const data = await validateHome()
+    const data = await ValidadeUserAcess()
     
     if (data.status === "error"){
       router.push('/login')
@@ -101,7 +101,7 @@ export async function validateHomeAcess(router: AppRouterInstance){
 // Usado no Home
 export async function countDeliveryQuantidy(){
   try{
-    const data = await CountDeliverys()
+    const data = await DeliveryQuantidy()
     if (data.status === 'ok'){
       return data.count
     }
@@ -117,7 +117,7 @@ export async function countDeliveryQuantidy(){
 
 export async function getDeliverys(){
   try{
-    const data = await getDeliverysToDo();
+    const data = await GetDeliverysToDo();
 
     if (data.status === "ok") {
       return data.deliverys;
@@ -134,7 +134,7 @@ export async function getDeliverys(){
 
 export async function getEscificDelivery (id:string){
   try{
-    const data = await getDelivery(id);
+    const data = await GetEspecificDeliveryDatas(id);
 
     if (data.status === "ok") {
       return data.deliveryDatas;

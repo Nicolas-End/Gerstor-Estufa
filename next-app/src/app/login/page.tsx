@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
+import Head from 'next/head';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +37,7 @@ const Login: React.FC = () => {
       return;
     }
     try {
-      const response = await validateWorkerLogin(email, password, router);
+      const response = await validateWorkerLogin(email, password);
 
       if (response == "ok"){
         router.push("/home");
@@ -56,13 +57,14 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <head>
+      <Head>
+  
         <title>Login - Controle Verde</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
-      </head>
+      </Head>
 
       <div className="min-h-screen bg-gradient-to-r from-[#fff] to-[#0a2c26] flex items-center justify-center p-4">
         <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white shadow-2xl rounded-lg overflow-hidden">
@@ -99,13 +101,13 @@ const Login: React.FC = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-900 "
                 onClick={PasswordVisible}
               >
                 {isVisible ? (
-                  <i className="fa-regular fa-eye-slash text-black"></i>
+                  <i className="fa-regular fa-eye-slash"></i>
                 ) : (
-                  <i className="fa-regular fa-eye text-black"></i>
+                  <i className="fa-regular fa-eye"></i>
                 )}
               </button>
             </div> <Link href="/password-forget" 

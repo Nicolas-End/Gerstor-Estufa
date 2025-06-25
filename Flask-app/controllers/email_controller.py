@@ -6,6 +6,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+"""
+    Sistema para enviar emails
+"""
 class EmailController :
     def __init__(self):
         self.msg = EmailMessage()
@@ -15,7 +19,7 @@ class EmailController :
     def send_recuperation_email (self,user_email,new_password):
         try: 
             unique_token_acess = str(uuid.uuid4())
-            ControllerToken().add_new_password_recuperation_token(unique_token_acess,user_email,new_password)
+            ControllerToken().new_recuperation_token(unique_token_acess,user_email,new_password)
             email_to_user =f"""
                 <html>
                     <body>

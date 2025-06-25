@@ -1,7 +1,8 @@
 .container {
   display: flex;
-  height: 110vh;
+  height: 100%;
   background-color: #f9f9f9;
+  
 }
 
 .content {
@@ -10,6 +11,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin-bottom: 7vh;
 }
 
 .header {

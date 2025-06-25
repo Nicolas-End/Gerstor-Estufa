@@ -7,6 +7,7 @@
   flex-direction: column;
   transition: width 0.3s ease;
   position: relative;
+  z-index: 100000;
 }
 
 .minimized {
@@ -105,13 +106,26 @@
 }
 
 .toggleButton {
-  background: none;
-  border: none;
+  position: absolute;
+  top: 1.75rem;
+  right: -12px;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  background: #58251b;
+  border: 1px solid #58251b;
+  border-radius: 50%;
   color: white;
-  margin-top: 1rem;
-  cursor: pointer;
+  display: flex;
   align-self: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: right 0.3s ease;
 }
+.minimized .toggleButton{
+  right: -12px;
+}
+
 
 /* Profile image styles */
 .profileImageContainer {

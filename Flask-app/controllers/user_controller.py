@@ -5,6 +5,9 @@ import bcrypt
 
 load_dotenv()
 
+"""
+    Sistema para controlar os dados dos usuarios
+"""
 class UserController:
     def __init__(self):
         self.collection_name = os.getenv('WORKER_COLLECTION')
@@ -36,7 +39,31 @@ class UserController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False,
-    
+    def add_new_Company(self,id,email,password,company_name):
+        try:
+            # filtro para verificar se o usuario ja existe
+            company_exist = {"id":id,"company_email":email}
+
+            if self.coll.find_one(company_exist):
+                return 'Adm Already Exist',False
+        
+            # se n exister criptografa a senha do usuario
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+            company_datas = {
+                'id':id,
+                'role':'ADM',
+                'company_name':company_name,
+                'company_email':email,
+                'password':hashed_password
+            }
+
+            self.coll.insert_one(company_datas)
+            return 'ok',True
+        
+        except Exception as e:
+            print('Error: ',e)
+            return 'Error',False
     def validate_user(self,email,password):
         try: 
             
@@ -78,10 +105,10 @@ class UserController:
             }
             worker = self.coll.find_one(worker_datas)
         
-            # se ele exister verifica se a senha dele esta correta caso sim 
+            # se ele exister verifica se o usuario existe, caso sim 
             # retorna um feedback de ok para o sistema
             if worker:
-                
+                # muda a senha do usuario se for valido
                 self.coll.update_one(worker_datas,{'$set':{'password':new_password}})
                 return True
             

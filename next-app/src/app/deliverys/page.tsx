@@ -1,19 +1,25 @@
 "use client";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import {faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { getDeliverys, validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-
+  useEffect(() => {
+   
+    initializeDeliverys(); 
+  }, []);
   const initializeDeliverys = async () => {
     try {
       const can_access_home = await validateHomeAcess(router);
@@ -39,10 +45,6 @@ export default function PedidosPage() {
     }
   };
 
-  useEffect(() => {
-    initializeDeliverys();
-    AOS.init();
-  }, []);
 
   if (isLoading) {
     return (
@@ -78,8 +80,6 @@ export default function PedidosPage() {
               <div
                 key={index}
                 className={styles.card}
-                data-aos="fade-up"
-                data-aos-duration="3000"
               >
                 <div
                   onDoubleClick={() => router.push(`delivery/${order.id}`)}
@@ -91,9 +91,14 @@ export default function PedidosPage() {
                     <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
                     <span className={styles.orderUnit}>Caixas</span>
                   </div>
+                   <div className="gap-6 flex flex-row-reverse">
+                      <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                      <div><button><FontAwesomeIcon icon={faCheck} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                      <div><button><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
+                    </div>
                 </div>
 
-                {selectedOrder?.id === order.id && (
+                {selectedOrder?.id === order.id && (  
                   <div className={styles.details}>
                     <p className="text-black">
                       <strong>Local de Entrega:</strong> {order.LocalEntrega}
@@ -106,7 +111,9 @@ export default function PedidosPage() {
               </div>
             ))}
           </div>
+          
         </div>
+
       </div>
     );
   }
