@@ -43,6 +43,7 @@ export async function validateTokenUser(token:string) {
   }
   
 }
+
 export async function RecuperationEmail(email:string,newPassword:string) {
   try {
     // espera a resposta da Api e retorna como data

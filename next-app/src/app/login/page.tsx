@@ -37,7 +37,7 @@ const Login: React.FC = () => {
       return;
     }
     try {
-      const response = await validateWorkerLogin(email, password, router);
+      const response = await validateWorkerLogin(email, password);
 
       if (response == "ok"){
         router.push("/home");

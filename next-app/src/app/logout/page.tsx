@@ -3,11 +3,12 @@ import { useRouter } from "next/navigation"
 import { useEffect } from "react";
 export default function Logout(){
     const router = useRouter();
-    const cleanDatas = () =>{
-        localStorage.clear()
-        router.push('./login')
-    };
-    cleanDatas()
+    useEffect(() => {
+      // Este código só roda no browser
+      localStorage.clear();
+      router.push('./login');
+    }, []);
+
     return (
         <div className="flex items-center justify-center h-screen bg-white text-gray-800">
         <div className="flex items-center space-x-2">

@@ -159,7 +159,7 @@ def add_new_delivery():
     
         
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
-@app.route('/worker-login', methods=["POST"])
+@app.route('/user-login', methods=["POST"])
 def user_login():
     try:
         response = request.get_json() 
