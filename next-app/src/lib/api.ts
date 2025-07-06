@@ -1,7 +1,7 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo  } from "./Controllers/delivery";
+import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery  } from "./Controllers/delivery";
 
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
@@ -137,7 +137,7 @@ export async function getEscificDelivery (id:string){
     const data = await GetEspecificDeliveryDatas(id);
 
     if (data.status === "ok") {
-      return data.deliveryDatas;
+      return data;
     } else if (data.status === "invalid") {
       return "invalid";
     } else {
@@ -153,6 +153,24 @@ export async function addNewItemDelivery (FormsData:any){
   try{
 
     const data = await AddNewDelivery(FormsData)
+
+    if (data.status === "ok"){
+
+      return 'ok'
+    }
+    else{
+      return 'error'
+    }
+  } catch (error){
+    console.log("Error ao acessar a conta: ",error);
+    return "Erro na requisição";
+  }
+}
+
+export async function editDelivery (FormsData:any){
+  try{
+
+    const data = await EditDelivery(FormsData)
 
     if (data.status === "ok"){
 

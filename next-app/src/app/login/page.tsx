@@ -42,11 +42,8 @@ const Login: React.FC = () => {
       if (response == "ok"){
         router.push("/home");
       }
-      else if (response === "wrong Pass") {
-        ShowAlert("A senha esta incorreta");
-      }
       else {
-        ShowAlert("Usuário não encontrado");
+        ShowAlert("Senha ou email incorretos");
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error);

@@ -94,7 +94,7 @@ export default function PedidosPage() {
                    <div className="gap-6 flex flex-row-reverse">
                       <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
                       <div><button><FontAwesomeIcon icon={faCheck} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
-                      <div><button><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
+                      <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
                 </div>
 

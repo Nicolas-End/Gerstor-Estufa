@@ -56,6 +56,26 @@ export function AddNewDelivery (FormsData:any): Promise<ApiResponse> {
     })
 }
 
+export function EditDelivery (FormsData:any): Promise<ApiResponse> {
+  return new Promise<ApiResponse>((resolve) =>{
+    const token = localStorage.getItem('token_from_user')
+    axios.post<ApiResponse>('http://127.0.0.1:5000/edit-delivery', {
+        FormsData
+      },{
+        headers:{
+            'Authorization':  token || ''
+        }
+      }
+    )
+      .then(response => {
+
+        resolve(response.data);
+      })
+      .catch(error => {
+        resolve({ status: 'error'});
+      });
+})
+}
 // Essa Função serve para pegar os dados de uma entrega especifica
 // Que o usuario selecionou
 export function GetEspecificDeliveryDatas(id:string): Promise<ApiResponse> {
@@ -90,7 +110,7 @@ export function GetDeliverysToDo(): Promise<ApiResponse> {
        
       const token = localStorage.getItem('token_from_user')
       axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/get-deliverys-products',
+        'http://127.0.0.1:5000/get-deliverys',
         {}, // corpo da requisição POST (vazio nesse caso)
         {
           headers: {

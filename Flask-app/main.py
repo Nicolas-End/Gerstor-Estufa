@@ -85,7 +85,7 @@ def add_new_Adm():
         return jsonify({'status': 'error', 'message': str(e)}), 200 
     
 #retorna os produtos de entregas da empresa
-@app.route('/get-deliverys-products', methods=['POST'])
+@app.route('/get-deliverys', methods=['POST'])
 def get_deliverys_products():
     try:
         
@@ -97,7 +97,7 @@ def get_deliverys_products():
         if not datas:
             return jsonify({'status':'error'}),400
 
-        deliverys, ok = DeliveryContoller().get_deliverys_products(datas['email'])
+        deliverys, ok = DeliveryContoller().get_deliverys(datas['email'])
         if not ok:
             return jsonify({'status': 'error'}), 400
         
@@ -116,7 +116,7 @@ def get_especific_delivery():
             return jsonify({'status': 'invalid'}), 400
             
         request_id = request.get_json()['id']
-        print(request_id)
+    
         datas = CriptographyController().decripto_datas(token)
         if not datas:
             return jsonify({'status':'error'}),400
@@ -124,7 +124,8 @@ def get_especific_delivery():
         delivery ,ok = DeliveryContoller().get_especific_delivery(datas['email'],request_id)
         
         if ok:
-            return jsonify({'status':'ok','deliveryDatas':delivery}),200
+            products = DeliveryContoller().get_products_from_a_delivery(datas['email'],request_id)
+            return jsonify({'status':'ok','deliveryDatas':delivery,"products":products}),200
         
         return jsonify({'status':'error'}),400
     
@@ -157,7 +158,32 @@ def add_new_delivery():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
     
+@app.route('/edit-delivery',methods=['POST'])
+def edit_delivery():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
         
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+        formsData = request.get_json()['FormsData']
+        delivery_id = formsData['id']
+        itens = formsData['items']
+        address = formsData['address']
+        date = formsData['deliveryDate']
+        name = formsData['name']
+        
+        ok = DeliveryContoller().edit_delivery(datas['email'],delivery_id,itens,address,date,name)
+        if ok:
+            return jsonify({'status':'ok'}),200
+        return jsonify({'status':'error'}),400
+    
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/user-login', methods=["POST"])
 def user_login():

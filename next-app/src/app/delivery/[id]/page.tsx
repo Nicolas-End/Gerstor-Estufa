@@ -5,10 +5,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getEscificDelivery, validateHomeAcess } from "@/lib/api";
 import Sidebar from "@/Components/sidebar";
+import { ChevronsLeftRightEllipsisIcon } from "lucide-react";
 
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [deliverysDatas, setDeliveryDatas] = useState<any[]>([]); // Array que guarda os dados do pedido
+  const [deliverysDatas, setDeliveryDatas] = useState<any[]>([]); 
+  const [products, setProducts] = useState<any[]>([]); // Array que guarda os dados do pedido
   const router = useRouter();
   const params = useParams();
 
@@ -35,8 +37,11 @@ export default function ProdutoPage() {
         router.push("/login"); // Redireciona caso haja erro
         return;
       }
-
-      setDeliveryDatas([delivery]); // Atualiza o estado com os dados da entrega
+      
+      setDeliveryDatas([delivery.deliveryDatas]);
+      setProducts([delivery.products])
+      
+       // Atualiza o estado com os dados da entrega
       setIsLoading(false);
     } catch (error) {
       console.log("Erro ao carregar dados:", error);
@@ -47,7 +52,9 @@ export default function ProdutoPage() {
   // Carrega os dados do pedido assim que o ID estiver disponível
   useEffect(() => {
     if (id !== null) {
-      initializeDeliverys(); // Chama a função de inicialização
+      initializeDeliverys();
+      
+       // Chama a função de inicialização
     }
   }, [id]);
 
@@ -84,7 +91,7 @@ export default function ProdutoPage() {
             </div>
           </div>
         </div>
-
+      
         {/* Exibindo os detalhes adicionais do pedido */}
         <div className={styles.details}>
           <p>
@@ -92,6 +99,14 @@ export default function ProdutoPage() {
           </p>
           <p>
             <strong>Quantidade de Caixas:</strong> {selectedOrder.Quantidade}
+          </p>
+          {products.map((product, index) => (
+            <p key={index}>
+              <strong>Produto:</strong> {product.Produto}
+            </p>
+          ))}
+          <p>
+            <strong>Observações:</strong> {selectedOrder.Observacoes}
           </p>
         </div>
       </div>
