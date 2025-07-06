@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
 import Head from 'next/head';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -54,15 +55,6 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Head>
-  
-        <title>Login - Controle Verde</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-        />
-      </Head>
-
       <div className="min-h-screen bg-gradient-to-r from-[#fff] to-[#0a2c26] flex items-center justify-center p-4">
         <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white shadow-2xl rounded-lg overflow-hidden">
           
@@ -98,14 +90,10 @@ const Login: React.FC = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-900 "
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-900"
                 onClick={PasswordVisible}
               >
-                {isVisible ? (
-                  <i className="fa-regular fa-eye-slash"></i>
-                ) : (
-                  <i className="fa-regular fa-eye"></i>
-                )}
+                {isVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
               </button>
             </div> <Link href="/password-forget" 
             className="fontRobo text-green-800 hover:text-white hover:decoration-white transition duration-150 mt-2 underline decoration-green-800">

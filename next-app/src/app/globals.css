@@ -28,3 +28,19 @@ body {
   font-family: var(--font-quicksand);
 }
 
+/* Chrome, Safari, Opera */
+input[type="password"]::-webkit-password-reveal-button {
+  display: none;
+}
+
+/* Edge, IE */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* Caso queira tirar também qualquer decoração nativa */
+input[type="password"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
