@@ -1,0 +1,186 @@
+.container {
+  display: flex;
+  height: 100%;
+  background-color: #f9f9f9;
+}
+
+.content {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 7vh;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333333;
+  text-align: center;
+}
+
+.headerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.searchContainer {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 1rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #0a3b2c;
+  box-shadow: 0 0 0 3px rgba(10, 59, 44, 0.1);
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.addButton {
+  background-color: #0a3b2c;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  background-color: #0f4f3a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.ordersList {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(1000px, 1fr));
+  max-width: 100%;
+  margin-top: 1.5rem;
+}
+
+.orderFunctionary {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.orderFunctionary:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.functionaryCard {
+  background-color: #0a3b2c;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  min-height: 80px;
+}
+
+.functionaryCard:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.functionaryIcon {
+  font-size: 3rem;
+  color: white;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.functionaryName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.orderName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .ordersList {
+    grid-template-columns: 1fr;
+  }
+  
+  .headerTop {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .headerBottom {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .searchContainer {
+    max-width: 100%;
+  }
+  
+  .functionaryName {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    font-size: 1.1rem;
+  }
+  
+  .functionaryIcon {
+    font-size: 2.5rem;
+  }
+}

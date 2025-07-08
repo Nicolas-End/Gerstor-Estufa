@@ -1,8 +1,8 @@
 "use client";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
-import styles from "../deliverys/page.module.css";
+import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,8 @@ import { useEffect, useState } from "react";
 export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [functionaryCount, setFunctionaryCount] = useState<number>(0); // substituindo DeliverysToDo
+    const [functionaryCount, setFunctionaryCount] = useState<number>(0);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         initializeFunctionary();
@@ -24,11 +25,8 @@ export default function FuncionarioPage() {
                 router.push("/login");
                 return;
             }
-
-            // Simulação de contador de algo (ex: pedidos feitos, funcionários ativos etc.)
-            const count = 5; // aqui você pode colocar sua lógica real depois
+            const count = 5;
             setFunctionaryCount(count);
-
             setIsLoading(false);
         } catch (error) {
             console.error("Erro ao verificar acesso do funcionário:", error);
@@ -51,14 +49,35 @@ export default function FuncionarioPage() {
                 <Sidebar />
                 <div className={styles.content}>
                     <div className={styles.header}>
-                        <h1 className={styles.title}>Pedidos</h1>
-                        <div className="flex items-center space-x-4">
+                        <div className={styles.headerTop}>
+                            <h1 className={styles.title}>Funcionarios</h1>
+                        </div>
+                        <div className={styles.headerBottom}>
+                            <div className={styles.searchContainer}>
+                                <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+                                <input
+                                    type="text"
+                                    placeholder="Pesquisar funcionários..."
+                                    className={styles.searchInput}
+                                />
+                            </div>
                             <button
-                                onClick={() => router.push("/delivery-form")}
-                                className="bg-[#0a3b2c] text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition"
-                            >
+                                onClick={() => router.push("")}
+                                className={styles.addButton}>
                                 + Adicionar
                             </button>
+                        </div>
+                    </div>
+                    <div className={styles.ordersList}>
+                        <div className={styles.card}>
+                            <div className={styles.orderFunctionary}>
+                                <div className="grid grid-cols-1 gap-4 mt-6 w-full">
+                                    <div className={styles.functionaryCard}>
+                                        <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                        <p className={styles.functionaryName}>Mathias Ferreira Mengardo</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

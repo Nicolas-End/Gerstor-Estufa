@@ -58,7 +58,7 @@ export default function Sidebar() {
           <Bell size={20} />
           <span>Notificações</span>
         </Link>
-        <Link href="/functionary"className={`${styles.navItem} ${isActive("/functionary")}`}>
+        <Link href="/functionarys"className={`${styles.navItem} ${isActive("/functionarys")}`}>
          <UserPlus size={20} />
          <span>Funcionarios</span>
         </Link>

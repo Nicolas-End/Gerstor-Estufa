@@ -1,5 +1,4 @@
 "use client";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -16,10 +15,11 @@ export default function PedidosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+
   useEffect(() => {
-   
-    initializeDeliverys(); 
-  }, []);
+       initializeDeliverys();
+   }, []);
+
   const initializeDeliverys = async () => {
     try {
       const can_access_home = await validateHomeAcess(router);
@@ -27,16 +27,13 @@ export default function PedidosPage() {
         router.push("/login");
         return;
       }
-
       const deliverys: any = await getDeliverys();
       console.log("Resposta da API: ", deliverys);
-
       if (!Array.isArray(deliverys)) {
         setDeliverysToDo([]);
         setIsLoading(false);
         return;
       }
-
       setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
@@ -44,7 +41,6 @@ export default function PedidosPage() {
       router.push("/login");
     }
   };
-
 
   if (isLoading) {
     return (
@@ -61,20 +57,16 @@ export default function PedidosPage() {
         <Sidebar />
         <div className={styles.content}>
           <div className={styles.header}>
-            <h1 className={styles.title}>Pedidos</h1>
-
-            <div className="flex items-center space-x-4">
+            <div className={styles.titleSection}>
+              <h1 className={styles.title}>Pedidos</h1>
               <div className={styles.count}>{deliverysToDo.length}</div>
-
-              <button
-                onClick={() => router.push("/delivery-form")}
-                className="bg-[#0a3b2c] text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition"
-              >
-                + Adicionar
-              </button>
             </div>
+            <button
+              onClick={() => router.push("/delivery-form")}
+              className={styles.addButton}>
+              + Adicionar
+            </button>
           </div>
-
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
               <div
@@ -97,9 +89,8 @@ export default function PedidosPage() {
                       <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
                 </div>
-
-                {selectedOrder?.id === order.id && (  
-                  <div className={styles.details}>
+                {selectedOrder?.id === order.id && (
+                    <div className={styles.details}>
                     <p className="text-black">
                       <strong>Local de Entrega:</strong> {order.LocalEntrega}
                     </p>
@@ -111,9 +102,7 @@ export default function PedidosPage() {
               </div>
             ))}
           </div>
-          
         </div>
-
       </div>
     );
   }
