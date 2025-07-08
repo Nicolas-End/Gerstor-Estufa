@@ -2,8 +2,8 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import {faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
@@ -68,7 +68,7 @@ export default function PedidosPage() {
 
               <button
                 onClick={() => router.push("/delivery-form")}
-                className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition"
+                className="bg-[#0a3b2c] text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition"
               >
                 + Adicionar
               </button>
@@ -93,7 +93,7 @@ export default function PedidosPage() {
                   </div>
                    <div className="gap-6 flex flex-row-reverse">
                       <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
-                      <div><button><FontAwesomeIcon icon={faCheck} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                      <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
                       <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
                 </div>

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import Image from "next/image"
 import {
   LayoutDashboard, BarChart2, ShoppingBag, History,
-  Bell, Settings, LogOut, HelpCircle, ChevronLeft, ChevronRight
+  Bell, Settings, UserPlus, LogOut, HelpCircle, ChevronLeft, ChevronRight
 } from "lucide-react"
 import styles from "./sidebar.module.css"
 
@@ -57,6 +57,10 @@ export default function Sidebar() {
         <Link href="/notificacoes" className={`${styles.navItem} ${isActive("/notificacoes")}`}>
           <Bell size={20} />
           <span>Notificações</span>
+        </Link>
+        <Link href="/functionary"className={`${styles.navItem} ${isActive("/functionary")}`}>
+         <UserPlus size={20} />
+         <span>Funcionarios</span>
         </Link>
         <div className={`${styles.navItem} ${styles.accountItem}`} onClick={toggleAccountMenu}>
           <div className={styles.profileImageContainer}>
