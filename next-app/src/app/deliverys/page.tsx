@@ -16,10 +16,19 @@ export default function PedidosPage() {
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
+
   useEffect(() => {
        initializeDeliverys();
    }, []);
 
+  useEffect(() => {
+
+
+    setInterval(() => {
+      initializeDeliverys();
+    }, 60000)// a cada 1 minuto ele atualiza os pedidos 
+
+  },[deliverysToDo]);
   const initializeDeliverys = async () => {
     try {
 
