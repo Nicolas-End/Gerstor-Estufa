@@ -20,11 +20,7 @@ export default function ProdutoPage() {
   // Função para carregar os dados da entrega
   const initializeDeliverys = async () => {
     try {
-      const can_access_home = await validateHomeAcess(router);
-      if (!can_access_home) {
-        router.push("/login");
-        return;
-      }
+
 
       if (id === null) {
         // Verifica se o ID é válido

@@ -22,12 +22,12 @@ export default function PedidosPage() {
 
   const initializeDeliverys = async () => {
     try {
-      const can_access_home = await validateHomeAcess(router);
-      if (!can_access_home) {
-        router.push("/login");
-        return;
-      }
+
       const deliverys: any = await getDeliverys();
+      if (deliverys === "invalid" || deliverys === "error") {
+        router.push("/login");
+        return; 
+      }
       if (!Array.isArray(deliverys)) {
         setDeliverysToDo([]);
         setIsLoading(false);
