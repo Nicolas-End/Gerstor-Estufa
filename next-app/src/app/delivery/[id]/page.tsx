@@ -75,7 +75,7 @@ export default function ProdutoPage() {
           <button
             type="button"
             onClick={() => router.push("/deliverys")}
-            className="bg-green-900 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-green-800 transition"
+            className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
           >
             Voltar
           </button>
