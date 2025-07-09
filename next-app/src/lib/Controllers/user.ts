@@ -22,6 +22,7 @@ export function ValidadeUserAcess(): Promise<ApiResponse> {
         }
       )
       .then((response) => {
+        
         resolve(response.data);
       })
       .catch((error) => {

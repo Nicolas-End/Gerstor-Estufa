@@ -135,8 +135,9 @@ export async function getDeliverys(){
 export async function getEscificDelivery (id:string){
   try{
     const data = await GetEspecificDeliveryDatas(id);
-
+    
     if (data.status === "ok") {
+      
       return data;
     } else if (data.status === "invalid") {
       return "invalid";

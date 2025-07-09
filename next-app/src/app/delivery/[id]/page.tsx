@@ -9,7 +9,7 @@ import { ChevronsLeftRightEllipsisIcon } from "lucide-react";
 
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [deliverysDatas, setDeliveryDatas] = useState<any[]>([]); 
+  const [deliverysDatas, setDeliveryDatas] = useState<any>([]);
   const [products, setProducts] = useState<any[]>([]); // Array que guarda os dados do pedido
   const router = useRouter();
   const params = useParams();
@@ -29,6 +29,7 @@ export default function ProdutoPage() {
       if (id === null) {
         // Verifica se o ID é válido
         console.log("ID inválido");
+        router.push("/deliverys");
         return;
       }
 
@@ -37,11 +38,11 @@ export default function ProdutoPage() {
         router.push("/login"); // Redireciona caso haja erro
         return;
       }
-      
-      setDeliveryDatas([delivery.deliveryDatas]);
-      setProducts([delivery.products])
-      
-       // Atualiza o estado com os dados da entrega
+
+      setDeliveryDatas(delivery.deliveryDatas);
+      setProducts(delivery.products);
+
+      // Atualiza o estado com os dados da entrega
       setIsLoading(false);
     } catch (error) {
       console.log("Erro ao carregar dados:", error);
@@ -53,8 +54,8 @@ export default function ProdutoPage() {
   useEffect(() => {
     if (id !== null) {
       initializeDeliverys();
-      
-       // Chama a função de inicialização
+
+      // Chama a função de inicialização
     }
   }, [id]);
 
@@ -72,9 +73,6 @@ export default function ProdutoPage() {
     );
   }
 
-  // Aqui a variável selectedOrder é o primeiro pedido no array deliverysDatas
-  const selectedOrder = deliverysDatas[0]; // Acessando o pedido único
-
   return (
     <div className={styles.container}>
       <Sidebar />
@@ -84,31 +82,33 @@ export default function ProdutoPage() {
         {/* Cabeçalho escuro com nome e quantidade */}
         <div className={styles.orderBox}>
           <div className={styles.orderHeader}>
-            <h1 className={styles.produto}>{selectedOrder.Produto}</h1>
+            <h1 className={styles.produto}>{deliverysDatas.produto}</h1>
+            
             <div className={styles.totalQuantity}>
-              <span>{selectedOrder.Quantidade}</span>
+              <span>{deliverysDatas.quantidade}</span>
               <span>Caixas</span>
             </div>
           </div>
         </div>
-      
-        {/* Exibindo os detalhes adicionais do pedido */}
-        <div className={styles.details}>
-          <p>
-            <strong>Local de Entrega:</strong> {selectedOrder.LocalEntrega}
-          </p>
-          <p>
-            <strong>Quantidade de Caixas:</strong> {selectedOrder.Quantidade}
-          </p>
-          {products.map((product, index) => (
-            <p key={index}>
-              <strong>Produto:</strong> {product.Produto}
-            </p>
-          ))}
-          <p>
-            <strong>Observações:</strong> {selectedOrder.Observacoes}
-          </p>
+        <div className="text-black">
+          {/*ENDERECO*/}
+          <span>Endereço:  {deliverysDatas.endereco} </span>
+            {/* Data */}
+            <span>Data de Entrega: {deliverysDatas.data}</span>
         </div>
+
+        {/* Exibindo os detalhes adicionais do pedido */}
+
+        {products.map((product, index) => (
+          <div className={styles.details} key={index}>
+            <p>
+              <strong className="text-black">Nome: {product.name}</strong>
+            </p>
+            <p>
+              <strong className="text-black">Quantidade: {product.quantity} {product.unit}</strong>
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

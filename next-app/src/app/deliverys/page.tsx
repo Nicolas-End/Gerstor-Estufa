@@ -28,7 +28,6 @@ export default function PedidosPage() {
         return;
       }
       const deliverys: any = await getDeliverys();
-      console.log("Resposta da API: ", deliverys);
       if (!Array.isArray(deliverys)) {
         setDeliverysToDo([]);
         setIsLoading(false);

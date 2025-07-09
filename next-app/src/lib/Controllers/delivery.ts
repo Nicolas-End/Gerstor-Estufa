@@ -94,7 +94,7 @@ export function GetEspecificDeliveryDatas(id:string): Promise<ApiResponse> {
         }
       )
         .then(response => {
-        
+          
           resolve(response.data);
         })
         .catch(error => {

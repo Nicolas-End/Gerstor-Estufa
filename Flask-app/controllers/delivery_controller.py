@@ -87,7 +87,7 @@ class DeliveryContoller:
                 delivery_datas = {
                     'id' : has_deliverys['idEntrega'],
                     'produto': has_deliverys['TipoProduto'],
-                    'quantiddade': has_deliverys['Quantidade'],
+                    'quantidade': has_deliverys['Quantidade'],
                     'endereco': has_deliverys['LocalEntrega'],
                     'data': has_deliverys['dataParaEntrega']
                 }
