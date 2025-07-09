@@ -238,6 +238,25 @@ def get_functionarys():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
     
+@app.route('/get-functionaries-quantity',methods=['POST'])
+def get_functionaries_quantity():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+    
+        functionaries_quantity, ok = FunctionariesController().get_functionaries_quantity(datas['company_email'])
+        if ok:
+            return jsonify({'status':'ok','functionaries_quantity':functionaries_quantity}),200
+        
+        return jsonify({'status':'error'}),400
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
 @app.route('/send-email-recuperation' ,methods=['POST'])
 def forget_password() :
     

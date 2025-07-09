@@ -3,7 +3,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery  } from "./Controllers/delivery";
 
-import { GetFunctionaries } from "./Controllers/functionaries";
+import { GetFunctionaries, GetFunctionariesQuantity } from "./Controllers/functionaries";
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
 
@@ -149,7 +149,21 @@ export async function getFunctionaries(){
     return "Erro na requisição";
   }
 }
-
+export async function funtionariesQuantity(){
+  try{
+    const data = await GetFunctionariesQuantity()
+    if (data.status === 'ok'){
+      return data.functionaries_quantity
+    }
+    else{
+      return 0
+    }
+  }
+  catch(error){
+    console.log('Error',error)
+    return 'Error'
+  }
+}
 export async function getEscificDelivery (id:string){
   try{
     const data = await GetEspecificDeliveryDatas(id);

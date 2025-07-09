@@ -34,3 +34,14 @@ class FunctionariesController():
         except Exception as e:
             print('Error : ',e)
             return 'Error',False
+    
+    def get_functionaries_quantity(self,company_email):
+        try:
+            has_functionaries = list(self.coll.find({"company_email": company_email}))
+            if has_functionaries:
+                return len(has_functionaries), True
+            else:
+                return 0, True
+        except Exception as e:
+            print('Error : ',e)
+            return 'Error',False
