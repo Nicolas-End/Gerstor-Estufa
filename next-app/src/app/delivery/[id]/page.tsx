@@ -1,5 +1,4 @@
 "use client";
-
 import styles from "./page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,7 +13,6 @@ export default function ProdutoPage() {
   const router = useRouter();
   const params = useParams();
   const id: any = params?.id ? params.id : null;
-
   const localStorageKey = `checked-products-${id}`;
 
   const initializeDeliverys = async () => {
@@ -23,13 +21,11 @@ export default function ProdutoPage() {
         router.push("/deliverys");
         return;
       }
-
       const delivery: any = await getEscificDelivery(id);
       if (delivery === "invalid" || delivery === "error") {
         router.push("/login");
         return;
       }
-
       setDeliveryDatas(delivery.deliveryDatas);
       setProducts(delivery.products);
       setIsLoading(false);
@@ -74,10 +70,17 @@ export default function ProdutoPage() {
     <div className={styles.container}>
       <Sidebar />
       <div className={`${styles.content} p-6`}>
-        <div className="mb-8">
+        <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold text-[#0a2c26]">PEDIDOS</h1>
+          <button
+            type="button"
+            onClick={() => router.push("/deliverys")}
+            className="bg-green-900 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-green-800 transition"
+          >
+            Voltar
+          </button>
         </div>
-
+        
         <div className="bg-[#0a2c26] text-white rounded-xl p-6 shadow-md flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">{deliverysDatas.produto}</h2>
           <div className="flex flex-col items-end">
@@ -85,7 +88,7 @@ export default function ProdutoPage() {
             <span className="text-sm uppercase tracking-wider">Caixas</span>
           </div>
         </div>
-
+        
         <div className="border border-zinc-300 rounded-lg overflow-hidden">
           <div className="grid grid-cols-5 bg-zinc-100 font-semibold text-zinc-700 px-4 py-2 text-sm">
             <span>Selecionar</span>
