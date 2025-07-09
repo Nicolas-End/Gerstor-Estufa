@@ -4,6 +4,7 @@ import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
+import { getFunctionaries } from "@/lib/api";
 import { validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,12 +12,9 @@ import { useEffect, useState } from "react";
 export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
+    const [functionariesDatas, setFunctionariesDatas] = useState<any>([]);
     const [functionaryCount, setFunctionaryCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
-
-    useEffect(() => {
-        initializeFunctionary();
-    }, []);
 
     const initializeFunctionary = async () => {
         try {
@@ -25,14 +23,23 @@ export default function FuncionarioPage() {
                 router.push("/login");
                 return;
             }
-            const count = 5;
-            setFunctionaryCount(count);
+            const functionaries = await getFunctionaries();
+            if (functionaries === "invalid" || functionaries === "error") {
+                router.push("/home");
+                return;
+            }
+            setFunctionariesDatas(functionaries);
+            const quantidy: number|undefined = functionaries?.length
+            setFunctionaryCount(quantidy || 0);
             setIsLoading(false);
         } catch (error) {
             console.error("Erro ao verificar acesso do funcionário:", error);
             router.push("/login");
         }
     };
+    useEffect(() => {
+        initializeFunctionary();
+    }, []);
 
     if (isLoading) {
         return (
@@ -69,16 +76,20 @@ export default function FuncionarioPage() {
                         </div>
                     </div>
                     <div className={styles.ordersList}>
-                        <div className={styles.card}>
+                        {functionariesDatas.map((functionary:any,index:any) => (
+                            <div className={styles.card} key={index}>
                             <div className={styles.orderFunctionary}>
                                 <div className="grid grid-cols-1 gap-4 mt-6 w-full">
                                     <div className={styles.functionaryCard}>
                                         <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                        <p className={styles.functionaryName}>Mathias Ferreira Mengardo</p>
+                                        <p className={styles.functionaryName}>{functionary.name}</p>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        ))}
+                        
                     </div>
                 </div>
             </div>

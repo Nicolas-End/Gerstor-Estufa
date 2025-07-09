@@ -3,6 +3,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery  } from "./Controllers/delivery";
 
+import { GetFunctionaries } from "./Controllers/functionaries";
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
 
@@ -128,6 +129,23 @@ export async function getDeliverys(){
     }
   } catch (error) {
     console.log("Erro ao acessar a conta:", error);
+    return "Erro na requisição";
+  }
+}
+
+export async function getFunctionaries(){
+  try{
+    const data = await GetFunctionaries();
+    
+    if (data.status === "ok") {
+      return data.functionaries;
+    } else if (data.status === "invalid") {
+      return "invalid";
+    } else {
+      return "error";
+    }
+  } catch (error) {
+    console.log("Erro ao acessar a conta: ", error);
     return "Erro na requisição";
   }
 }
