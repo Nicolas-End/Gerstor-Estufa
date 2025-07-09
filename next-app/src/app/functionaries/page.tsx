@@ -37,6 +37,7 @@ export default function FuncionarioPage() {
             router.push("/login");
         }
     };
+
     useEffect(() => {
         initializeFunctionary();
     }, []);
@@ -77,19 +78,11 @@ export default function FuncionarioPage() {
                     </div>
                     <div className={styles.ordersList}>
                         {functionariesDatas.map((functionary:any,index:any) => (
-                            <div className={styles.card} key={index}>
-                            <div className={styles.orderFunctionary}>
-                                <div className="grid grid-cols-1 gap-4 mt-6 w-full">
-                                    <div className={styles.functionaryCard}>
-                                        <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                        <p className={styles.functionaryName}>{functionary.name}</p>
-                                        
-                                    </div>
-                                </div>
+                            <div className={styles.functionaryCard} key={index}>
+                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                <p className={styles.functionaryName}>{functionary.name}</p>
                             </div>
-                        </div>
                         ))}
-                        
                     </div>
                 </div>
             </div>
