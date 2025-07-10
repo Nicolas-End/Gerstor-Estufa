@@ -85,7 +85,10 @@ export default function Home() {
                 )}
               </p>
             </Link>
-            <div className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow">
+            <Link
+              href="/functionaries"
+              className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
+            >
               <h2 className="text-xl font-semibold mb-2">Funcionarios</h2>
               <p className="text-4xl font-bold">
                 {functionariesQuantidy || (
@@ -107,8 +110,7 @@ export default function Home() {
                   </svg>
                 )}
               </p>
-            </div>
-
+            </Link>
             <div className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-2">Notificações</h2>
               <p className="text-4xl font-bold">3</p>
