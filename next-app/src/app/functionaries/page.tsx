@@ -70,7 +70,7 @@ export default function FuncionarioPage() {
                                 />
                             </div>
                             <button
-                                onClick={() => router.push("")}
+                                onClick={() => router.push("/functionary-form")}
                                 className={styles.addButton}>
                                 + Adicionar
                             </button>
