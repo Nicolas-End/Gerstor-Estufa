@@ -2,11 +2,12 @@
 .sidebar {
   background-color: #0a3b2c;
   width: 13rem;
-  height: 110vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
-  position: relative;
   z-index: 100000;
 }
 

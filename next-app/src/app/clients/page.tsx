@@ -79,7 +79,7 @@ export default function ClientsPage() {
                     <div className={styles.ordersList}>
                         {clientsDatas.map((client:any,index:any) => (
                             <div className={styles.clientCard} key={index}>
-                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
                                 <p className={styles.clientName}>{client.name}</p>
                             </div>
                         ))}
