@@ -3,7 +3,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery  } from "./Controllers/delivery";
 
-import { GetFunctionaries, GetFunctionariesQuantity } from "./Controllers/functionaries";
+import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "./Controllers/functionaries";
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
 
@@ -163,6 +163,19 @@ export async function funtionariesQuantity(){
     console.log('Error',error)
     return 'Error'
   }
+}
+
+export async function  addNewFunctionary(name:string,email:string,password:string,role:string) {
+  try{
+    const data = await AddNewFunctionary(name,email,password,role)
+    return data.status
+
+  }
+    catch(error){
+    console.log('Error',error)
+    return 'Error'
+  }
+  
 }
 export async function getEscificDelivery (id:string){
   try{

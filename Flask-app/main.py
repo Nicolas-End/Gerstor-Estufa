@@ -186,6 +186,7 @@ def edit_delivery():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
+
 @app.route('/user-login', methods=["POST"])
 def user_login():
     try:
@@ -196,10 +197,11 @@ def user_login():
         responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
 
         if returnApi:  
-            compnay_email, has_company = UserController().get_company_email(worker_email)
+            compnay_email, company_name,has_company = UserController().get_company_email(worker_email)
             data_user ={
                 'email':worker_email,
                 'company_email':compnay_email,
+                'company_name':company_name,
                 'acess':True
             }
             token = CriptographyController().cripto_datas(data_user) #criptografa os dados do usuario 
@@ -237,6 +239,32 @@ def get_functionarys():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
+
+@app.route('/add-new-functionary', methods=['POST'])
+def add_new_functionary():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+
+        functionary_datas = request.get_json() 
+        functionary_name = functionary_datas['name']
+        functionary_pass = functionary_datas['password']
+        functionary_email = functionary_datas['email']
+        functionary_role = functionary_datas['role']
+        result, status = FunctionariesController().add_new_functionary(datas['company_email'],datas['company_name'],
+                                                                       functionary_name,functionary_pass,functionary_email,functionary_role)
+
+        return jsonify({'status':result})
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status': 'error', 'message': str(e)})
     
 @app.route('/get-functionaries-quantity',methods=['POST'])
 def get_functionaries_quantity():

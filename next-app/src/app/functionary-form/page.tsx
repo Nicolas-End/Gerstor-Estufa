@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { validateHomeAcess } from "@/lib/api";
+import { addNewFunctionary, validateHomeAcess } from "@/lib/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -51,7 +51,8 @@ export default function RegisterEmployeePage() {
         if (password !== confirmPassword) {
             ShowAlert("As senhas não coincidem!");
             return;
-        }
+        }   
+
 
         const formData = {
             name,
@@ -61,13 +62,26 @@ export default function RegisterEmployeePage() {
         };
 
         try {
+
             setIsLoading(true);
 
             // Aqui você faria a chamada real à API, como:
             // await registerEmployee(formData);
-            console.log("Dados do funcionário:", formData);
-
-            ShowAlert("Funcionário cadastrado com sucesso!");
+            const result = await addNewFunctionary(name,email,password,role)
+            if (result === "AlreadyExist"){
+                ShowAlert("Funcionário  ja esta cadastrado");
+                setIsLoading(false);
+                return ;
+            }
+            else if (result === "ok"){
+                ShowAlert("Funcionário cadastrado com sucesso!");
+            }
+            else{
+                ShowAlert("Ops !! houve um erro")
+                setIsLoading(false);
+                return;
+            }
+            
 
             // Resetar os campos
             setName("");

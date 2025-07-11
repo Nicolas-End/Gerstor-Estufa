@@ -108,9 +108,12 @@ export default function Sidebar() {
 
         {/* Desktop extra links */}
         <div className="hidden md:flex flex-col">
+
           <Link href="/functionaries" className={`${styles.navItem} mt-2`}>
             <UserPlus size={20} /> <span>Funcionários</span>
           </Link>
+
+          
           <Link href="/clients" className={`${styles.navItem} mt-2`}>
             <Users size={20} /> <span>Clientes</span>
           </Link>

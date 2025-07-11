@@ -51,3 +51,29 @@ export function GetFunctionaries(): Promise<ApiResponse> {
         });
     });
   }
+
+    export function AddNewFunctionary(name:string,email:string,password:string,role:string): Promise<ApiResponse> {
+    return new Promise<ApiResponse>((resolve) => {
+       
+      const token = localStorage.getItem('token_from_user')
+      axios.post<ApiResponse>(
+        'http://127.0.0.1:5000/add-new-functionary',
+        {"name":name,
+          "email":email,
+          "password":password,
+          "role":role
+        }, // corpo da requisição POST 
+        {
+          headers: {
+            'Authorization':  token || ''
+          }
+        }
+      )
+        .then(response => {
+          resolve(response.data);
+        })
+        .catch(error => {
+          resolve({ status: 'error'});
+        });
+    });
+  }

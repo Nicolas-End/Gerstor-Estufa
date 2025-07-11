@@ -46,7 +46,9 @@ class UserController:
 
             if has_email:
                 company_email = has_email['company_email']
-                return company_email,True
+                company_name = has_email['company_name']
+                return company_email,company_name,True
+            
             return "noexist",False
         except Exception as e:
             print('Error: ',e)
