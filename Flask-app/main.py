@@ -230,7 +230,7 @@ def get_functionarys():
         
         functionaries, ok = FunctionariesController().get_functionaries(datas['company_email'])
         if ok:
-            print(functionaries)
+            
             return jsonify({'status':'ok','functionaries':functionaries}),200
         
         return jsonify({'status':'error'}),400
