@@ -2,3 +2,4 @@
 teste.py
 *.pyc
 __pycache__/
+.venv
