@@ -13,9 +13,13 @@ export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [functionariesDatas, setFunctionariesDatas] = useState<any>([]);
+    
     const [functionaryCount, setFunctionaryCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
 
+    const resultados = functionariesDatas.filter((item:any) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     const initializeFunctionary = async () => {
         try {
             const can_access_home = await validateHomeAcess(router);
@@ -66,6 +70,7 @@ export default function FuncionarioPage() {
                                 <input
                                     type="text"
                                     placeholder="Pesquisar funcionários..."
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                     className={styles.searchInput}
                                 />
                             </div>
@@ -77,7 +82,14 @@ export default function FuncionarioPage() {
                         </div>
                     </div>
                     <div className={styles.ordersList}>
-                        {functionariesDatas.map((functionary:any,index:any) => (
+                        {searchTerm ?
+                        resultados.map((functionary:any,index:any)=>(
+                            <div className={styles.functionaryCard} key={index}>
+                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                <p className={styles.functionaryName}>{functionary.name}</p>
+                            </div>
+                        )): 
+                        functionariesDatas.map((functionary:any,index:any) => (
                             <div className={styles.functionaryCard} key={index}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
                                 <p className={styles.functionaryName}>{functionary.name}</p>
