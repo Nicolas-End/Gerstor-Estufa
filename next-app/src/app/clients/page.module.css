@@ -106,7 +106,7 @@
   flex: 1; 
 }
 
-.functionaryCard {
+.clientCard {
   background-color: #0a3b2c;
   color: white;
   padding: 1.5rem;
@@ -120,19 +120,19 @@
   min-height: 80px;
 }
 
-.functionaryCard:hover {
+.clientCard:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
-.functionaryIcon {
+.clientIcon {
   font-size: 3rem;
   color: white;
   flex-shrink: 0;
   margin-right: 0.5rem;
 }
 
-.functionaryName {
+.clientName {
   font-size: 1.25rem;
   font-weight: 600;
   color: #ffffff;
@@ -167,14 +167,14 @@
     max-width: 100%;
   }
   
-  .functionaryName {
+  .clientName {
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
     font-size: 1.1rem;
   }
   
-  .functionaryIcon {
+  .clientIcon {
     font-size: 2.5rem;
   }
 }

@@ -1,3 +1,4 @@
+// sidebar.tsx
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -15,7 +16,7 @@ import {
   ChevronRight,
   MoreVertical,
   Users,
-  Truck
+  Truck,
 } from "lucide-react";
 import styles from "./sidebar.module.css";
 
@@ -43,12 +44,13 @@ export default function Sidebar() {
 
   return (
     <div className={sidebarClass}>
-      {/* Botão de minimizar - só no desktop */}
-      <button className={styles.toggleButton} onClick={() => setMinimized(!minimized)}>
+      <button
+        className={styles.toggleButton}
+        onClick={() => setMinimized(!minimized)}
+      >
         {minimized ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
       </button>
 
-      {/* Logo - só no desktop */}
       <div className={styles.logo}>
         <div className={styles.logoContainer}>
           <div className={styles.logoCircle}>
@@ -57,7 +59,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Menu principal */}
       <nav className={styles.nav}>
         <Link href="/home" className={`${styles.navItem} ${isActive("/home")}`}>
           <LayoutDashboard size={20} />
@@ -66,43 +67,63 @@ export default function Sidebar() {
         <Link
           href="/deliverys"
           className={`${styles.navItem} ${
-            isActive("/deliverys") || isActive("/delivery-form") || isActive("/delivery")
+            isActive("/deliverys") ||
+            isActive("/delivery-form") ||
+            isActive("/delivery")
           }`}
         >
-          <ShoppingBag size={20} />
-          <span>Pedidos</span>
+          <ShoppingBag size={20} /> <span>Pedidos</span>
         </Link>
-        <Link href="/historicos" className={`${styles.navItem} ${isActive("/historicos")}`}>
-          <History size={20} />
-          <span>Histórico</span>
+        <Link
+          href="/historicos"
+          className={`${styles.navItem} ${isActive("/historicos")}`}
+        >
+          <History size={20} /> <span>Histórico</span>
         </Link>
-        <Link href="/notificacoes" className={`${styles.navItem} ${isActive("/notificacoes")}`}>
-          <Bell size={20} />
-          <span>Notificações</span>
+        <Link
+          href="/notificacoes"
+          className={`${styles.navItem} ${isActive("/notificacoes")}`}
+        >
+          <Bell size={20} /> <span>Notificações</span>
         </Link>
-        <div className={`${styles.navItem} md:hidden`} onClick={toggleMobileMenu}>
+
+        {/* Mobile-only menu button */}
+        <div className={`${styles.navItem} ${styles.mobileOnly}`} onClick={toggleMobileMenu}>
           <MoreVertical size={20} />
           <span className="text-xs">Mais</span>
           {showMobileMenu && (
-            <div className={`${styles.accountMenu} mobileDropdown`}>
+            <div className={`${styles.accountMenu} ${styles.mobileDropdown}`}>
               <Link href="/functionaries" className={styles.menuItem}>
-                <UserPlus size={16} />
-                <span>Funcionários</span>
+                <UserPlus size={16} /> <span>Funcionários</span>
               </Link>
-              <Link href="/clientes" className={styles.menuItem}>
-                <Users size={16} />
-                <span>Clientes</span>
+              <Link href="/clients" className={styles.menuItem}>
+                <Users size={16} /> <span>Clientes</span>
               </Link>
               <Link href="/caminhoes" className={styles.menuItem}>
-                <Truck size={16} />
-                <span>Caminhões</span>
+                <Truck size={16} /> <span>Caminhões</span>
               </Link>
             </div>
           )}
         </div>
 
-        {/* Conta (avatar) - só desktop */}
-        <div className={`${styles.navItem} ${styles.accountItem} hidden md:flex`} onClick={toggleAccountMenu}>
+        {/* Desktop extra links */}
+        <div className="hidden md:flex flex-col">
+          <Link href="/functionaries" className={`${styles.navItem} mt-2`}>
+            <UserPlus size={20} /> <span>Funcionários</span>
+          </Link>
+          <Link href="/clients" className={`${styles.navItem} mt-2`}>
+            <Users size={20} /> <span>Clientes</span>
+          </Link>
+          <Link href="/caminhoes" className={`${styles.navItem} mt-2`}>
+            <Truck size={20} /> <span>Caminhões</span>
+          </Link>
+        </div>
+
+        {/* Desktop account avatar */}
+        <div
+          className={`${styles.navItem} ${styles.accountItem} hidden md:flex`}
+          onClick={toggleAccountMenu}
+        >
           <div className={styles.profileImageContainer}>
             <Image
               src="/default-avatar.png"
@@ -116,12 +137,10 @@ export default function Sidebar() {
           {showAccountMenu && (
             <div className={styles.accountMenu}>
               <Link href="/logout" className={styles.menuItem}>
-                <LogOut size={16} />
-                <span>Log Out</span>
+                <LogOut size={16} /> <span>Log Out</span>
               </Link>
               <Link href="/help" className={styles.menuItem}>
-                <HelpCircle size={16} />
-                <span>Help</span>
+                <HelpCircle size={16} /> <span>Help</span>
               </Link>
             </div>
           )}
@@ -130,3 +149,5 @@ export default function Sidebar() {
     </div>
   );
 }
+
+

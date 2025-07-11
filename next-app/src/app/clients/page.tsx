@@ -9,14 +9,14 @@ import { validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function FuncionarioPage() {
+export default function ClientsPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [functionariesDatas, setFunctionariesDatas] = useState<any>([]);
-    const [functionaryCount, setFunctionaryCount] = useState<number>(0);
+    const [clientsDatas, setClientsDatas] = useState<any>([]);
+    const [clientCount, setClientCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const initializeFunctionary = async () => {
+    const initializeClients = async () => {
         try {
             const can_access_home = await validateHomeAcess(router);
             if (!can_access_home) {
@@ -28,18 +28,18 @@ export default function FuncionarioPage() {
                 router.push("/home");
                 return;
             }
-            setFunctionariesDatas(functionaries);
+            setClientsDatas(functionaries);
             const quantidy: number|undefined = functionaries?.length
-            setFunctionaryCount(quantidy || 0);
+            setClientCount(quantidy || 0);
             setIsLoading(false);
         } catch (error) {
-            console.error("Erro ao verificar acesso do funcionário:", error);
+            console.error("Erro ao verificar acesso do cliente:", error);
             router.push("/login");
         }
     };
 
     useEffect(() => {
-        initializeFunctionary();
+        initializeClients();
     }, []);
 
     if (isLoading) {
@@ -58,29 +58,29 @@ export default function FuncionarioPage() {
                 <div className={styles.content}>
                     <div className={styles.header}>
                         <div className={styles.headerTop}>
-                            <h1 className={styles.title}>Funcionários</h1>
+                            <h1 className={styles.title}>Clientes</h1>
                         </div>
                         <div className={styles.headerBottom}>
                             <div className={styles.searchContainer}>
                                 <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
                                 <input
                                     type="text"
-                                    placeholder="Pesquisar funcionários..."
+                                    placeholder="Pesquisar clientes..."
                                     className={styles.searchInput}
                                 />
                             </div>
                             <button
-                                onClick={() => router.push("/functionary-form")}
+                                onClick={() => router.push("/client-form")}
                                 className={styles.addButton}>
                                 + Adicionar
                             </button>
                         </div>
                     </div>
                     <div className={styles.ordersList}>
-                        {functionariesDatas.map((functionary:any,index:any) => (
-                            <div className={styles.functionaryCard} key={index}>
+                        {clientsDatas.map((client:any,index:any) => (
+                            <div className={styles.clientCard} key={index}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                <p className={styles.functionaryName}>{functionary.name}</p>
+                                <p className={styles.clientName}>{client.name}</p>
                             </div>
                         ))}
                     </div>

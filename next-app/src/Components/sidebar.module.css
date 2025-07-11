@@ -232,3 +232,12 @@
 @media (min-width: 769px) {
   /* Sem alterações adicionais */
 }
+
+.mobileOnly {
+  display: flex;
+}
+@media (min-width: 768px) {
+  .mobileOnly {
+    display: none;
+  }
+}
