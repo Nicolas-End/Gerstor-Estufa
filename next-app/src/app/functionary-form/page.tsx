@@ -69,7 +69,7 @@ export default function RegisterEmployeePage() {
             // await registerEmployee(formData);
             const result = await addNewFunctionary(name,email,password,role)
             if (result === "AlreadyExist"){
-                ShowAlert("Funcionário  ja esta cadastrado");
+                ShowAlert("Este email ja esta cadastrado no sistema!");
                 setIsLoading(false);
                 return ;
             }

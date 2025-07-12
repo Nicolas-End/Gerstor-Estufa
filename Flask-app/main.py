@@ -185,8 +185,32 @@ def edit_delivery():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200
-# Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 
+@app.route('/delete-delivery',methods=['POST'])
+def delete_delivery():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+        delivery_id= request.get_json()['delivery_id']
+        delivery_was_deleted = DeliveryContoller().delete_delivery(datas['company_email'],delivery_id)
+        if delivery_was_deleted:
+            products_deleted = DeliveryContoller().delete_product(datas['company_email'],delivery_id)
+            if products_deleted:
+                return jsonify({'status':'ok'})
+
+        return jsonify({'status':'error'})    
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200
+
+# Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/user-login', methods=["POST"])
 def user_login():
     try:

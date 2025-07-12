@@ -126,3 +126,28 @@ export function GetDeliverysToDo(): Promise<ApiResponse> {
         });
     });
   }
+
+
+export function DeleteEspecificDelivery(delivery_id:string): Promise<ApiResponse> {
+    return new Promise<ApiResponse>((resolve) => {
+       
+      const token = localStorage.getItem('token_from_user')
+      axios.post<ApiResponse>(
+        'http://127.0.0.1:5000/delete-delivery',
+        {
+          'delivery_id':delivery_id
+        }, // corpo da requisição POST 
+        {
+          headers: {
+            'Authorization':  token || ''
+          }
+        }
+      )
+        .then(response => {
+          resolve(response.data);
+        })
+        .catch(error => {
+          resolve({ status: 'error'});
+        });
+    });
+  }

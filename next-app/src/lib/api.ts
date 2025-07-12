@@ -1,7 +1,7 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery  } from "./Controllers/delivery";
+import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery  } from "./Controllers/delivery";
 
 import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "./Controllers/functionaries";
 // Faz o processo e controle de senha do usuario
@@ -9,6 +9,7 @@ import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecover
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "./Controllers/user";
+import { StringDecoder } from "string_decoder";
 export async function validateWorkerLogin(
   email: string,
   password: string,
@@ -224,6 +225,24 @@ export async function editDelivery (FormsData:any){
     }
     else{
       return 'error'
+    }
+  } catch (error){
+    console.log("Error ao acessar a conta: ",error);
+    return "Erro na requisição";
+  }
+}
+
+export async function deleteEspecificDelivery(delivery_id:string){
+  try{
+
+    const data = await DeleteEspecificDelivery(delivery_id)
+
+    if (data.status === "ok"){
+
+      return true
+    }
+    else{
+      return false
     }
   } catch (error){
     console.log("Error ao acessar a conta: ",error);

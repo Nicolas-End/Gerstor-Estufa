@@ -6,9 +6,11 @@ import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys, validateHomeAcess } from "@/lib/api";
+import { getDeliverys, deleteEspecificDelivery} from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
 
 export default function PedidosPage() {
   const router = useRouter();
@@ -26,9 +28,31 @@ export default function PedidosPage() {
 
     setInterval(() => {
       initializeDeliverys();
-    }, 60000)// a cada 1 minuto ele atualiza os pedidos 
+    }, 120000)// a cada 2 minuto ele atualiza os pedidos 
 
   },[deliverysToDo]);
+  
+
+  function ShowAlert(text: string) {
+          toast(text, {
+              style: {
+                  backgroundColor: "#fff",
+                  color: "#2b192e",
+                  fontFamily: "Arial, sans-serif",
+              },
+          });
+      }
+  async function deleteDelivery(delivery_id:string){
+    const data = await deleteEspecificDelivery(delivery_id)
+    
+    if (data){
+      initializeDeliverys()
+      return ;
+    }
+    ShowAlert('Houve algum erro no processo !!')
+    
+
+  }
   const initializeDeliverys = async () => {
     try {
 
@@ -49,6 +73,7 @@ export default function PedidosPage() {
       router.push("/login");
     }
   };
+
 
   if (isLoading) {
     return (
@@ -92,7 +117,7 @@ export default function PedidosPage() {
                     <span className={styles.orderUnit}>Caixas</span>
                   </div>
                    <div className="gap-6 flex flex-row-reverse">
-                      <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                      <div><button onClick={()=> deleteDelivery(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
                       <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
                       <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
@@ -111,6 +136,17 @@ export default function PedidosPage() {
             ))}
           </div>
         </div>
+        <ToastContainer
+                        position="top-right"
+                        autoClose={4000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+          />
+
       </div>
     );
   }

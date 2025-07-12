@@ -57,7 +57,7 @@ class FunctionariesController():
                                 }
             
             # Verifica se o funcionario ja esta cadastrado no sistema
-            functionary_exist = self.coll.find_one(functionary_datas)
+            functionary_exist = self.coll.find_one({'email':email})
             if functionary_exist:
                 return 'AlreadyExist',False
             
