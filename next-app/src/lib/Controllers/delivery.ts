@@ -59,7 +59,7 @@ export function AddNewDelivery (FormsData:any): Promise<ApiResponse> {
 export function EditDelivery (FormsData:any): Promise<ApiResponse> {
   return new Promise<ApiResponse>((resolve) =>{
     const token = localStorage.getItem('token_from_user')
-    axios.post<ApiResponse>('http://127.0.0.1:5000/edit-delivery', {
+    axios.post<ApiResponse>('https://gerenciador-empresarial-1cfr.vercel.app/edit-delivery', {
         FormsData
       },{
         headers:{
@@ -110,7 +110,7 @@ export function GetDeliverysToDo(): Promise<ApiResponse> {
        
       const token = localStorage.getItem('token_from_user')
       axios.post<ApiResponse>(
-        'https://gerenciador-empresarial-1cfr.vercel.app/get-deliverys-products',
+        'https://gerenciador-empresarial-1cfr.vercel.app/get-deliverys',
 
         {}, // corpo da requisição POST (vazio nesse caso)
         {
