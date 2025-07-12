@@ -17,6 +17,8 @@ import {
   MoreVertical,
   Users,
   Truck,
+  Settings,
+  HardHat
 } from "lucide-react";
 import styles from "./sidebar.module.css";
 
@@ -66,11 +68,10 @@ export default function Sidebar() {
         </Link>
         <Link
           href="/deliverys"
-          className={`${styles.navItem} ${
-            isActive("/deliverys") ||
+          className={`${styles.navItem} ${isActive("/deliverys") ||
             isActive("/delivery-form") ||
             isActive("/delivery")
-          }`}
+            }`}
         >
           <ShoppingBag size={20} /> <span>Pedidos</span>
         </Link>
@@ -94,7 +95,7 @@ export default function Sidebar() {
           {showMobileMenu && (
             <div className={`${styles.accountMenu} ${styles.mobileDropdown}`}>
               <Link href="/functionaries" className={styles.menuItem}>
-                <UserPlus size={16} /> <span>Funcionários</span>
+                <HardHat size={16} /> <span>Funcionários</span>
               </Link>
               <Link href="/clients" className={styles.menuItem}>
                 <Users size={16} /> <span>Clientes</span>
@@ -113,7 +114,7 @@ export default function Sidebar() {
             <UserPlus size={20} /> <span>Funcionários</span>
           </Link>
 
-          
+
           <Link href="/clients" className={`${styles.navItem} mt-2`}>
             <Users size={20} /> <span>Clientes</span>
           </Link>
@@ -140,10 +141,10 @@ export default function Sidebar() {
           {showAccountMenu && (
             <div className={styles.accountMenu}>
               <Link href="/logout" className={styles.menuItem}>
-                <LogOut size={16} /> <span>Log Out</span>
+                <LogOut size={16} /> <span>Encerrar Sessão</span>
               </Link>
-              <Link href="/help" className={styles.menuItem}>
-                <HelpCircle size={16} /> <span>Help</span>
+              <Link href="/settings" className={styles.menuItem}>
+                <Settings size={16} /> <span>Configurações</span>
               </Link>
             </div>
           )}
