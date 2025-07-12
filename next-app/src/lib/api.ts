@@ -7,6 +7,9 @@ import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from ".
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
 
+// processos relacioandos ao cliente
+import { GetClients } from "./Controllers/clients";
+
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "./Controllers/user";
 import { StringDecoder } from "string_decoder";
@@ -117,23 +120,7 @@ export async function countDeliveryQuantidy() {
   }
 }
 
-export async function getDeliverys() {
-  try {
-    const data = await GetDeliverysToDo();
-
-    if (data.status === "ok") {
-      return data.deliverys;
-    } else if (data.status === "invalid") {
-      return "invalid";
-    } else {
-      return "error";
-    }
-  } catch (error) {
-    console.log("Erro ao acessar a conta:", error);
-    return "Erro na requisição";
-  }
-}
-
+//======= FUNCIONARIOS ========
 export async function getFunctionaries() {
   try {
     const data = await GetFunctionaries();
@@ -178,6 +165,8 @@ export async function addNewFunctionary(name: string, email: string, password: s
   }
 
 }
+
+//========= ENTREGAS =========
 export async function getEscificDelivery(id: string) {
   try {
     const data = await GetEspecificDeliveryDatas(id);
@@ -231,6 +220,22 @@ export async function editDelivery(FormsData: any) {
     return "Erro na requisição";
   }
 }
+export async function getDeliverys() {
+  try {
+    const data = await GetDeliverysToDo();
+
+    if (data.status === "ok") {
+      return data.deliverys;
+    } else if (data.status === "invalid") {
+      return "invalid";
+    } else {
+      return "error";
+    }
+  } catch (error) {
+    console.log("Erro ao acessar a conta:", error);
+    return "Erro na requisição";
+  }
+}
 
 export async function deleteEspecificDelivery(delivery_id: string) {
   try {
@@ -249,6 +254,8 @@ export async function deleteEspecificDelivery(delivery_id: string) {
     return "Erro na requisição";
   }
 }
+
+// ======= CAMINHÕES ===========
 export async function getTrucks() {
   try {
     const res = await fetch("/api/trucks");
@@ -278,3 +285,22 @@ export async function addNewTruck(data: {
   }
 }
 
+//======= CLIENTES ==========
+
+export async function GetAllClients() {
+  try {
+
+    const data = await GetClients()
+    console.log(data)
+    if (data.status === "ok") {
+      
+      return data.clients
+    }
+    else {
+      return 'nothing'
+    }
+  } catch (error) {
+    console.log("Error ao acessar a conta: ", error);
+    return "Erro na requisição";
+  }
+}

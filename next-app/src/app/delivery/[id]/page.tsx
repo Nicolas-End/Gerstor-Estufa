@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getEscificDelivery } from "@/lib/api";
 import Sidebar from "@/Components/sidebar";
 
+
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysDatas, setDeliveryDatas] = useState<any>([]);
@@ -41,6 +42,7 @@ export default function ProdutoPage() {
       if (savedChecks) {
         setCheckedItems(JSON.parse(savedChecks));
       }
+      
     }
   }, [id]);
 
