@@ -39,6 +39,20 @@ class UserController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False,
+    
+    def get_company_email(self,email):
+        try:
+            has_email = self.coll.find_one( {"email": email} ) 
+
+            if has_email:
+                company_email = has_email['company_email']
+                company_name = has_email['company_name']
+                return company_email,company_name,True
+            
+            return "noexist",False
+        except Exception as e:
+            print('Error: ',e)
+            return 'Error',False
     def add_new_Company(self,id,email,password,company_name):
         try:
             # filtro para verificar se o usuario ja existe
@@ -54,7 +68,9 @@ class UserController:
                 'id':id,
                 'role':'ADM',
                 'company_name':company_name,
+                'name':company_name,
                 'company_email':email,
+                'email':email,
                 'password':hashed_password
             }
 
@@ -69,7 +85,7 @@ class UserController:
             
             # pega o dados do usuario e verifica se ele existe no banco de dados
             worker_datas = {
-                'company_email':email,
+                'email':email,
             }
             worker = self.coll.find_one(worker_datas)
         

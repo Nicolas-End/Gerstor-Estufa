@@ -1,42 +1,71 @@
 "use client";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import {faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys, validateHomeAcess } from "@/lib/api";
+import { getDeliverys, deleteEspecificDelivery} from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
 
 export default function PedidosPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+
+
   useEffect(() => {
-   
-    initializeDeliverys(); 
-  }, []);
+       initializeDeliverys();
+   }, []);
+
+  useEffect(() => {
+
+
+    setInterval(() => {
+      initializeDeliverys();
+    }, 120000)// a cada 2 minuto ele atualiza os pedidos 
+
+  },[deliverysToDo]);
+  
+
+  function ShowAlert(text: string) {
+          toast(text, {
+              style: {
+                  backgroundColor: "#fff",
+                  color: "#2b192e",
+                  fontFamily: "Arial, sans-serif",
+              },
+          });
+      }
+  async function deleteDelivery(delivery_id:string){
+    const data = await deleteEspecificDelivery(delivery_id)
+    
+    if (data){
+      initializeDeliverys()
+      return ;
+    }
+    ShowAlert('Houve algum erro no processo !!')
+    
+
+  }
   const initializeDeliverys = async () => {
     try {
-      const can_access_home = await validateHomeAcess(router);
-      if (!can_access_home) {
-        router.push("/login");
-        return;
-      }
 
       const deliverys: any = await getDeliverys();
-      console.log("Resposta da API: ", deliverys);
-
+      if (deliverys === "invalid" || deliverys === "error") {
+        router.push("/login");
+        return; 
+      }
       if (!Array.isArray(deliverys)) {
         setDeliverysToDo([]);
         setIsLoading(false);
         return;
       }
-
       setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
@@ -61,20 +90,16 @@ export default function PedidosPage() {
         <Sidebar />
         <div className={styles.content}>
           <div className={styles.header}>
-            <h1 className={styles.title}>Pedidos</h1>
-
-            <div className="flex items-center space-x-4">
+            <div className={styles.titleSection}>
+              <h1 className={styles.title}>Pedidos</h1>
               <div className={styles.count}>{deliverysToDo.length}</div>
-
-              <button
-                onClick={() => router.push("/delivery-form")}
-                className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition"
-              >
-                + Adicionar
-              </button>
             </div>
+            <button
+              onClick={() => router.push("/delivery-form")}
+              className={styles.addButton}>
+              + Adicionar
+            </button>
           </div>
-
           <div className={styles.ordersList}>
             {deliverysToDo.map((order, index) => (
               <div
@@ -92,14 +117,13 @@ export default function PedidosPage() {
                     <span className={styles.orderUnit}>Caixas</span>
                   </div>
                    <div className="gap-6 flex flex-row-reverse">
-                      <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
-                      <div><button><FontAwesomeIcon icon={faCheck} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
-                      <div><button><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
+                      <div><button onClick={()=> deleteDelivery(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                      <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                      <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
                 </div>
-
-                {selectedOrder?.id === order.id && (  
-                  <div className={styles.details}>
+                {selectedOrder?.id === order.id && (
+                    <div className={styles.details}>
                     <p className="text-black">
                       <strong>Local de Entrega:</strong> {order.LocalEntrega}
                     </p>
@@ -111,8 +135,17 @@ export default function PedidosPage() {
               </div>
             ))}
           </div>
-          
         </div>
+        <ToastContainer
+                        position="top-right"
+                        autoClose={4000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+          />
 
       </div>
     );

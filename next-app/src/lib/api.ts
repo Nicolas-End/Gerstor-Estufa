@@ -1,13 +1,15 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo  } from "./Controllers/delivery";
+import { DeliveryQuantidy, AddNewDelivery,GetEspecificDeliveryDatas,GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery  } from "./Controllers/delivery";
 
+import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "./Controllers/functionaries";
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "./Controllers/user";
+import { StringDecoder } from "string_decoder";
 export async function validateWorkerLogin(
   email: string,
   password: string,
@@ -132,12 +134,57 @@ export async function getDeliverys(){
   }
 }
 
+export async function getFunctionaries(){
+  try{
+    const data = await GetFunctionaries();
+    
+    if (data.status === "ok") {
+      return data.functionaries;
+    } else if (data.status === "invalid") {
+      return "invalid";
+    } else {
+      return "error";
+    }
+  } catch (error) {
+    console.log("Erro ao acessar a conta: ", error);
+    return "Erro na requisição";
+  }
+}
+export async function funtionariesQuantity(){
+  try{
+    const data = await GetFunctionariesQuantity()
+    if (data.status === 'ok'){
+      return data.functionaries_quantity
+    }
+    else{
+      return 0
+    }
+  }
+  catch(error){
+    console.log('Error',error)
+    return 'Error'
+  }
+}
+
+export async function  addNewFunctionary(name:string,email:string,password:string,role:string) {
+  try{
+    const data = await AddNewFunctionary(name,email,password,role)
+    return data.status
+
+  }
+    catch(error){
+    console.log('Error',error)
+    return 'Error'
+  }
+  
+}
 export async function getEscificDelivery (id:string){
   try{
     const data = await GetEspecificDeliveryDatas(id);
-
+    
     if (data.status === "ok") {
-      return data.deliveryDatas;
+      
+      return data;
     } else if (data.status === "invalid") {
       return "invalid";
     } else {
@@ -160,6 +207,42 @@ export async function addNewItemDelivery (FormsData:any){
     }
     else{
       return 'error'
+    }
+  } catch (error){
+    console.log("Error ao acessar a conta: ",error);
+    return "Erro na requisição";
+  }
+}
+
+export async function editDelivery (FormsData:any){
+  try{
+
+    const data = await EditDelivery(FormsData)
+
+    if (data.status === "ok"){
+
+      return 'ok'
+    }
+    else{
+      return 'error'
+    }
+  } catch (error){
+    console.log("Error ao acessar a conta: ",error);
+    return "Erro na requisição";
+  }
+}
+
+export async function deleteEspecificDelivery(delivery_id:string){
+  try{
+
+    const data = await DeleteEspecificDelivery(delivery_id)
+
+    if (data.status === "ok"){
+
+      return true
+    }
+    else{
+      return false
     }
   } catch (error){
     console.log("Error ao acessar a conta: ",error);

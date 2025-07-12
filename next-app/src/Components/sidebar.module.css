@@ -2,11 +2,11 @@
 .sidebar {
   background-color: #0a3b2c;
   width: 13rem;
-  height: 110vh;
+  position: sticky;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
-  position: relative;
   z-index: 100000;
 }
 
@@ -228,7 +228,24 @@
   }
 }
 
-/* === Mantém a sidebar lateral em telas maiores === */
-@media (min-width: 769px) {
-  /* Sem alterações adicionais */
+.mobileOnly {
+  display: flex;
+}
+@media (min-width: 768px) {
+  .sidebar{
+    top: 0;
+  }
+
+  @media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    top: unset; /* remove qualquer herança */
+  }
+}
+
+  .mobileOnly {
+    display: none;
+  }
+
 }

@@ -8,6 +8,7 @@ from controllers.user_controller import UserController
 from controllers.delivery_controller import DeliveryContoller
 from controllers.email_controller import EmailController
 from controllers.token_controller import ControllerToken
+from controllers.functionaries import FunctionariesController
 load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -31,7 +32,7 @@ def home_acess():
         #processo para descriptografar os dados do usuario 
         data_user_is_correct = CriptographyController().decripto_datas(token)
 
-          
+        
        #verificando se o acesso do usuario é valido
         if data_user_is_correct['acess'] == True:
                 return jsonify({'status':'ok'}),200
@@ -54,7 +55,7 @@ def count_deliverys():
             return jsonify({'status':'error'}),400
         
 
-        count, ok = DeliveryContoller().quantidy_deliverys(datas['email'])
+        count, ok = DeliveryContoller().quantidy_deliverys(datas['company_email'])
         if not ok:
             return jsonify({'status': 'error'}), 400
         
@@ -85,7 +86,7 @@ def add_new_Adm():
         return jsonify({'status': 'error', 'message': str(e)}), 200 
     
 #retorna os produtos de entregas da empresa
-@app.route('/get-deliverys-products', methods=['POST'])
+@app.route('/get-deliverys', methods=['POST'])
 def get_deliverys_products():
     try:
         
@@ -97,11 +98,11 @@ def get_deliverys_products():
         if not datas:
             return jsonify({'status':'error'}),400
 
-        deliverys, ok = DeliveryContoller().get_deliverys_products(datas['email'])
+        deliverys, ok = DeliveryContoller().get_deliverys(datas['company_email'])
         if not ok:
-            return jsonify({'status': 'error'}), 400
+            return jsonify({'status':'error',}),200
         
-        return jsonify({'status':'ok','deliverys':deliverys})
+        return jsonify({'status':'ok','deliverys':deliverys}),200
     
     except Exception as e:
         print('Error:', e)
@@ -116,15 +117,16 @@ def get_especific_delivery():
             return jsonify({'status': 'invalid'}), 400
             
         request_id = request.get_json()['id']
-        print(request_id)
+    
         datas = CriptographyController().decripto_datas(token)
         if not datas:
             return jsonify({'status':'error'}),400
         
-        delivery ,ok = DeliveryContoller().get_especific_delivery(datas['email'],request_id)
+        delivery ,ok = DeliveryContoller().get_especific_delivery(datas['company_email'],request_id)
         
         if ok:
-            return jsonify({'status':'ok','deliveryDatas':delivery}),200
+            products = DeliveryContoller().get_products_from_a_delivery(datas['company_email'],request_id)
+            return jsonify({'status':'ok','deliveryDatas':delivery,"products":products}),200
         
         return jsonify({'status':'error'}),400
     
@@ -149,7 +151,7 @@ def add_new_delivery():
         date = formsData['deliveryDate']
         name = formsData['name'] #Pegando os dados do ususario
         
-        ok = DeliveryContoller().add_new_delivery(datas['email'],itens,address,date,name)
+        ok = DeliveryContoller().add_new_delivery(datas['company_email'],itens,address,date,name)
         if ok:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400
@@ -157,7 +159,57 @@ def add_new_delivery():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
     
+@app.route('/edit-delivery',methods=['POST'])
+def edit_delivery():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
         
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+        formsData = request.get_json()['FormsData']
+        delivery_id = formsData['id']
+        itens = formsData['items']
+        address = formsData['address']
+        date = formsData['deliveryDate']
+        name = formsData['name']
+        
+        ok = DeliveryContoller().edit_delivery(datas['company_email'],delivery_id,itens,address,date,name)
+        if ok:
+            return jsonify({'status':'ok'}),200
+        return jsonify({'status':'error'}),400
+    
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200
+
+@app.route('/delete-delivery',methods=['POST'])
+def delete_delivery():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+        delivery_id= request.get_json()['delivery_id']
+        delivery_was_deleted = DeliveryContoller().delete_delivery(datas['company_email'],delivery_id)
+        if delivery_was_deleted:
+            products_deleted = DeliveryContoller().delete_product(datas['company_email'],delivery_id)
+            if products_deleted:
+                return jsonify({'status':'ok'})
+
+        return jsonify({'status':'error'})    
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200
+
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/user-login', methods=["POST"])
 def user_login():
@@ -169,8 +221,11 @@ def user_login():
         responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
 
         if returnApi:  
+            compnay_email, company_name,has_company = UserController().get_company_email(worker_email)
             data_user ={
                 'email':worker_email,
+                'company_email':compnay_email,
+                'company_name':company_name,
                 'acess':True
             }
             token = CriptographyController().cripto_datas(data_user) #criptografa os dados do usuario 
@@ -188,7 +243,72 @@ def user_login():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
 
+@app.route('/get-functionaries', methods=['POST'])
+def get_functionarys():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+        functionaries, ok = FunctionariesController().get_functionaries(datas['company_email'])
+        if ok:
+            
+            return jsonify({'status':'ok','functionaries':functionaries}),200
+        
+        return jsonify({'status':'error'}),400
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
 
+@app.route('/add-new-functionary', methods=['POST'])
+def add_new_functionary():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+
+        functionary_datas = request.get_json() 
+        functionary_name = functionary_datas['name']
+        functionary_pass = functionary_datas['password']
+        functionary_email = functionary_datas['email']
+        functionary_role = functionary_datas['role']
+        result, status = FunctionariesController().add_new_functionary(datas['company_email'],datas['company_name'],
+                                                                       functionary_name,functionary_pass,functionary_email,functionary_role)
+
+        return jsonify({'status':result})
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status': 'error', 'message': str(e)})
+    
+@app.route('/get-functionaries-quantity',methods=['POST'])
+def get_functionaries_quantity():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+    
+        functionaries_quantity, ok = FunctionariesController().get_functionaries_quantity(datas['company_email'])
+        if ok:
+            return jsonify({'status':'ok','functionaries_quantity':functionaries_quantity}),200
+        
+        return jsonify({'status':'error'}),400
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
 @app.route('/send-email-recuperation' ,methods=['POST'])
 def forget_password() :
     
@@ -260,6 +380,7 @@ def create_new_worker():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
+
 
 if __name__ == '__main__':
     app.run(debug=True)

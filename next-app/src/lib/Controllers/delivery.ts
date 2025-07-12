@@ -56,6 +56,26 @@ export function AddNewDelivery (FormsData:any): Promise<ApiResponse> {
     })
 }
 
+export function EditDelivery (FormsData:any): Promise<ApiResponse> {
+  return new Promise<ApiResponse>((resolve) =>{
+    const token = localStorage.getItem('token_from_user')
+    axios.post<ApiResponse>('http://127.0.0.1:5000/edit-delivery', {
+        FormsData
+      },{
+        headers:{
+            'Authorization':  token || ''
+        }
+      }
+    )
+      .then(response => {
+
+        resolve(response.data);
+      })
+      .catch(error => {
+        resolve({ status: 'error'});
+      });
+})
+}
 // Essa Função serve para pegar os dados de uma entrega especifica
 // Que o usuario selecionou
 export function GetEspecificDeliveryDatas(id:string): Promise<ApiResponse> {
@@ -74,7 +94,7 @@ export function GetEspecificDeliveryDatas(id:string): Promise<ApiResponse> {
         }
       )
         .then(response => {
-        
+          
           resolve(response.data);
         })
         .catch(error => {
@@ -91,7 +111,33 @@ export function GetDeliverysToDo(): Promise<ApiResponse> {
       const token = localStorage.getItem('token_from_user')
       axios.post<ApiResponse>(
         'https://gerenciador-empresarial-1cfr.vercel.app/get-deliverys-products',
+
         {}, // corpo da requisição POST (vazio nesse caso)
+        {
+          headers: {
+            'Authorization':  token || ''
+          }
+        }
+      )
+        .then(response => {
+          resolve(response.data);
+        })
+        .catch(error => {
+          resolve({ status: 'error'});
+        });
+    });
+  }
+
+
+export function DeleteEspecificDelivery(delivery_id:string): Promise<ApiResponse> {
+    return new Promise<ApiResponse>((resolve) => {
+       
+      const token = localStorage.getItem('token_from_user')
+      axios.post<ApiResponse>(
+        'https://gerenciador-empresarial-1cfr.vercel.app/delete-delivery',
+        {
+          'delivery_id':delivery_id
+        }, // corpo da requisição POST 
         {
           headers: {
             'Authorization':  token || ''
