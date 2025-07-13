@@ -8,28 +8,34 @@ import { getFunctionaries } from "@/lib/api";
 import { validateHomeAcess } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GetAllClients } from "@/lib/api";
 
 export default function ClientsPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [clientsDatas, setClientsDatas] = useState<any>([]);
     const [clientCount, setClientCount] = useState<number>(0);
+    const [hasClient, setHasclient] = useState(Boolean)
     const [searchTerm, setSearchTerm] = useState("");
 
     const initializeClients = async () => {
         try {
             const can_access_home = await validateHomeAcess(router);
             if (!can_access_home) {
-                router.push("/login");
-                return;
-            }
-            const functionaries = await getFunctionaries();
-            if (functionaries === "invalid" || functionaries === "error") {
                 router.push("/home");
                 return;
             }
-            setClientsDatas(functionaries);
-            const quantidy: number|undefined = functionaries?.length
+            const clients: any = await GetAllClients();
+            if (clients === "nothing") {
+                setClientsDatas([])
+                setHasclient(false)
+                setIsLoading(false)
+                
+                return;
+            }
+            setHasclient(true)
+            setClientsDatas(clients);
+            const quantidy: number|undefined = clients?.length
             setClientCount(quantidy || 0);
             setIsLoading(false);
         } catch (error) {
@@ -77,12 +83,14 @@ export default function ClientsPage() {
                         </div>
                     </div>
                     <div className={styles.ordersList}>
-                        {clientsDatas.map((client:any,index:any) => (
+                        {hasClient? clientsDatas.map((client:any,index:any) => (
                             <div className={styles.clientCard} key={index}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
                                 <p className={styles.clientName}>{client.name}</p>
                             </div>
-                        ))}
+                        )): <div className="text-center text-gray-500 text-lg py-8">
+                            Nenhum cliente {searchTerm ? "encontrado" : "cadastrado"}
+                        </div>}
                     </div>
                 </div>
             </div>

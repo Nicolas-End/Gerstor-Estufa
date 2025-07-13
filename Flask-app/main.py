@@ -9,6 +9,7 @@ from controllers.delivery_controller import DeliveryContoller
 from controllers.email_controller import EmailController
 from controllers.token_controller import ControllerToken
 from controllers.functionaries import FunctionariesController
+from controllers.client_controller import ClientController
 load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -359,28 +360,25 @@ def change_password() :
         print('Error:', e)
         return jsonify({'status':'error'})
     
-@app.route('/add-worker', methods=['POST'])
-def create_new_worker():
+@app.route('/get-clients', methods=['POST'])
+def get_clients():
     try:
-        # adiciona um novo trabalhador ao banco de dados
-        response = request.get_json()  
-        worker_name = response['name']
-        worker_id = response['id']
-        worker_role = response['role']
-        worker_email = response['email']
-        worker_password = response['password']
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
         
-        # Chama a função para adicionar um novo worker
-        responseApi, returnApi = UserController().add_new_user(worker_name, worker_id, worker_role, worker_email, worker_password)
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
         
-        if returnApi:  # Sucesso
-            return jsonify({'status': 'ok'}), 201  # Retorna status 201 para sucesso
-        return jsonify({'status': responseApi}), 201  # Erro (status 400)
-
-    except Exception as e:
-        print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
-
-
+        status,clients = ClientController().get_clients(datas['company_email'])
+        if status:
+            
+            return jsonify({'status':'ok','clients':clients}),200
+        return jsonify({'status':'error'}),200
+    
+    except Exception as e: 
+        print('Error: ', e)
+        return jsonify({'status':'error'})
 if __name__ == '__main__':
     app.run(debug=True)
