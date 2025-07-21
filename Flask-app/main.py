@@ -21,6 +21,7 @@ fernet = Fernet(os.getenv('FERNET_KEY'))
 def home():
     return "BEM-VINDO A MINHA API"
 
+#========= USUARIO ========
 # Valida se o usuario pode acessar o home
 @app.route('/home-acess', methods=['POST'])
 def home_acess():
@@ -43,7 +44,112 @@ def home_acess():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
+
+#Sistema pra registrar uma nova estufa
+@app.route('/add-new-company', methods=['POST'])
+def add_new_Adm():
+    try: 
+        response = request.get_json()
+        company_id = response['id']
+        company_email = response['email']
+        company_password = response['password']
+        company_name = response['companyName']
+
+        responseApi, returnApi = UserController().add_new_Company(company_id,company_email,company_password,company_name)
+
+        if returnApi:
+            return jsonify({'status':'ok'}),201
+
+        return jsonify({'status': responseApi}), 201
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
+
+# Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
+@app.route('/user-login', methods=["POST"])
+def user_login():
+    try:
+        response = request.get_json() 
+        worker_email = response['email']
+        worker_password = response['password']
+
+        responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
+
+        if returnApi:  
+            compnay_email, company_name,has_company = UserController().get_company_email(worker_email)
+            data_user ={
+                'email':worker_email,
+                'company_email':compnay_email,
+                'company_name':company_name,
+                'acess':True
+            }
+            token = CriptographyController().cripto_datas(data_user) #criptografa os dados do usuario 
+            
+            
+            return jsonify({'status': 'ok','token':token}), 201 
+        
+        
+        if responseApi == "Wrong Password":
+            return jsonify({'status': 'Wrongpassword'}), 201  
+        
+        return jsonify({'status':'noexist'}),201
     
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
+    
+@app.route('/send-email-recuperation' ,methods=['POST'])
+def forget_password() :
+    
+    try:
+        
+        user_json = request.get_json()
+        user_email = user_json['email']
+        new_user_pass = user_json['newPassword']
+        
+        user_exist = UserController().find_user(user_email)
+        if not user_exist:
+            return jsonify({'status':'noexist'}),200
+        
+        sent_email = EmailController().send_recuperation_email(user_email,new_user_pass)
+        
+        if sent_email:
+            return jsonify({'status':'ok'}),200
+        else:
+            return jsonify({'status':'error'}),200
+        
+    except Exception as e:
+        print('Error:', e)
+        return jsonify({'status': 'error', 'message': str(e)}), 200 
+    
+#sistema para alterar a senha a senha do usuario
+@app.route('/change-password' ,methods=['POST'])
+def change_password() :
+    try:
+        user_json = request.get_json()
+        token = user_json['token']
+        
+        token_data,email = token.split("&")
+        # verifica se o token do usuario é valido
+        token_valid, new_password = ControllerToken().token_verify(token_data,email)
+        if not token_valid:
+            return jsonify({'status':'token_invalid'}),200
+        
+        # se o token do email for valido ele muda a senha do usuario                                                                                                        
+        changed_password = UserController().change_user_password(email,new_password)
+        
+        if changed_password:
+            
+            return jsonify({'status':'ok'}),200
+        
+        return jsonify({'status':'error'}),200 
+    
+    except Exception as e: 
+        print('Error:', e)
+        return jsonify({'status':'error'})
+
+    
+#======== ENTREGAS =======
 @app.route('/count-deliverys', methods=['POST'])
 def count_deliverys():
     try:
@@ -66,26 +172,7 @@ def count_deliverys():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
     
-#Sistema pra registrar uma nova estufa
-@app.route('/add-new-company', methods=['POST'])
-def add_new_Adm():
-    try: 
-        response = request.get_json()
-        company_id = response['id']
-        company_email = response['email']
-        company_password = response['password']
-        company_name = response['companyName']
 
-        responseApi, returnApi = UserController().add_new_Company(company_id,company_email,company_password,company_name)
-
-        if returnApi:
-            return jsonify({'status':'ok'}),201
-
-        return jsonify({'status': responseApi}), 201
-    except Exception as e:
-        print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
-    
 #retorna os produtos de entregas da empresa
 @app.route('/get-deliverys', methods=['POST'])
 def get_deliverys_products():
@@ -108,8 +195,7 @@ def get_deliverys_products():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200 
-    
-    
+       
 @app.route('/get-especific-delivery', methods=['POST'])
 def get_especific_delivery():
     try:
@@ -211,38 +297,8 @@ def delete_delivery():
         print('Error: ',e)
         return jsonify({'status': 'error', 'message': str(e)}), 200
 
-# Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
-@app.route('/user-login', methods=["POST"])
-def user_login():
-    try:
-        response = request.get_json() 
-        worker_email = response['email']
-        worker_password = response['password']
 
-        responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
-
-        if returnApi:  
-            compnay_email, company_name,has_company = UserController().get_company_email(worker_email)
-            data_user ={
-                'email':worker_email,
-                'company_email':compnay_email,
-                'company_name':company_name,
-                'acess':True
-            }
-            token = CriptographyController().cripto_datas(data_user) #criptografa os dados do usuario 
-            
-            
-            return jsonify({'status': 'ok','token':token}), 201 
-        
-        
-        if responseApi == "Wrong Password":
-            return jsonify({'status': 'Wrongpassword'}), 201  
-        
-        return jsonify({'status':'noexist'}),201
-    
-    except Exception as e:
-        print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+#========= FUNCIONARIOS ===========
 
 @app.route('/get-functionaries', methods=['POST'])
 def get_functionarys():
@@ -310,56 +366,11 @@ def get_functionaries_quantity():
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
-@app.route('/send-email-recuperation' ,methods=['POST'])
-def forget_password() :
     
-    try:
-        
-        user_json = request.get_json()
-        user_email = user_json['email']
-        new_user_pass = user_json['newPassword']
-        
-        user_exist = UserController().find_user(user_email)
-        if not user_exist:
-            return jsonify({'status':'noexist'}),200
-        
-        sent_email = EmailController().send_recuperation_email(user_email,new_user_pass)
-        
-        if sent_email:
-            return jsonify({'status':'ok'}),200
-        else:
-            return jsonify({'status':'error'}),200
-        
-    except Exception as e:
-        print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+
     
-#sistema para alterar a senha a senha do usuario
-@app.route('/change-password' ,methods=['POST'])
-def change_password() :
-    try:
-        user_json = request.get_json()
-        token = user_json['token']
-        
-        token_data,email = token.split("&")
-        # verifica se o token do usuario é valido
-        token_valid, new_password = ControllerToken().token_verify(token_data,email)
-        if not token_valid:
-            return jsonify({'status':'token_invalid'}),200
-        
-        # se o token do email for valido ele muda a senha do usuario                                                                                                        
-        changed_password = UserController().change_user_password(email,new_password)
-        
-        if changed_password:
-            
-            return jsonify({'status':'ok'}),200
-        
-        return jsonify({'status':'error'}),200 
-    
-    except Exception as e: 
-        print('Error:', e)
-        return jsonify({'status':'error'})
-    
+
+#========== CLIENTES =========    
 @app.route('/get-clients', methods=['POST'])
 def get_clients():
     try:
@@ -380,5 +391,32 @@ def get_clients():
     except Exception as e: 
         print('Error: ', e)
         return jsonify({'status':'error'})
+    
+@app.route('/add-new-client', methods=['POST'])
+def add_client():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+
+        clients_datas = request.get_json()  
+        created_client , err = ClientController().add_new_client(datas['company_email'],clients_datas['name'],clients_datas['address'],
+                                                                clients_datas['document'])
+        
+        if created_client:
+            return jsonify({'status':'ok'}),200
+        else:
+            return jsonify({'status':err})
+    
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status':'error'})
+    
+
 if __name__ == '__main__':
     app.run(debug=True)

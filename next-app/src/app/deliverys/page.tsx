@@ -23,14 +23,6 @@ export default function PedidosPage() {
        initializeDeliverys();
    }, []);
 
-  useEffect(() => {
-
-
-    setInterval(() => {
-      initializeDeliverys();
-    }, 120000)// a cada 2 minuto ele atualiza os pedidos 
-
-  },[deliverysToDo]);
   
 
   function ShowAlert(text: string) {

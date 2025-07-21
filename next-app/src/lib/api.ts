@@ -8,7 +8,7 @@ import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from ".
 import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
 
 // processos relacioandos ao cliente
-import { GetClients } from "./Controllers/clients";
+import { AddClient, GetClients } from "./Controllers/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "./Controllers/user";
@@ -298,6 +298,27 @@ export async function GetAllClients() {
     }
     else {
       return 'nothing'
+    }
+  } catch (error) {
+    console.log("Error ao acessar a conta: ", error);
+    return "Erro na requisição";
+  }
+}
+
+export async function AddNewClient(name:string, address: {[key:string]:string|number}, document: {[key:string]:string}) {
+  try {
+
+    const data = await AddClient(name,address,document)
+    console.log(data)
+    if (data.status === "ok") {
+      
+      return "Cliente Cadastrado com sucesso"
+    }
+    else if(data.status === "Exist"){
+      return "Cliente já Cadastrado no sistema"
+    }
+    else {
+      return 'Houve um erro no sistema'
     }
   } catch (error) {
     console.log("Error ao acessar a conta: ", error);

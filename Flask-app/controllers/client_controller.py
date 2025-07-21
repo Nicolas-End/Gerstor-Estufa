@@ -17,17 +17,16 @@ class ClientController:
             if has_clients:
                 dict_clients = []
                 for i in has_clients:
-                    if i['cnpj']:
-                        clients= {
+                    clients= {
                             'name': i['name'],
                             'street': i['street'],
                             'email': i['email'],
-                            'neighborhood': i['neighborhood'],
+                            'address': i['address'],
                         }
-                        if 'cnpj' in i:
-                            clients['cnpj'] = i['cnpj']
-                        else:
-                            clients['cpf'] = i['cpf']
+                    if 'cnpj' in i and i['cnpj']:
+                        clients['cnpj'] = i['cnpj']
+                    else:
+                        clients['cpf'] = i['cpf']
                     dict_clients.append(clients.copy())
                 return dict_clients, True 
             return [], True
@@ -35,3 +34,30 @@ class ClientController:
             print('Error:',e)
             return False , 0
         
+    def add_new_client(self,company_email,name,address,document):
+        try:
+            client_adress = "Rua {}, Bairro {}, {}".format(address['street'],address['neighborhood'],address['number'])
+            clients_datas = {"company_email":company_email,
+                             "name":name,
+                             "address":client_adress}
+            
+            # Verifica se tem alguma referencia
+            if address['reference']:
+                clients_datas['referencia'] = address['reference']
+
+            #verifica se o identificador esta correto
+            if document['type'] != "cnpj" and document['type'] != "cpf":
+                return False, "Identi"
+            clients_datas[document['type']] = document['value']
+            
+
+
+            client_exist = self.coll.find_one({'company_email':company_email,document['type']:document['value']})
+            if client_exist:
+                return False, "Exist"
+            
+            self.coll.insert_one(clients_datas)
+            return True,"ok"
+        except Exception as e:
+            print ('Error: ',e)
+            return False
