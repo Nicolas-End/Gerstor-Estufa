@@ -4,6 +4,7 @@ interface ApiResponse {
   status: string;
   message?: string;
   token?:string;
+  role?:string
 }
 
 // Verifica se o usuario tem permissão para acessar o site

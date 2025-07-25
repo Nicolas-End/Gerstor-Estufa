@@ -19,17 +19,16 @@ class ClientController:
                 for i in has_clients:
                     clients= {
                             'name': i['name'],
-                            'street': i['street'],
-                            'email': i['email'],
                             'address': i['address'],
                         }
-                    if 'cnpj' in i and i['cnpj']:
+                    if 'cnpj' in i:
                         clients['cnpj'] = i['cnpj']
                     else:
                         clients['cpf'] = i['cpf']
                     dict_clients.append(clients.copy())
-                return dict_clients, True 
-            return [], True
+
+                return True, dict_clients
+            return False, []
         except Exception as e:
             print('Error:',e)
             return False , 0

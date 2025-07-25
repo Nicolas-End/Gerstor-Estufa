@@ -76,7 +76,7 @@ def user_login():
         responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
 
         if returnApi:  
-            compnay_email, company_name,has_company = UserController().get_company_email(worker_email)
+            compnay_email, company_name,role = UserController().get_company_email(worker_email)
             data_user ={
                 'email':worker_email,
                 'company_email':compnay_email,
@@ -86,7 +86,7 @@ def user_login():
             token = CriptographyController().cripto_datas(data_user) #criptografa os dados do usuario 
             
             
-            return jsonify({'status': 'ok','token':token}), 201 
+            return jsonify({'status': 'ok','token':token,'role':role}), 201 
         
         
         if responseApi == "Wrong Password":
@@ -382,7 +382,7 @@ def get_clients():
         if not datas:
             return jsonify({'status':'error'}),400
         
-        status,clients = ClientController().get_clients(datas['company_email'])
+        status, clients = ClientController().get_clients(datas['company_email'])
         if status:
             
             return jsonify({'status':'ok','clients':clients}),200
