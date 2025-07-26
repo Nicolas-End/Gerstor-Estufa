@@ -32,7 +32,7 @@ export default function PedidosPage() {
           <button
             onClick={() => {
               toast.dismiss(toastId);
-              toast.success("Confirmado com sucesso!");
+              toast.success("Excluido com sucesso");
               deleteDelivery(id)
 
             }}
@@ -49,9 +49,7 @@ export default function PedidosPage() {
         </div>
       </div>,
       {
-        autoClose: false,
         closeOnClick: false,
-        draggable: false,
         closeButton: false,
       }
     )

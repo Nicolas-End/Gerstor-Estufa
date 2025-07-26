@@ -99,7 +99,7 @@ const Login: React.FC = () => {
                   <input
                     id="password"
                     type={isVisible ? "text" : "password"}
-                    className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm pr-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full h-10 rounded-md border text-gray-700 border-gray-300 px-3 py-2 text-sm pr-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
