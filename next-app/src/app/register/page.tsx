@@ -76,40 +76,46 @@ const RegisterPage = () => {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
       
       </head>
-      <div className="flex h-screen bg-gradient-to-r from-[#fff] to-[#0a2c26] items-center justify-center">
-        
-        <div className="w-full max-w-md bg-[#fff] text-[#000] p-8 rounded-lg shadow-2xl">
-          <div className="flex items-center mb-6">
-            <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
-            <h1 className="text-4xl font-bold fontQuick">Controle Verde</h1>
-          </div>
-          <p className="text-sm mb-8 fontRobo">Crie sua conta</p>
+      
+      <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-200 px-4 space-y-4">
 
-          {/* Campo de Nome da Empresa */}
-          <label className="text-sm mb-2 fontRobo">Nome da Empresa:</label>
-          <input
+  {/* Logo + Título */}
+  <div className="text-center">
+    <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600 rounded-2xl mb-4 shadow-lg">
+      <img src="/Logo.png" alt="Logo" className="w-8 h-8 object-contain" />
+    </div>
+    <h1 className="text-3xl font-bold text-emerald-800 mb-1">Controle Verde</h1>
+    <p className="text-emerald-600/80 text-sm">Sistema de gestão sustentável</p>
+  </div>
+
+  {/* Formulário de Registro */}
+  <form onSubmit={handleRegister} className="w-full max-w-sm bg-white rounded-2xl shadow-md p-6 space-y-4">
+  
+      <label htmlFor="name" className="block text-sm font-medium text-emerald-700 mb-1">Nome da Empresa</label>
+      <input
             value={nomeEmpresa}
             type="nome"
-            className="w-full mb-4 p-3 rounded bg-[#0a2c26] text-[#fff] shadow-md"
+            className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             onChange={(e) => setNomeEmpresa(e.target.value)}
+            
           />
 
           {/* Campo de Email */}
-          <label className="text-sm mb-2 fontRobo">Email:</label>
+          <label className="text-sm font-medium text-gray-700 mb-1">Email:</label>
           <input
             value={email}
             type="email"
-            className="w-full mb-4 p-3 rounded bg-[#0a2c26] text-[#fff] shadow-md"
+            className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             onChange={(e) => setEmail(e.target.value)}
           />
           
           {/* Campo de Senha */}
-          <label className="text-sm mb-2 fontRobo">Senha:</label>
+          <label className="text-sm font-medium text-gray-700 mb-1">Senha:</label>
           <div className="relative mb-4">
             <input
               value={password}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#0a2c26] text-[#fff] shadow-md"
+              className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
@@ -126,12 +132,12 @@ const RegisterPage = () => {
           </div>
 
           {/* Campo de Confirmação de Senha */}
-          <label className="text-sm mb-2 fontRobo">Confirme a Senha:</label>
+          <label className="text-sm font-medium text-gray-700 mb-1">Confirme a Senha:</label>
           <div className="relative mb-6">
             <input
               value={confirmPassword}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#0a2c26] text-[#fff] shadow-md"
+              className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <button
@@ -159,7 +165,7 @@ const RegisterPage = () => {
 
           {/* Botão de Registro */}
           <button
-            className="w-full fontQuick border-2 border-solid border-[#0a2c26] bg-[#0a2c26] text-[#fff] rounded-lg py-3 shadow-lg transition transform hover:bg-[#fff] hover:text-[#000] hover:-translate-y-1"
+            className="w-full h-11 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md transition-colors"
             onClick={handleRegister}
             disabled={isLoading}
           >
@@ -172,17 +178,24 @@ const RegisterPage = () => {
                 "Registrar"
               )}
           </button>
+           <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500">ou</span>
+                </div>
+              </div>
           
-
           {/* Link para a página de Login */}
           <Link
             href="/login"
-            className="block w-full text-center fontQuick border-2 border-solid border-[#0a2c26] bg-[#0a2c26] text-[#fff] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#fff] hover:text-[#000] hover:-translate-y-1"
+            className="block w-full text-center font-medium border-2 border-solid bg-emerald-600 hover:bg-emerald-700 text-[#fff] rounded-md transition-colors py-3 shadow-lg mt-4 "
           >
             Já tem uma conta? Faça login
           </Link>
+          </form>
         </div>
-      </div>
     </>
   );
 };
