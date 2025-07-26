@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const router = useRouter();
 
   function ShowAlert(text: string) {
-    toast(text, {
+    toast.error(text, {
       style: {
         backgroundColor: "#fff",
         color: "#2b192e",

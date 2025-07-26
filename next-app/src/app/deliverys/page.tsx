@@ -24,9 +24,40 @@ export default function PedidosPage() {
    }, []);
 
   
+  function confirmToast(id:string){
+    const toastId = toast.info(
+      <div>
+        <p>Tem certeza que deseja excluir essa entrega?</p>
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={() => {
+              toast.dismiss(toastId);
+              toast.success("Confirmado com sucesso!");
+              deleteDelivery(id)
 
+            }}
+            className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+          >
+            Sim
+          </button>
+          <button
+            onClick={() => toast.dismiss(toastId)}
+            className="bg-red-600 text-white px-3 py-1 rounded"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>,
+      {
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+      }
+    )
+  }
   function ShowAlert(text: string) {
-          toast(text, {
+          toast.error (text, {
               style: {
                   backgroundColor: "#fff",
                   color: "#2b192e",
@@ -34,6 +65,7 @@ export default function PedidosPage() {
               },
           });
       }
+
   async function deleteDelivery(delivery_id:string){
     const data = await deleteEspecificDelivery(delivery_id)
     
@@ -109,7 +141,7 @@ export default function PedidosPage() {
                     <span className={styles.orderUnit}>Caixas</span>
                   </div>
                    <div className="gap-6 flex flex-row-reverse">
-                      <div><button onClick={()=> deleteDelivery(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                      <div><button onClick={()=> confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
                       <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
                       <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
