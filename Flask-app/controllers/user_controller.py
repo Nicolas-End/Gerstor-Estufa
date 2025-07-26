@@ -48,7 +48,7 @@ class UserController:
                 company_email = has_email['company_email']
                 company_name = has_email['company_name']
                 role = has_email['role']
-                return company_email,company_name
+                return company_email,company_name, role
             
             return "noexist",False
         except Exception as e:

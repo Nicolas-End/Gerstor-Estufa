@@ -75,7 +75,8 @@ def user_login():
 
         responseApi, returnApi = UserController().validate_user( worker_email, worker_password)
 
-        if returnApi:  
+        if returnApi:
+
             compnay_email, company_name,role = UserController().get_company_email(worker_email)
             data_user ={
                 'email':worker_email,
