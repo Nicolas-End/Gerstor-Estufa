@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { addNewFunctionary, validateHomeAcess } from "@/lib/api";
+import { addNewFunctionary, validateHomeAcess } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

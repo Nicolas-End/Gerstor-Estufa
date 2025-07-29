@@ -6,7 +6,7 @@ import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys, deleteEspecificDelivery} from "@/lib/api";
+import { getDeliverys, deleteEspecificDelivery} from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";

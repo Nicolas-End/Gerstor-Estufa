@@ -5,7 +5,7 @@ import styles from "../functionaries/page.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTruck } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { getTrucks } from "@/lib/api"; 
+import { getTrucks } from "@/lib/ts/api"; 
 import { useRouter } from "next/navigation";
 
 export default function CaminhoesPage() {

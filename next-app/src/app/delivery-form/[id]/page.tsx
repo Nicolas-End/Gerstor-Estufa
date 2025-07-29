@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
-import { validateHomeAcess,getEscificDelivery, editDelivery } from "@/lib/api";
+import { validateHomeAcess,getEscificDelivery, editDelivery } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";

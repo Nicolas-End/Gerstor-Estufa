@@ -4,7 +4,7 @@ import {
   validateHomeAcess,
   countDeliveryQuantidy,
   funtionariesQuantity,
-} from "@/lib/api";
+} from "@/lib/ts/api";
 import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";

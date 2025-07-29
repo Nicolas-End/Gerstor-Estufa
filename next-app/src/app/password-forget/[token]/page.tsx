@@ -2,7 +2,7 @@
 import styles from "./page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { validateTokenUser } from "@/lib/api";
+import { validateTokenUser } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import Link from "next/link";
 export default function ProdutoPage() {

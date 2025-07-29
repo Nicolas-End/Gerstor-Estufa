@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import Link from "next/link";
-import { registerNewCompany } from "@/lib/api";
+import { registerNewCompany } from "@/lib/ts/api";
 
 
 const RegisterPage = () => {

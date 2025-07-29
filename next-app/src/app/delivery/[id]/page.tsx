@@ -2,7 +2,7 @@
 import styles from "./page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getEscificDelivery } from "@/lib/api";
+import { getEscificDelivery } from "@/lib/ts/api";
 import Sidebar from "@/Components/sidebar";
 
 

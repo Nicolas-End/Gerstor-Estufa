@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
-import { RecuperationEmail } from "@/lib/api";
+import { RecuperationEmail } from "@/lib/ts/api";
 const ForgetPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

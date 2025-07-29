@@ -34,6 +34,7 @@ export function DeliveryQuantidy(): Promise<ApiResponse> {
     })
 }
 
+
 // Adiciona uma nova entrega ao banco de dados
 export function AddNewDelivery (FormsData:any): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) =>{

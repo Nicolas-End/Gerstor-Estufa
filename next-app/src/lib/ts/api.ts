@@ -1,17 +1,17 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { DeliveryQuantidy, AddNewDelivery, GetEspecificDeliveryDatas, GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery } from "./Controllers/delivery";
+import { DeliveryQuantidy, AddNewDelivery, GetEspecificDeliveryDatas, GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery } from "@/lib/services/delivery";
 
-import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "./Controllers/functionaries";
+import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
-import { SendEmailRecovery, ChangePassword } from "./Controllers/passwordRecovery";
+import { SendEmailRecovery, ChangePassword } from "@/lib/services/passwordRecovery";
 
 // processos relacioandos ao cliente
-import { AddClient, GetClients } from "./Controllers/clients";
+import { AddClient, GetClients } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
-import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "./Controllers/user";
+import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "@/lib/services/user";
 import { StringDecoder } from "string_decoder";
 export async function validateWorkerLogin(
   email: string,

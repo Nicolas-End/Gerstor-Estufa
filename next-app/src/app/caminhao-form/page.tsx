@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { addNewTruck } from "@/lib/api";
+import { addNewTruck } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
