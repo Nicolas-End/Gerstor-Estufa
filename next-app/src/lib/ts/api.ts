@@ -1,7 +1,7 @@
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { DeliveryQuantidy, AddNewDelivery, GetEspecificDeliveryDatas, GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery } from "@/lib/services/delivery";
+import {deliveryQuantidy,AddNewDelivery, GetEspecificDeliveryDatas, GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery } from "@/lib/services/delivery";
 
 import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
@@ -13,6 +13,7 @@ import { AddClient, GetClients } from "@/lib/services/clients";
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "@/lib/services/user";
 import { StringDecoder } from "string_decoder";
+import { getAllTrucks } from "../services/trucks";
 export async function validateWorkerLogin(
   email: string,
   password: string,
@@ -106,7 +107,7 @@ export async function validateHomeAcess(router: AppRouterInstance) {
 // Usado no Home
 export async function countDeliveryQuantidy() {
   try {
-    const data = await DeliveryQuantidy()
+    const data = await deliveryQuantidy()
     if (data.status === 'ok') {
       return data.count
     }
@@ -309,7 +310,6 @@ export async function AddNewClient(name:string, address: {[key:string]:string|nu
   try {
 
     const data = await AddClient(name,address,document)
-    console.log(data)
     if (data.status === "ok") {
       
       return "Cliente Cadastrado com sucesso"
@@ -322,6 +322,32 @@ export async function AddNewClient(name:string, address: {[key:string]:string|nu
     }
   } catch (error) {
     console.log("Error ao acessar a conta: ", error);
+    return "Erro na requisição";
+  }
+}
+
+//====== CAMINHÕES ======
+export async function GetTrucks(){
+  try {
+    const data = await getAllTrucks();
+    console.log(data)
+    if (typeof data === 'string') {
+      switch (data) {
+        case 'Authorization?':
+          return 'Login'; // Usuário não autenticado
+        case 'internalError':
+        case 'Erro Desconhecido':
+          return 'Erro interno'; // Problemas no servidor
+        default:
+          return 'Erro desconhecido'; // Para qualquer outro tipo
+      }
+    }
+
+    // Se chegou aqui, é uma lista de caminhões
+    return data;
+
+  } catch (error) {
+    console.error("Erro ao acessar a conta:", error);
     return "Erro na requisição";
   }
 }

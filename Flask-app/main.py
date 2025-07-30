@@ -10,6 +10,7 @@ from controllers.email_controller import EmailController
 from controllers.token_controller import ControllerToken
 from controllers.functionaries import FunctionariesController
 from controllers.client_controller import ClientController
+from controllers.truck_controller import TruckController
 load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -418,6 +419,28 @@ def add_client():
         print('Error: ',e)
         return jsonify({'status':'error'})
     
+#====CAMINHÕES=====
+@app.route('/get-trucks', methods=['POST'])
+def get_trucks():   
+    try:
+
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'error','message':'Authorization?'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error','message':'Authorization?'}),400
+        
+        status, trucks= TruckController().get_trucks(datas['company_email'])
+        if status:
+            return jsonify({'status':'ok','trucks':trucks}),200
+        
+        return jsonify({'status':'error','message':'internalError'}),400
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status': 'error', 'message': 'internalError'}), 400
+
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

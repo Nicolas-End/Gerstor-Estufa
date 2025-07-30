@@ -1,46 +1,39 @@
-{/*Fiz com base no seu delivery ai dps voce arruma certinho negão, falta negócio de URL e tals(eu acho), ia mandar no gpt soq vou deixar com vc msm*/}
 import axios from "axios";
+import api from '@/lib/config/axiosConfig'
 
 interface TruckData {
-  modelo: string;
-  placa: string;
-  chassi?: string;
-  cor?: string;
-  eixos?: number;
-  mercosul?: boolean;
+  'modelo': string;
+  'placa': string;
+  'chassi': string;
+  'cor'?: string;
+  'eixos'?: number;
+  'mercosul'?: boolean;
 }
 
 interface ApiResponse {
-  status: string;
-  message?: string;
-  trucks?: TruckData[];
-  truck?: TruckData;
+  'status': string;
+  'message'?: string;
+  'trucks'?: TruckData[];
+  'truck'?: TruckData;
 }
 
 const baseUrl = "http://127.0.0.1:5000";
 
-export function AddNewTruck(data: TruckData): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-    const token = localStorage.getItem("token_from_user");
+export const getAllTrucks = async (): Promise<TruckData[] | string> => {
+  try {
+    const response = await api.post<ApiResponse>('/get-trucks');
+    
+    if (response.status === 200 && response.data.trucks) {
+      return response.data.trucks;
+    } else {
+      return response.data.message || 'Erro Desconhecido.';
+    }
 
-    axios
-      .post<ApiResponse>(
-        `${baseUrl}/add-new-truck`,
-        data,
-        {
-          headers: {
-            Authorization: token || "",
-          },
-        }
-      )
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch(() => {
-        resolve({ status: "error" });
-      });
-  });
-}
+  } catch (error) {
+    console.error('Erro ao buscar caminhões:', error);
+    throw error;
+  }
+};
 
 export function GetAllTrucks(): Promise<ApiResponse> {
   return new Promise<ApiResponse>((resolve) => {

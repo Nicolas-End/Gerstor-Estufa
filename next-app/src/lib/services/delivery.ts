@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import api from '@/lib/config/axiosConfig'; 
 interface ApiResponse {
     'status': string,
     'message'?: string,
@@ -34,7 +34,15 @@ export function DeliveryQuantidy(): Promise<ApiResponse> {
     })
 }
 
-
+export const deliveryQuantidy = async () => {
+  try {
+    const response = await api.post('/count-deliverys');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 // Adiciona uma nova entrega ao banco de dados
 export function AddNewDelivery (FormsData:any): Promise<ApiResponse> {
     return new Promise<ApiResponse>((resolve) =>{
