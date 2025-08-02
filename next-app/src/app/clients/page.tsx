@@ -4,10 +4,12 @@ import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getFunctionaries, ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
+import { ToastContainer } from "react-toastify";
+import { ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
 ;
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { showAlert, showError } from "@/lib/controller/alertsController";
 
 export default function ClientsPage() {
     const router = useRouter();
@@ -25,21 +27,27 @@ export default function ClientsPage() {
                 return;
             }
             const clients: any = await GetAllClients();
-            if (clients === "nothing") {
-                setClientsDatas([])
-                setHasclient(false)
-                setIsLoading(false)
-                
-                return;
+            if (typeof clients === "string"){
+                switch (clients){
+                    case "Credencial Invalida":
+                        showAlert("Suas credenciais sõa invalidas")
+                        router.push('/logout')
+                    default:
+                        showError("Houve um erro interno tente novamente mais tarde")
+                        setIsLoading(false)
+                        return;
+                }
             }
+
             setHasclient(true)
             setClientsDatas(clients);
             const quantidy: number|undefined = clients?.length
             setClientCount(quantidy || 0);
             setIsLoading(false);
         } catch (error) {
-            console.error("Erro ao verificar acesso do cliente:", error);
-            router.push("/login");
+            showError("Houve um erro tente novamente mais tarde")
+            setIsLoading(false)
+            return;
         }
     };
 
@@ -92,6 +100,16 @@ export default function ClientsPage() {
                         </div>}
                     </div>
                 </div>
+                  <ToastContainer
+                position="top-right"
+                autoClose={4000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+            />
             </div>
         );
     }

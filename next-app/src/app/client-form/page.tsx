@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { validateHomeAcess, AddNewClient } from "@/lib/ts/api";
-import { ToastContainer, toast } from "react-toastify";
+import { ValidateHomeAcess, AddNewClient } from "@/lib/ts/api";
+import { ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 export default function RegisterClientPage() {
   const router = useRouter();
@@ -22,19 +23,11 @@ export default function RegisterClientPage() {
   const [number, setNumber] = useState(0);
   const [reference, setReference] = useState("");
 
-  function ShowAlert(text: string) {
-    toast(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
+
 
   const initializePage = async () => {
     try {
-      const canAccess = await validateHomeAcess(router);
+      const canAccess = await ValidateHomeAcess(router);
       if (!canAccess) {
         router.push("/login");
         return;
@@ -52,24 +45,37 @@ export default function RegisterClientPage() {
     // Remover formatação para envio
     const rawId = idValue.replace(/\D/g, '');
 
-    
+
     try {
-      const address ={
-        "street":street,
-        "neighborhood":neighborhood,
-        "number":number,
-        "reference":reference
+      const address = {
+        "street": street,
+        "neighborhood": neighborhood,
+        "number": number,
+        "reference": reference
       }
-      const document ={
+      const document = {
         "type": idType,
-        "value":rawId
+        "value": rawId
 
       }
-      const result = await AddNewClient(name,address,document)
       setIsLoading(true);
-      ShowAlert(result);
+      const result = await AddNewClient(name, address, document)
 
-      // Resetar campos
+      switch (result) {
+        case true:
+          showSucess("Cliente Cadastro no sistema com sucesso")
+        case "Credencial Invalida":
+          showAlert("Suas credenciais são invalidas")
+          router.push('/logout')
+          return;
+        case "Cliente ja Existe":
+          showAlert("Cliente ja Constatado no sistema")
+        default:
+          showError("Houver um error interno tente novamente mais tarde")
+
+      }
+
+
       setName("");
       setIdValue("");
       setStreet("");
@@ -77,8 +83,9 @@ export default function RegisterClientPage() {
       setNumber(0);
       setReference("");
       setIsLoading(false);
+      return;
     } catch (error) {
-      ShowAlert("Erro ao cadastrar. Tente novamente.");
+      showAlert("Houve um erro Interno Tente novamente mais tarde")
       setIsLoading(false);
     }
   };

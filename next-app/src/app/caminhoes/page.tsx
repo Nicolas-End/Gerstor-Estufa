@@ -6,32 +6,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
 import { faSearch, faTruck } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { GetTrucks, getTrucks,validateHomeAcess } from "@/lib/ts/api"; 
+import { GetTrucks,ValidateHomeAcess } from "@/lib/ts/api"; 
 import { useRouter } from "next/navigation";
+import { showError } from "@/lib/controller/alertsController";
 
 export default function CaminhoesPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [trucks, setTrucks] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const showError = (text: string) => {
-        toast(text, {
-            style: {
-            backgroundColor: "#fff",
-            color: "#0a2c26",
-            fontFamily: "Arial, sans-serif",
-            },
-         });
-    };
+
     useEffect(() => {
         initializeTrucks();
     }, []);
 
     const initializeTrucks = async () => {
             try {
-                const can_access_home = await validateHomeAcess(router);
+                const can_access_home = await ValidateHomeAcess(router);
                 if (!can_access_home) {
-                    router.push("/home");
+                    router.push("/logout");
                     return;
                 }
                 const data: any = await GetTrucks();
@@ -39,7 +32,7 @@ export default function CaminhoesPage() {
                     switch (data){
                         case 'Login':
                             showError('Por favor refaça o Login')
-                            return;
+                            router.push('/logout')
                         default :
                             showError ('Ops houve um erro interno')
                             showError('Tente novamente mais tarde pfv')

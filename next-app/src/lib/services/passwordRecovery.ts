@@ -1,50 +1,49 @@
 import axios from 'axios'
 
-interface ApiResponse{
-    'status':string,
-    'message'?:string,
+interface ApiResponse {
+  'status': string,
+  'message'?: string,
 
 }
 
-// essa função server para enviar o email de recuperação de senha para o usuario 
-// utilizado na pagina de password-forget
-export function SendEmailRecovery(email:string,newPassword:string): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) => {
-      
-      axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/send-email-recuperation',
-        {
-            email,
-            newPassword
-        }, 
-       
-      )
-        .then(response => {
-        
-          resolve(response.data);
-        })
-        .catch(error => {
-          resolve({ status: 'error', message: 'Erro na requisição' });
-        });
-    });
+
+export const sendEmailRecovery = async (email: string, newPassword: string) => {
+  try {
+    const data = { 'email': email, 'newPassword': newPassword }
+    const response = await axios.post<ApiResponse>('http://127.0.0.1:5000/send-email-recuperation', data,{
+      validateStatus: () => true
+    })
+
+    switch (response.status) {
+      case 200:
+        return "Enviado"
+      case 401:
+        return "Não cadastrado"
+      default:
+        return "Erro Interno"
+    }
+  } catch (error) {
+    throw (error)
   }
+}
 
-export function ChangePassword(token:string): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-     
-    axios.post<ApiResponse>(
-      'http://127.0.0.1:5000/change-password',
-      { 
-          token
-      }, // corpo da requisição POST (vazio nesse caso)
-
+export const changePassword= async (token:string) =>{
+  try{
+    const data = {'token':token}
+    const response = await axios.post<ApiResponse>('http://127.0.0.1:5000/change-password',data,{
+      validateStatus: () => true
+    }
     )
-      .then(response => {
-      
-        resolve(response.data);
-      })
-      .catch(error => {
-        resolve({ status: 'error', message: 'Erro na requisição' });
-      });
-  });
+
+    switch (response.status){
+      case 200:
+        return "Senha modificada"
+      case 401:
+        return "Token Invalido"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw(error)
+  }
 }

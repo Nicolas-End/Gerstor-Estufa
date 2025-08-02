@@ -5,7 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
-import { RecuperationEmail } from "@/lib/ts/api";
+import { SendRecuperationEmail } from "@/lib/ts/api";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 const ForgetPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,43 +14,48 @@ const ForgetPassword: React.FC = () => {
   const [code, setCode] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-  function ShowAlert(text: string) {
-    toast(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
+
+
   const handleEmail = async () => {
-    setIsLoading(true)
-    if (password == "" || email == "" || confirmPassword == "" ){
-      ShowAlert('Preencha Todos os Campos')
+    try {
+      setIsLoading(true)
+      if (password == "" || email == "" || confirmPassword == "") {
+        showAlert('Preencha Todos os Campos')
+
+        setIsLoading(false)
+        return
+      }
+      else if (password !== confirmPassword) {
+        showAlert("As senhas não coincidem!");
+        setIsLoading(false)
+        return;
+      }
+      else {
+        const response = await SendRecuperationEmail(email, password)
+
+          switch (response) {
+            case "Enviado":
+              showSucess("Email para recuperação enviado com sucesso")
+              setIsLoading(false)
+              return
+            case "Não cadastrado":
+              showAlert("Você é um usuario não cadastrado no nosso sistema")
+              setIsLoading(false)
+              return;
+
+            default:
+              showError("Não conseguimos enviar o email devido a um erro interno")
+              setIsLoading(false)
+              return;
+          }
+        
+
+
+      }
+    } catch (error) {
+      showError("Não conseguimos enviar o email devido a um erro interno")
       setIsLoading(false)
-      return  
-    }
-    else if (password !== confirmPassword) {
-      ShowAlert("As senhas não coincidem!");
-      setIsLoading(false)
-      return;
-    }
-    else{
-      const response = await RecuperationEmail(email,password)
-      if (response == 'ok'){
-        ShowAlert('Email Enviado com Sucesso')
-        setIsLoading(false)
-      }
-      else if (response == 'noexist'){
-        ShowAlert('Email não cadastrado')
-        setIsLoading(false)
-      }
-      else{
-        ShowAlert('Oopps houve algum erro')
-        setIsLoading(false)
-      }
     }
   }
 

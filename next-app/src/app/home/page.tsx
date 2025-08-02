@@ -14,7 +14,7 @@ import Sidebar from "@/Components/sidebar";
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [deliveryQuantidy, setDeliveryQuantidy] = useState(0);
+  const [deliveryQuantidy, setDeliveryQuantidy] = useState(-1);
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
   const initializeDashboard = async () => {
     try {
@@ -65,7 +65,7 @@ export default function Home() {
             >
               <h2 className="text-xl font-semibold mb-2">Pedidos</h2>
               <p className="text-4xl font-bold">
-                {deliveryQuantidy || (
+                {deliveryQuantidy !== -1? deliveryQuantidy: (
                   <svg
                     aria-hidden="true"
                     className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

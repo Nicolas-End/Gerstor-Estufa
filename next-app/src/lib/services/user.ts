@@ -12,7 +12,7 @@ interface ApiResponse {
 export const validateUserAcess = async() =>{
   try{
     let api = await createApiWithAuth()
-    const response = await api.post<ApiResponse>('home-acess')
+    const response = await api.post<ApiResponse>('/home-acess')
 
     if(response.status === 200 && response.data){
       return "ok"

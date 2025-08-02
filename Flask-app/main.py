@@ -109,18 +109,18 @@ def forget_password() :
         
         user_exist = UserController().find_user(user_email)
         if not user_exist:
-            return jsonify({'status':'noexist'}),200
+            return jsonify({'status':'noexist'}),401
         
         sent_email = EmailController().send_recuperation_email(user_email,new_user_pass)
         
         if sent_email:
             return jsonify({'status':'ok'}),200
         else:
-            return jsonify({'status':'error'}),200
+            return jsonify({'status':'error'}),500
         
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500
     
 #sistema para alterar a senha a senha do usuario
 @app.route('/change-password' ,methods=['POST'])
@@ -133,7 +133,7 @@ def change_password() :
         # verifica se o token do usuario é valido
         token_valid, new_password = ControllerToken().token_verify(token_data,email)
         if not token_valid:
-            return jsonify({'status':'token_invalid'}),200
+            return jsonify({'status':'token_invalid'}),401
         
         # se o token do email for valido ele muda a senha do usuario                                                                                                        
         changed_password = UserController().change_user_password(email,new_password)
@@ -142,11 +142,11 @@ def change_password() :
             
             return jsonify({'status':'ok'}),200
         
-        return jsonify({'status':'error'}),200 
+        return jsonify({'status':'error'}),500
     
     except Exception as e: 
         print('Error:', e)
-        return jsonify({'status':'error'})
+        return jsonify({'status':'error'}),500
 
     
 #======== ENTREGAS =======
@@ -317,21 +317,21 @@ def get_functionarys():
             
             return jsonify({'status':'ok','functionaries':functionaries}),200
         
-        return jsonify({'status':'error'}),400
+        return jsonify({'status':'error'}),500
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/add-new-functionary', methods=['POST'])
 def add_new_functionary():
     try:
         token = request.headers.get('Authorization')
         if not token:
-            return jsonify({'status': 'invalid'}), 400
+            return jsonify({'status': 'invalid'}), 401
         
         datas = CriptographyController().decripto_datas(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return jsonify({'status':'error'}),401
         
 
         functionary_datas = request.get_json() 
@@ -341,8 +341,11 @@ def add_new_functionary():
         functionary_role = functionary_datas['role']
         result, status = FunctionariesController().add_new_functionary(datas['company_email'],datas['company_name'],
                                                                        functionary_name,functionary_pass,functionary_email,functionary_role)
+        if (result == "AlreadyExist"):
 
-        return jsonify({'status':result})
+            return 409
+        else:
+            return 200
     
     except Exception as e:
         print('Error: ',e)
@@ -387,11 +390,11 @@ def get_clients():
         if status:
             
             return jsonify({'status':'ok','clients':clients}),200
-        return jsonify({'status':'error'}),200
+        return jsonify({'status':'error'}),500
     
     except Exception as e: 
         print('Error: ', e)
-        return jsonify({'status':'error'})
+        return jsonify({'status':'error'}),500
     
 @app.route('/add-new-client', methods=['POST'])
 def add_client():
@@ -406,17 +409,17 @@ def add_client():
         
 
         clients_datas = request.get_json()  
-        created_client , err = ClientController().add_new_client(datas['company_email'],clients_datas['name'],clients_datas['address'],
+        created_client  = ClientController().add_new_client(datas['company_email'],clients_datas['name'],clients_datas['address'],
                                                                 clients_datas['document'])
         
         if created_client:
             return jsonify({'status':'ok'}),200
         else:
-            return jsonify({'status':err})
+            return jsonify({'status':'ok'}),409
     
     except Exception as e:
         print('Error: ',e)
-        return jsonify({'status':'error'})
+        return jsonify({'status':'error'}),500
     
 #====CAMINHÕES=====
 @app.route('/get-trucks', methods=['POST'])

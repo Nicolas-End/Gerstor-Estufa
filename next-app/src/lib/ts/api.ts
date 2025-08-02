@@ -5,17 +5,17 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import {deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
-import { AddNewFunctionary, functionariesQuantity, GetFunctionaries } from "@/lib/services/functionaries";
+import { addNewFunctionary, functionariesQuantity, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
-import { SendEmailRecovery, ChangePassword } from "@/lib/services/passwordRecovery";
+import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
 // processos relacioandos ao cliente
-import { AddClient, GetClients } from "@/lib/services/clients";
+import { addClient, getClients } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
-import { getAllTrucks } from "../services/trucks";
+import { getAllTrucks } from "@/lib/services/trucks";
 
 
 
@@ -45,8 +45,8 @@ export async function ValidateLogin(email:string, password:string) {
 export async function validateTokenUser(token: string) {
   try {
     // envia para o back end para mudar a senha do usuario se for valido o token
-    const change_pass = await ChangePassword(token);
-    return change_pass.status
+    const response = await changePassword(token);
+    return response
   }
   catch (error) {
     console.log("Erro ao iniciar dashboard:", error);
@@ -54,17 +54,18 @@ export async function validateTokenUser(token: string) {
 
 }
 
-export async function RecuperationEmail(email: string, newPassword: string) {
+export async function SendRecuperationEmail(email: string, newPassword: string) {
   try {
-    // espera a resposta da Api e retorna como data
-    const data = await SendEmailRecovery(email, newPassword);
 
-    return data.status
+    const response = await sendEmailRecovery(email, newPassword);
+    console.log(response)
+    return response
   } catch (error) {
 
     return "Erro na requisição";
   }
 }
+
 export async function RegisterNewCompnay(email:string,password:string,companyName:string){
   try{
     const response = await addNewCompany(email,"1",password,companyName)
@@ -123,23 +124,17 @@ export async function countDeliveryQuantidy() {
 }
 
 //======= FUNCIONARIOS ========
-export async function getFunctionaries() {
-  try {
-    const data = await GetFunctionaries();
 
-    if (data.status === "ok") {
-      return data.functionaries;
-    } else if (data.status === "invalid") {
-      return "invalid";
-    } else {
-      return "error";
-    }
-  } catch (error) {
-    console.log("Erro ao acessar a conta: ", error);
-    return "Erro na requisição";
+export async function GetFunctionaries() {
+  try{
+    const response = getFunctionaries()
+    return response
+  }catch(error){
+    console.log("Error Funcionarios: ",error)
+    throw (error)
   }
+  
 }
-
 export async function FunctionariesQuantity(router: AppRouterInstance) {
   try{
     const response = await functionariesQuantity()
@@ -160,19 +155,15 @@ export async function FunctionariesQuantity(router: AppRouterInstance) {
   
 }
 
-export async function addNewFunctionary(name: string, email: string, password: string, role: string) {
-  try {
-    const data = await AddNewFunctionary(name, email, password, role)
-    return data.status
-
+export async function AddNewFunctionary(name: string, email: string, password: string, role: string) {
+  try{
+    const response = await addNewFunctionary(name, email, password, role)
+    return response
+  }catch(error){
+    console.log("Erro adicionar Funcionario: ",error)
+    throw error
   }
-  catch (error) {
-    console.log('Error', error)
-    return 'Error'
-  }
-
 }
-
 //========= ENTREGAS =========
 
 export async function GetEspecificDelivery(id:string) {
@@ -267,38 +258,23 @@ export async function addNewTruck(data: {
 export async function GetAllClients() {
   try {
 
-    const data = await GetClients()
-    console.log(data)
-    if (data.status === "ok") {
-      
-      return data.clients
-    }
-    else {
-      return 'nothing'
-    }
+    const response= await getClients()
+    console.log(response)
+    return response 
   } catch (error) {
-    console.log("Error ao acessar a conta: ", error);
-    return "Erro na requisição";
+    console.log("Error Clientes: ", error);
+    throw(error)
   }
 }
 
+
 export async function AddNewClient(name:string, address: {[key:string]:string|number}, document: {[key:string]:string}) {
   try {
-
-    const data = await AddClient(name,address,document)
-    if (data.status === "ok") {
-      
-      return "Cliente Cadastrado com sucesso"
-    }
-    else if(data.status === "Exist"){
-      return "Cliente já Cadastrado no sistema"
-    }
-    else {
-      return 'Houve um erro no sistema'
-    }
+    const response = await addClient(name,address,document)
+    return response
   } catch (error) {
-    console.log("Error ao acessar a conta: ", error);
-    return "Erro na requisição";
+    console.log("Error Adicionar Cliente: ", error);
+    throw error
   }
 }
 
@@ -306,7 +282,6 @@ export async function AddNewClient(name:string, address: {[key:string]:string|nu
 export async function GetTrucks(){
   try {
     const data = await getAllTrucks();
-    console.log(data)
     if (typeof data === 'string') {
       switch (data) {
         case 'Authorization?':

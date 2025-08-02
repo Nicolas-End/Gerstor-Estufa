@@ -28,7 +28,7 @@ class ClientController:
                     dict_clients.append(clients.copy())
 
                 return True, dict_clients
-            return False, []
+            return True, []
         except Exception as e:
             print('Error:',e)
             return False , 0
@@ -46,17 +46,17 @@ class ClientController:
 
             #verifica se o identificador esta correto
             if document['type'] != "cnpj" and document['type'] != "cpf":
-                return False, "Identi"
+                return False
             clients_datas[document['type']] = document['value']
             
 
 
             client_exist = self.coll.find_one({'company_email':company_email,document['type']:document['value']})
             if client_exist:
-                return False, "Exist"
+                return False
             
             self.coll.insert_one(clients_datas)
-            return True,"ok"
+            return True
         except Exception as e:
             print ('Error: ',e)
             return False

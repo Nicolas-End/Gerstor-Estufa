@@ -8,28 +8,25 @@ interface ApiResponse{
 
 }
 
-export function GetFunctionaries(): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) => {
-       
-      const token = localStorage.getItem('token_from_user')
-      axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/get-functionaries',
-        {}, // corpo da requisição POST (vazio nesse caso)
-        {
-          headers: {
-            'Authorization':  token || ''
-          }
-        }
-      )
-        .then(response => {
-          resolve(response.data);
-        })
-        .catch(error => {
-          resolve({ status: 'error'});
-        });
-    });
-  }
 
+export const getFunctionaries = async() =>{
+  try{
+    const api = await createApiWithAuth();
+    const response = await api.post<apiResponse>('/get-functionaries')
+
+    switch (response.status){
+      case 200:
+        return response.data.functionaries
+      case 400:
+        return "Credencial Invalida"
+      default:
+        return "Erro Interno"
+        
+    }
+  }catch(error){
+    throw error
+  }
+}
   export const functionariesQuantity = async() =>{
     try{
       const api = await createApiWithAuth()
@@ -51,28 +48,24 @@ export function GetFunctionaries(): Promise<ApiResponse> {
     }
   }
 
-    export function AddNewFunctionary(name:string,email:string,password:string,role:string): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) => {
-       
-      const token = localStorage.getItem('token_from_user')
-      axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/add-new-functionary',
-        {"name":name,
-          "email":email,
-          "password":password,
-          "role":role
-        }, // corpo da requisição POST 
-        {
-          headers: {
-            'Authorization':  token || ''
-          }
-        }
-      )
-        .then(response => {
-          resolve(response.data);
-        })
-        .catch(error => {
-          resolve({ status: 'error'});
-        });
-    });
+export const addNewFunctionary = async(name:string,email:string,password:string,role:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {"name":name,"email":email,"password":password,"role":role}
+
+    const response = await api.post<ApiResponse>('/add-new-functionary')
+
+    switch(response.status){
+      case 200:
+        return true
+      case 409:
+        return 'Já Existe'
+      case 401:
+        return "Credencial Invalida"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw (error)
   }
+}

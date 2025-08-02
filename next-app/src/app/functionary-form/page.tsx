@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { addNewFunctionary, validateHomeAcess } from "@/lib/ts/api";
-import { ToastContainer, toast } from "react-toastify";
+import { AddNewFunctionary, ValidateHomeAcess } from "@/lib/ts/api";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 export default function RegisterEmployeePage() {
     const router = useRouter();
@@ -21,19 +22,10 @@ export default function RegisterEmployeePage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("");
 
-    function ShowAlert(text: string) {
-        toast(text, {
-            style: {
-                backgroundColor: "#fff",
-                color: "#2b192e",
-                fontFamily: "Arial, sans-serif",
-            },
-        });
-    }
 
     const initializePage = async () => {
         try {
-            const canAccess = await validateHomeAcess(router);
+            const canAccess = await ValidateHomeAcess(router);
             if (!canAccess) {
                 router.push("/login");
                 return;
@@ -49,7 +41,7 @@ export default function RegisterEmployeePage() {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            ShowAlert("As senhas não coincidem!");
+            showAlert("As senhas não coincidem!");
             return;
         }   
 
@@ -67,20 +59,22 @@ export default function RegisterEmployeePage() {
 
             // Aqui você faria a chamada real à API, como:
             // await registerEmployee(formData);
-            const result = await addNewFunctionary(name,email,password,role)
-            if (result === "AlreadyExist"){
-                ShowAlert("Este email ja esta cadastrado no sistema!");
-                setIsLoading(false);
-                return ;
+            const response = await AddNewFunctionary(name,email,password,role)
+            switch(response){
+                case true:
+                    showSucess("Funcionário cadastrado com sucesso!");
+                case 'Credencial Invalida':
+                    showError('Credencial Invalida')
+                    router.push('/logout')
+                case 'Erro Interno':
+                    showError('Houve um erro no sistema tente novamente mais tarde')
+                    setIsLoading(false)
+                    return;
+                case 'Já Existe':
+                    showAlert("Funcionario Já Existente")
+                    router.push('/functionaries')
             }
-            else if (result === "ok"){
-                ShowAlert("Funcionário cadastrado com sucesso!");
-            }
-            else{
-                ShowAlert("Ops !! houve um erro")
-                setIsLoading(false);
-                return;
-            }
+
             
 
             // Resetar os campos
@@ -91,7 +85,7 @@ export default function RegisterEmployeePage() {
             setRole("");
             setIsLoading(false);
         } catch (error) {
-            ShowAlert("Erro ao cadastrar. Tente novamente.");
+            showError("Houver um erro no sistema tente novamente mais tarde");
             setIsLoading(false);
         }
     };

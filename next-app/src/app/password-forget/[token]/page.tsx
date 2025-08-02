@@ -5,53 +5,46 @@ import { useEffect, useState } from "react";
 import { validateTokenUser } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import Link from "next/link";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { renderToHTMLOrFlight } from "next/dist/server/app-render/app-render";
 export default function ProdutoPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const params = useParams();
   const token: any = params?.token ? params.token : null;
 
-  function ShowAlert(text: string) {
 
-    toast(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
 
   const verifyTokenUser = async () => {
-    try{
+    try {
       // envia um sistema no back-end para verificar se o token do cadastrado do usuario é valido
       // se for valido e muda a senha do usuario
-      const valid_token_user = await validateTokenUser(decodeURIComponent(token));
+      const response = await validateTokenUser(decodeURIComponent(token));
 
-      if (valid_token_user == "ok") {
-        setIsLoading(false)
-        ShowAlert("Senha Mudada com sucesso");
+      switch (response) {
+        case "Senha modificada":
+          setIsLoading(false)
+          showSucess("Senha Mudada com sucesso")
 
+          return;
+        case "Token Invalido":
+          setIsLoading(false)
+          showAlert("Token Invalido");
 
-        return ;
+          return;
+        case "Erro Interno":
+          setIsLoading(false )
+          showError("Houve um erro Interno tente novamente mais tarde")
 
+          return;
       }
-      else if(valid_token_user == "invalid token") {
 
-        ShowAlert("Token Invalido");
-        router.push("/login");
-        return ;
-
-      }
-      else{
-        ShowAlert("Oopps houve algum erro");
-        router.push("/login");
-        return ;
-      }
     }
     catch (error) {
-      console.log("Erro ao iniciar dashboard:", error);
-      router.push("/login");
+      setIsLoading(false)
+      showError("Houve um pequeno erro tente novamente mais tarde")
+      return;
+      
     }
   }
 
@@ -66,7 +59,7 @@ export default function ProdutoPage() {
           <span className="text-xl font-medium">Carregando...</span>
         </div>
         <ToastContainer
-          position="top-right"
+          position="top-center"
           autoClose={4000}
           hideProgressBar={false}
           newestOnTop={false}
@@ -74,23 +67,29 @@ export default function ProdutoPage() {
           rtl={false}
           pauseOnFocusLoss
           draggable
+          toastStyle={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
         />
       </div>
     );
   }
-  else{
-  return (
-    <div className="flex items-center justify-center h-screen bg-white text-gray-800">
-         
-         <Link
-              href="/register"
-              className=" fontRobo mt-4 text-center w-full py-3 border border-white text-white font-semibold rounded hover:bg-white hover:text-[#0a2c26] transition duration-200"
-            >
-              Registre-se
-            </Link>
-        
-          <ToastContainer
-          position="top-right"
+  else {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white text-gray-800">
+
+        <Link
+          href="/register"
+          className=" fontRobo mt-4 text-center w-full py-3 border border-white text-white font-semibold rounded hover:bg-white hover:text-[#0a2c26] transition duration-200"
+        >
+          Registre-se
+        </Link>
+
+        <ToastContainer
+          position="top-center"
           autoClose={4000}
           hideProgressBar={false}
           newestOnTop={false}
@@ -98,11 +97,17 @@ export default function ProdutoPage() {
           rtl={false}
           pauseOnFocusLoss
           draggable
+          toastStyle={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
         />
-        </div>
+      </div>
 
-    
-    
-  );
-}
+
+
+    );
+  }
 }
