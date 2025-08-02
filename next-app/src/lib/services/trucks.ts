@@ -1,5 +1,5 @@
 import axios from "axios";
-import api from '@/lib/config/axiosConfig'
+import {createApiWithAuth} from '@/lib/config/axiosConfig'
 
 interface TruckData {
   'modelo': string;
@@ -21,6 +21,7 @@ const baseUrl = "http://127.0.0.1:5000";
 
 export const getAllTrucks = async (): Promise<TruckData[] | string> => {
   try {
+    const api = await createApiWithAuth()
     const response = await api.post<ApiResponse>('/get-trucks');
     
     if (response.status === 200 && response.data.trucks) {
@@ -35,28 +36,7 @@ export const getAllTrucks = async (): Promise<TruckData[] | string> => {
   }
 };
 
-export function GetAllTrucks(): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-    const token = localStorage.getItem("token_from_user");
 
-    axios
-      .post<ApiResponse>(
-        `${baseUrl}/get-trucks`,
-        {},
-        {
-          headers: {
-            Authorization: token || "",
-          },
-        }
-      )
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch(() => {
-        resolve({ status: "error" });
-      });
-  });
-}
 
 export function GetSpecificTruck(id: string): Promise<ApiResponse> {
   return new Promise<ApiResponse>((resolve) => {

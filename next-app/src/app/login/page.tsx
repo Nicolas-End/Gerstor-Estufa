@@ -1,6 +1,6 @@
 "use client";
 
-import { validateWorkerLogin } from "@/lib/ts/api";
+import { ValidateLogin } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
@@ -35,9 +35,9 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await validateWorkerLogin(email, password);
+      const response = await ValidateLogin(email, password);
       if (response === "ok") {
-        router.push("/home");
+        router.push('/home')
       } else {
         showToast("Email ou senha incorretos");
       }

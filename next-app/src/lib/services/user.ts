@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import {createApiWithAuth} from "@/lib/config/axiosConfig"
 interface ApiResponse {
   status: string;
   message?: string;
@@ -9,77 +9,63 @@ interface ApiResponse {
 
 // Verifica se o usuario tem permissão para acessar o site
 // utiliza em todas as paginas menos no login e etc
-export function ValidadeUserAcess(): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-    const token = localStorage.getItem("token_from_user");
-    axios
-      .post<ApiResponse>(
-        "http://127.0.0.1:5000/home-acess",
-        {}, // corpo da requisição POST (vazio nesse caso)
-        {
-          headers: {
-            Authorization: token || "",
-          },
-        }
-      )
-      .then((response) => {
-        
-        resolve(response.data);
-      })
-      .catch((error) => {
-        resolve({ status: "error", message: "Erro na requisição" });
-      });
-  });
-}
+export const validateUserAcess = async() =>{
+  try{
+    let api = await createApiWithAuth()
+    const response = await api.post<ApiResponse>('home-acess')
 
+    if(response.status === 200 && response.data){
+      return "ok"
+    }else if(response.status === 401){
+      return "Negado"
+    }else {
+      return "Erro Interno"
+    }
+
+  }catch(error){
+    throw error
+  }
+}
 // server para adicionar uma nova empresa ao banco de dados
 // utilizado no register page
-export function AddNewCompany(
-  email: string,
-  id: string,
-  password: string,
-  companyName: string
-): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-    axios
-      .post<ApiResponse>("http://127.0.0.1:5000/add-new-company", {
-        email,
-        id,
-        password,
-        companyName,
-      })
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch((error) => {
-        resolve({ status: "error", message: "Erro na requisição" });
-      });
-  });
-}
+export const addNewCompany = async (email:string,id:string,password:string,companyEmail:string) =>{
+  try{
+    let datas = {email,id,password,companyEmail}
+    const response = await axios.post<ApiResponse>('http://127.0.0.1:5000/add-new-company',datas,{
+      validateStatus: () => true
+    })
 
+    if (response.status === 200 && response.data){
+      return "created"
+    }else if(response.status === 409){
+      return "Already Exist"
+    }else{
+      return "internal Error"
+    }
+  }catch(error){
+    throw(error)
+  }
+}
 // server para logar o usuario na pagina de login
 // utilizado na pagina de login
-export function UserLoginAcess(
-    /* pede as info do usuario
-    e retorna uma promisse pois pode demorar */
-    email: string,
-  
-    password: string
-  ): Promise<ApiResponse> {
-    /* Na resposta da api ele "return" uma resposta chamada data */
-    return new Promise<ApiResponse>((resolve) => {
-      //faz um posta para a receber as informações da api
-      axios.post<ApiResponse>('http://127.0.0.1:5000/user-login', {
-        email,
-        
-        password,
+
+export const login = async (email:string,password:string) =>{
+  try{
+      let data = {email, password}
+      const response = await axios.post<ApiResponse>('http://127.0.0.1:5000/user-login',data ,  
+      {
+        validateStatus: () => true  
       })
-      .then(response => {
-        resolve(response.data);
-      })
-      .catch(error => {
-        resolve({ status: 'error', message: 'Erro na requisição' });
-      });
-    });
+
+      if (response.status !== 500 && response.data){
+        return response.data
+      }
+      else{
+        return response.data.message
+      }
+  }catch(error){
+    console.error('Erro no Login:', error);
+    throw error;
   }
+}
   

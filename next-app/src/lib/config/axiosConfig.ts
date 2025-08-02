@@ -1,24 +1,17 @@
-'use client'
-import axios from "axios";
+'use server'
+import axios from 'axios';
+import { cookies } from 'next/headers';
 
+export async function createApiWithAuth():Promise<any>{
+  const cookiesStore = await cookies()
+  const token = await cookiesStore.get('token_from_user')?.value;
 
-const token = localStorage.getItem('token_from_user')
-export const api = axios.create({
-    baseURL: "http://127.0.0.1:5000",
+  return axios.create({
+    baseURL: 'http://127.0.0.1:5000',
     headers: {
-        "Content-Type": "application/json",
-        'Authorization':  token || ''
+      'Content-Type': 'application/json',
+      'Authorization': token || '',
     },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token_from_user');
-  if (token) {
-    config.headers['Authorization'] = token;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
-export default api
+    validateStatus: () => true
+  });
+}

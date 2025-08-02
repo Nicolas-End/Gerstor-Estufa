@@ -4,7 +4,7 @@ import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getFunctionaries, validateHomeAcess, GetAllClients } from "@/lib/ts/api";
+import { getFunctionaries, ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
 ;
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function ClientsPage() {
 
     const initializeClients = async () => {
         try {
-            const can_access_home = await validateHomeAcess(router);
+            const can_access_home = await ValidateHomeAcess(router);
             if (!can_access_home) {
                 router.push("/home");
                 return;

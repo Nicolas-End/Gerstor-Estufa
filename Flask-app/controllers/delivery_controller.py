@@ -148,7 +148,8 @@ class DeliveryContoller:
                 'Quantidade': itens_quantidy,
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
-                'EmailEntrega':company_email
+                'EmailEntrega':company_email,
+                'status':'pending'
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)

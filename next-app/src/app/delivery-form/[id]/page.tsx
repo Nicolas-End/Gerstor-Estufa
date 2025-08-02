@@ -3,7 +3,8 @@
 
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
-import { validateHomeAcess,getEscificDelivery, editDelivery } from "@/lib/ts/api";
+import { ValidateHomeAcess,GetEspecificDelivery, EditDelivery } from "@/lib/ts/api";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -18,15 +19,7 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
-  function ShowAlert(text: string) {
-    toast(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
+
   // Estados dos campos principais
   const [customerName, setCustomerName] = useState("");
 
@@ -61,18 +54,27 @@ export default function DeliveryFormPage() {
   // Inicia a Pagina Form Verifica se o usuario é valido
   const initializeDeliverForm = async() => {
     try {
-      const can_access_home = await validateHomeAcess(router);
+      const can_access_home = await ValidateHomeAcess(router);
       
       if (!can_access_home) {
         router.push("/login");
         return;
       }
 
-      const delivery: any =  await getEscificDelivery(id);
-      if (delivery === "invalid" || delivery === "error") {
-      router.push("/home"); // Redireciona caso haja erro
-      return;
-     }
+      const delivery: any = await GetEspecificDelivery(id);
+          if (typeof delivery === "string"){
+            switch (delivery) {
+              case "Credencial Invalida":
+                router.push('/logout')
+              case "Entrega inexistente":
+                showAlert('Entrega não Existente')
+                router.push('/deliverys')
+              default:
+                showAlert('Entrega Interno tente novamente mais tarde')
+                router.push('/deliverys')
+          }
+        }
+     
      setItems(delivery.products);
      setCustomerName(delivery.deliveryDatas.produto);
      setAddress(delivery.deliveryDatas.endereco);
@@ -110,19 +112,25 @@ export default function DeliveryFormPage() {
 
     try {
       setIsLoading(true)
-      const data = await editDelivery(formData);
-      if (data === 'ok'){
-        ShowAlert('Entrega Editada com Sucesso')
-        esperar()
-        router.push('/deliverys')
+      const data = await EditDelivery(formData);
+      switch (data){
+        case true:
+          showSucess('Entrega Editada com Sucesso')
+          esperar()
+         
+        case "Credencial Invalida":
+          showError("Suas Credencias são Invalidas")
+          esperar()
+          
+        default:
+          showAlert('Houve um erro Interno')
+          showAlert('Tente novamente mais tarde')
+          setIsLoading(false)
+
       }
-      else{
-        ShowAlert('Opss.. Houve um erro')
-        ShowAlert('Tente novamente mais tarde')
-        setIsLoading(false)
-      }
+
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      showError("Houve erro Interno")
     }
   };
   useEffect(() => {

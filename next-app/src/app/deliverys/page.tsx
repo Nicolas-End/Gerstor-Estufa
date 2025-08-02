@@ -6,10 +6,11 @@ import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys, deleteEspecificDelivery} from "@/lib/ts/api";
+import {  DeleteEspecificDelivery, GetDeliverys} from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { cookies } from "next/headers";
 
 
 export default function PedidosPage() {
@@ -65,7 +66,15 @@ export default function PedidosPage() {
       }
 
   async function deleteDelivery(delivery_id:string){
-    const data = await deleteEspecificDelivery(delivery_id)
+    const data = await DeleteEspecificDelivery(delivery_id)
+    if (data === true){
+      router.refresh()
+    }else if (data === "Credencial Invalida"){
+      ShowAlert("Credencial invalida")
+      router.push('/logout')
+    }else{
+      ShowAlert('Houve um erro interno Tente apagae denovo mais tarde')
+    }
     
     if (data){
       initializeDeliverys()
@@ -78,11 +87,22 @@ export default function PedidosPage() {
   const initializeDeliverys = async () => {
     try {
 
-      const deliverys: any = await getDeliverys();
-      if (deliverys === "invalid" || deliverys === "error") {
-        router.push("/login");
-        return; 
+      const deliverys: any = await GetDeliverys();
+      console.log(deliverys)
+      if (typeof deliverys == "string"){
+        switch (deliverys){
+          case "Credencial Invalida":
+            ShowAlert("Credencias Invalidas")
+            
+            router.push("/logout")
+            return;
+          default:
+            ShowAlert("Houver um erro Interno Tente novamente mais tarde ")
+            setIsLoading(false)
+            return;
+        }
       }
+      
       if (!Array.isArray(deliverys)) {
         setDeliverysToDo([]);
         setIsLoading(false);
@@ -91,7 +111,6 @@ export default function PedidosPage() {
       setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
-      console.log("Erro ao iniciar dashboard:", error);
       router.push("/login");
     }
   };

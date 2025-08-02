@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  validateHomeAcess,
+  ValidateHomeAcess,
   countDeliveryQuantidy,
-  funtionariesQuantity,
+  FunctionariesQuantity,
 } from "@/lib/ts/api";
 import { useEffect, useState } from "react";
 
@@ -18,7 +18,7 @@ export default function Home() {
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
   const initializeDashboard = async () => {
     try {
-      const can_access_home = await validateHomeAcess(router);
+      const can_access_home = await ValidateHomeAcess(router);
       if (!can_access_home) {
         router.push("/login");
         return;
@@ -26,7 +26,7 @@ export default function Home() {
       setIsLoading(false);
 
       const deliverys_quantidy: any = await countDeliveryQuantidy();
-      const functionaries_quantity: any = await funtionariesQuantity();
+      const functionaries_quantity: any = await FunctionariesQuantity(router);
       // Após a verficação do usuario
       // Verifica a quantidade de entregas pendentes a fazer
 

@@ -1,11 +1,12 @@
 'use client'
 import { useRouter } from "next/navigation"
+import { deleteCookies } from "@/lib/controller/cookiesController";
 import { useEffect } from "react";
 export default function Logout(){
     const router = useRouter();
     useEffect(() => {
       // Este código só roda no browser
-      localStorage.clear();
+      deleteCookies()
       router.push('./login');
     }, []);
 

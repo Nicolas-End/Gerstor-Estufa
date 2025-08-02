@@ -1,9 +1,11 @@
+'use server'
+import { cookies } from "next/headers"
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import {deliveryQuantidy,AddNewDelivery, GetEspecificDeliveryDatas, GetDeliverysToDo, EditDelivery, DeleteEspecificDelivery } from "@/lib/services/delivery";
+import {deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
-import { AddNewFunctionary, GetFunctionaries, GetFunctionariesQuantity } from "@/lib/services/functionaries";
+import { AddNewFunctionary, functionariesQuantity, GetFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
 import { SendEmailRecovery, ChangePassword } from "@/lib/services/passwordRecovery";
 
@@ -11,33 +13,35 @@ import { SendEmailRecovery, ChangePassword } from "@/lib/services/passwordRecove
 import { AddClient, GetClients } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
-import { ValidadeUserAcess, AddNewCompany, UserLoginAcess } from "@/lib/services/user";
-import { StringDecoder } from "string_decoder";
+import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
+
 import { getAllTrucks } from "../services/trucks";
-export async function validateWorkerLogin(
-  email: string,
-  password: string,
-) {
-  // se a requisição no validate_worker der certo ele retorna
-  // cria alguns localStorage caso contratio da um
-  // fedback ao usuario
-  try {
-    const data = await UserLoginAcess(email, password);
-    if (data.status === "ok") {
-      // Armazenando um token que tem os dados do usuario  no localStorage
-      const user_token: any = data.token;
-      localStorage.setItem("token_from_user", user_token);
-      return 'ok';
-    } else if (data.status === "Wrongpassword") {
-      return "wrong Pass";
-    } else {
-      return "User not found";
+
+
+
+export async function ValidateLogin(email:string, password:string) {
+  try{
+    const response = await login(email,password)
+
+    if (typeof response === "string"){
+      return "Internal Error"
+    }else{
+      switch(response?.status){
+        case "ok":
+          const user_token: any = response.token;
+          const user_role: any = response.role
+          const cookiesStore = await cookies()
+          cookiesStore.set('token_from_user',user_token)
+          cookiesStore.set('role_from_user',user_role)
+          return 'ok'
+        default:
+          return "User not found";
+      }
     }
-  } catch (error) {
-    return "Erro";
+  }catch(error){
+    throw error
   }
 }
-
 export async function validateTokenUser(token: string) {
   try {
     // envia para o back end para mudar a senha do usuario se for valido o token
@@ -61,53 +65,50 @@ export async function RecuperationEmail(email: string, newPassword: string) {
     return "Erro na requisição";
   }
 }
-export async function registerNewCompany(email: string, password: string, companyName: string) {
-  const company_id = "1";
-  try {
-    // espera a resposta da Api e retorna como data
-    const data = await AddNewCompany(email, company_id, password, companyName);
+export async function RegisterNewCompnay(email:string,password:string,companyName:string){
+  try{
+    const response = await addNewCompany(email,"1",password,companyName)
 
-    if (data.status === "ok") {
-      return "ok";
-    } else if (data.status === "Adm Already Exist") {
-      return "Adm Already Exist";
-    } else {
-      return "error";
+    switch (response){
+      case "created":
+        return "ok"
+      case "Already Exist":
+        return "Adm Already Exist"
+      default:
+        return "error"
     }
-  } catch (error) {
-    console.log("Erro ao acessar a conta:", error);
-    return "Erro na requisição";
+  }catch(error){
+    throw (error)
   }
 }
 
 // Essa função vai servir para validar se o usuario pode acessar o Home
-export async function validateHomeAcess(router: AppRouterInstance) {
-  try {
-    let token: string | null = localStorage.getItem('token_from_user')
-    if (token == null) {
+
+export async function ValidateHomeAcess(router: AppRouterInstance) {
+  try{
+    const cookiesStore = await cookies()
+    let token: string | undefined = cookiesStore.get('token_from_user')?.value
+    if (token == undefined) {
       router.push('/login')
       return false
     }
-
-    const data = await ValidadeUserAcess()
-
-    if (data.status === "error") {
-      router.push('/login')
-      return Promise.all([false])
+    const response = await validateUserAcess();
+    switch(response){
+      case("ok"):
+        return Promise.all([true])
+      default:
+        router.push('/login')
+        return Promise.all([false])
     }
-    else {
-
-      return Promise.all([true])
-    }
+  }catch(error){
+    throw(error)
   }
-  catch (error) {
-    console.log('Error: ', error)
-  }
+  
 }
 // Usado no Home
 export async function countDeliveryQuantidy() {
   try {
-    const data = await deliveryQuantidy()
+    const data = await deliveryQuantity()
     if (data.status === 'ok') {
       return data.count
     }
@@ -138,20 +139,25 @@ export async function getFunctionaries() {
     return "Erro na requisição";
   }
 }
-export async function funtionariesQuantity() {
-  try {
-    const data = await GetFunctionariesQuantity()
-    if (data.status === 'ok') {
-      return data.functionaries_quantity
+
+export async function FunctionariesQuantity(router: AppRouterInstance) {
+  try{
+    const response = await functionariesQuantity()
+    if (typeof response === "string"){
+      switch(response){
+        case "Acesso Negado":
+          router.push('/login')
+          return 0
+        default:
+          return 0
+      }
+    }else{
+      return response.functionaries_quantity
     }
-    else {
-      return 0
-    }
+  }catch(error){
+    throw error
   }
-  catch (error) {
-    console.log('Error', error)
-    return 'Error'
-  }
+  
 }
 
 export async function addNewFunctionary(name: string, email: string, password: string, role: string) {
@@ -168,92 +174,62 @@ export async function addNewFunctionary(name: string, email: string, password: s
 }
 
 //========= ENTREGAS =========
-export async function getEscificDelivery(id: string) {
-  try {
-    const data = await GetEspecificDeliveryDatas(id);
 
-    if (data.status === "ok") {
-
-      return data;
-    } else if (data.status === "invalid") {
-      return "invalid";
-    } else {
-      return "error";
-    }
-  } catch (error) {
-    console.log("Erro ao acessar a conta: ", error);
-    return "Erro na requisição";
+export async function GetEspecificDelivery(id:string) {
+  try{
+    const response = await getEspecificDeliveryDatas(id)
+    
+    return response
+  }catch(error){
+    console.log('Erro Entrega Especifica: ',error)
+    throw(error)
   }
 }
 
-export async function addNewItemDelivery(FormsData: any) {
-  try {
+export async function AddNewDelivery(FormsData:any) {
+  try{
+    const response = await addNewDelivery(FormsData)
+    console.log(response)
+    return response
+  }catch(error){
+    console.log("Erro adicionar nova entrega: ",error)
+    throw(error)
+  }
+  
+}
 
-    const data = await AddNewDelivery(FormsData)
 
-    if (data.status === "ok") {
+export async function EditDelivery(FormsData:any){
+  try{
+    const response = await editDelivery(FormsData)
 
-      return 'ok'
-    }
-    else {
-      return 'error'
-    }
-  } catch (error) {
-    console.log("Error ao acessar a conta: ", error);
-    return "Erro na requisição";
+    return response
+  }catch(error){
+    console.log("Erro no Edit Delivery: ",error)
+    throw error
   }
 }
 
-export async function editDelivery(FormsData: any) {
-  try {
+export async function GetDeliverys() {
+    try{
+      const response = await getDeliverysToDo();
 
-    const data = await EditDelivery(FormsData)
-
-    if (data.status === "ok") {
-
-      return 'ok'
+      return response
+    }catch(error){
+      console.log("Erro Pegar Entregas: ",error)
+      throw(error)
     }
-    else {
-      return 'error'
-    }
-  } catch (error) {
-    console.log("Error ao acessar a conta: ", error);
-    return "Erro na requisição";
-  }
-}
-export async function getDeliverys() {
-  try {
-    const data = await GetDeliverysToDo();
-
-    if (data.status === "ok") {
-      return data.deliverys;
-    } else if (data.status === "invalid") {
-      return "invalid";
-    } else {
-      return "error";
-    }
-  } catch (error) {
-    console.log("Erro ao acessar a conta:", error);
-    return "Erro na requisição";
-  }
 }
 
-export async function deleteEspecificDelivery(delivery_id: string) {
-  try {
 
-    const data = await DeleteEspecificDelivery(delivery_id)
-
-    if (data.status === "ok") {
-
-      return true
+export async function DeleteEspecificDelivery(delivery_id:string) {
+    try{
+        const response = await deleteEspecificDelivery(delivery_id)
+        return response
+    }catch(error){
+      console.log('Erro ao Deletar Entrega: ',error)
+      throw error
     }
-    else {
-      return false
-    }
-  } catch (error) {
-    console.log("Error ao acessar a conta: ", error);
-    return "Erro na requisição";
-  }
 }
 
 // ======= CAMINHÕES ===========

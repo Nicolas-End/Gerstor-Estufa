@@ -1,5 +1,5 @@
 import axios from "axios";
-import api from '@/lib/config/axiosConfig'; 
+import {createApiWithAuth} from '@/lib/config/axiosConfig'; 
 interface ApiResponse {
     'status': string,
     'message'?: string,
@@ -14,28 +14,10 @@ interface ApiResponse {
 
 // Função para contar a quantidade de entregas que a empresa precisa fazer 
 // ira aparecer na pagina do home
-export function DeliveryQuantidy(): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) =>{
-        const token = localStorage.getItem('token_from_user')
-        axios.post<ApiResponse>('http://127.0.0.1:5000/count-deliverys', {
-            
-          },{
-            headers:{
-                'Authorization':  token || ''
-            }
-          }
-        )
-          .then(response => {
-            resolve(response.data);
-          })
-          .catch(error => {
-            resolve({ status: 'error'});
-          });
-    })
-}
 
-export const deliveryQuantidy = async () => {
+export const deliveryQuantity = async () => {
   try {
+    const api = await createApiWithAuth()
     const response = await api.post('/count-deliverys');
     return response.data;
   } catch (error) {
@@ -43,120 +25,107 @@ export const deliveryQuantidy = async () => {
     throw error;
   }
 }
-// Adiciona uma nova entrega ao banco de dados
-export function AddNewDelivery (FormsData:any): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) =>{
-        const token = localStorage.getItem('token_from_user')
-        axios.post<ApiResponse>('http://127.0.0.1:5000/add-new-delivery', {
-            FormsData
-          },{
-            headers:{
-                'Authorization':  token || ''
-            }
-          }
-        )
-          .then(response => {
+// Adiciona uma nova entrega ao banco de dado
 
-            resolve(response.data);
-          })
-          .catch(error => {
-            resolve({ status: 'error'});
-          });
-    })
+export const addNewDelivery = async(FormData:any) => {
+  try{
+    const api = await createApiWithAuth()
+    const data  = {'FormsData':FormData}
+    const response:any = await api.post<ApiRespose>('/add-new-delivery',data)
+    switch(response.status){
+      case 200:
+        return true
+      case 400:
+        return "Credencial Invalida"
+      case 500:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw(error)
+  }
 }
 
-export function EditDelivery (FormsData:any): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) =>{
-    const token = localStorage.getItem('token_from_user')
-    axios.post<ApiResponse>('http://127.0.0.1:5000/edit-delivery', {
-        FormsData
-      },{
-        headers:{
-            'Authorization':  token || ''
-        }
-      }
-    )
-      .then(response => {
 
-        resolve(response.data);
-      })
-      .catch(error => {
-        resolve({ status: 'error'});
-      });
-})
+export const editDelivery = async(FormsData:any) => {
+  try{
+    const api = await createApiWithAuth()
+    const data = {'FormsData':FormsData}
+    const response = api.post<ApiResponse>('/edit-delivery',data)
+    switch(response.status){
+      case 200:
+        return true
+      case 400:
+        return "Credencial Invalida"
+      default: 
+        return "Erro Interno"
+    }
+    
+  }catch (error){
+    throw error
+  }
 }
 // Essa Função serve para pegar os dados de uma entrega especifica
 // Que o usuario selecionou
-export function GetEspecificDeliveryDatas(id:string): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) => {
-       
-      const token = localStorage.getItem('token_from_user')
-      axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/get-especific-delivery',
-        {   
-            'id':id
-        }, // corpo da requisição POST 
-        {
-          headers: {
-            'Authorization':  token || ''
-          }
+export const getEspecificDeliveryDatas = async(id:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'id':id }
+    const response = await api.post<ApiResponse>('/get-especific-delivery',data)
+    switch (response.status){
+      case 200 :
+        if (response.data.status === "ok"){
+          return response.data
         }
-      )
-        .then(response => {
-          
-          resolve(response.data);
-        })
-        .catch(error => {
-          resolve({ status: 'error'});
-        });
-    });
+        else{
+          return "Entrega inexistente"
+        }
+      case 400:
+        return "Credencial Invalida"
+      case 500:
+        return "Erro Interno"
+    
+    }
+  }catch(error){
+    throw(error)
+  }
 }
-
 // Esta função ira pegar todas as entregas que a empresa precisa fazer
 // na pargina de entregas
-export function GetDeliverysToDo(): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) => {
-       
-      const token = localStorage.getItem('token_from_user')
-      axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/get-deliverys',
-        {}, // corpo da requisição POST (vazio nesse caso)
-        {
-          headers: {
-            'Authorization':  token || ''
-          }
-        }
-      )
-        .then(response => {
-          resolve(response.data);
-        })
-        .catch(error => {
-          resolve({ status: 'error'});
-        });
-    });
+
+export const getDeliverysToDo = async () =>{
+  try{
+    const api = await createApiWithAuth()
+    const response = await api.post<ApiResponse>('/get-deliverys')
+    switch (response.status){
+      case 200:
+        return response.data.deliverys
+      case 400:
+        return "Credencial Invalida"
+      case 500:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw(error)
   }
+}
 
 
-export function DeleteEspecificDelivery(delivery_id:string): Promise<ApiResponse> {
-    return new Promise<ApiResponse>((resolve) => {
-       
-      const token = localStorage.getItem('token_from_user')
-      axios.post<ApiResponse>(
-        'http://127.0.0.1:5000/delete-delivery',
-        {
-          'delivery_id':delivery_id
-        }, // corpo da requisição POST 
-        {
-          headers: {
-            'Authorization':  token || ''
-          }
-        }
-      )
-        .then(response => {
-          resolve(response.data);
-        })
-        .catch(error => {
-          resolve({ status: 'error'});
-        });
-    });
+export const deleteEspecificDelivery = async(delivery_id:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'delivery_id':delivery_id}
+
+    const response = api.post<ApiResopnse>('/delete-delivery',data)
+    switch (response.status){
+      case 200: 
+        return true
+      case 400:
+        return "Credencial Invalida"
+      default:
+        return "Erro Interno"
+
+    }
+  }catch(error){
+    throw(error)
   }
+}

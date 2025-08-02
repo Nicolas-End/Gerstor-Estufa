@@ -30,7 +30,7 @@ def home_acess():
         #pega o header da requisição para consegruir pegar o token
         token = request.headers.get('Authorization')
         if not token:
-            return jsonify({'status':'invalid'}),400
+            return jsonify({'status':'invalid'}),401
         
         #processo para descriptografar os dados do usuario 
         data_user_is_correct = CriptographyController().decripto_datas(token)
@@ -40,11 +40,11 @@ def home_acess():
         if data_user_is_correct['acess'] == True:
                 return jsonify({'status':'ok'}),200
                 
-        return jsonify({'status':'invalid'}),400
+        return jsonify({'status':'invalid'}),401
 
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500 
 
 #Sistema pra registrar uma nova estufa
 @app.route('/add-new-company', methods=['POST'])
@@ -60,11 +60,13 @@ def add_new_Adm():
 
         if returnApi:
             return jsonify({'status':'ok'}),201
-
-        return jsonify({'status': responseApi}), 201
+        elif  returnApi == "Already Exist":
+            return jsonify({'status': responseApi}), 409
+        else:
+            return jsonify({'status':responseApi}),500
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # Valida o usuario para o login e retorna que o usuario pode acessar o home se ele tiver os dados
 @app.route('/user-login', methods=["POST"])
@@ -90,15 +92,11 @@ def user_login():
             
             return jsonify({'status': 'ok','token':token,'role':role}), 201 
         
-        
-        if responseApi == "Wrong Password":
-            return jsonify({'status': 'Wrongpassword'}), 201  
-        
-        return jsonify({'status':'noexist'}),201
+        return jsonify({'status':'noexist'}),401
     
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': 'Server Error'}), 500 
     
 @app.route('/send-email-recuperation' ,methods=['POST'])
 def forget_password() :
@@ -190,13 +188,14 @@ def get_deliverys_products():
 
         deliverys, ok = DeliveryContoller().get_deliverys(datas['company_email'])
         if not ok:
-            return jsonify({'status':'error',}),200
+            
+            return jsonify({'status':'error',}),500
         
         return jsonify({'status':'ok','deliverys':deliverys}),200
     
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500 
        
 @app.route('/get-especific-delivery', methods=['POST'])
 def get_especific_delivery():
@@ -217,7 +216,7 @@ def get_especific_delivery():
             products = DeliveryContoller().get_products_from_a_delivery(datas['company_email'],request_id)
             return jsonify({'status':'ok','deliveryDatas':delivery,"products":products}),200
         
-        return jsonify({'status':'error'}),400
+        return jsonify({'status':'sem entrga'}),200
     
     except Exception as e:
         print('Error:', e)
@@ -243,10 +242,10 @@ def add_new_delivery():
         ok = DeliveryContoller().add_new_delivery(datas['company_email'],itens,address,date,name)
         if ok:
             return jsonify({'status':'ok'}),200
-        return jsonify({'status':'error'}),400
+        return jsonify({'status':'error'}),500
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500 
     
 @app.route('/edit-delivery',methods=['POST'])
 def edit_delivery():
@@ -291,13 +290,13 @@ def delete_delivery():
         if delivery_was_deleted:
             products_deleted = DeliveryContoller().delete_product(datas['company_email'],delivery_id)
             if products_deleted:
-                return jsonify({'status':'ok'})
+                return jsonify({'status':'ok'}),200
 
-        return jsonify({'status':'error'})    
+        return jsonify({'status':'error'}),500   
     
     except Exception as e:
         print('Error: ',e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 #========= FUNCIONARIOS ===========
@@ -364,10 +363,10 @@ def get_functionaries_quantity():
         if ok:
             return jsonify({'status':'ok','functionaries_quantity':functionaries_quantity}),200
         
-        return jsonify({'status':'error'}),400
+        return jsonify({'status':'error'}),500
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200  # Retorna 200 para erro interno
+        return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 200 para erro interno
     
 
     

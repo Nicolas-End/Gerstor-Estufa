@@ -2,9 +2,10 @@
 import styles from "./page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getEscificDelivery } from "@/lib/ts/api";
+import { GetEspecificDelivery } from "@/lib/ts/api";
 import Sidebar from "@/Components/sidebar";
-
+import { showAlert } from "@/lib/controller/alertsController";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,10 +23,18 @@ export default function ProdutoPage() {
         router.push("/deliverys");
         return;
       }
-      const delivery: any = await getEscificDelivery(id);
-      if (delivery === "invalid" || delivery === "error") {
-        router.push("/login");
-        return;
+      const delivery: any = await GetEspecificDelivery(id);
+      if (typeof delivery === "string"){
+        switch (delivery) {
+          case "Credencial Invalida":
+            router.push('/logout')
+          case "Entrega inexistente":
+            showAlert('Entrega não Existente')
+            router.push('/deliverys')
+          default:
+            showAlert('Entrega Interno tente novamente mais tarde')
+            router.push('/deliverys')
+        }
       }
       setDeliveryDatas(delivery.deliveryDatas);
       setProducts(delivery.products);
@@ -136,6 +145,16 @@ export default function ProdutoPage() {
         </div>
 
       </div>
+              <ToastContainer
+                        position="top-right"
+                        autoClose={4000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+          />
     </div>
   );
 }

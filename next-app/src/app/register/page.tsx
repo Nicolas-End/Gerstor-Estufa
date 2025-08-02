@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import Link from "next/link";
-import { registerNewCompany } from "@/lib/ts/api";
+import { RegisterNewCompany } from "@/lib/ts/api";
 
 
 const RegisterPage = () => {
@@ -47,7 +47,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const response = await registerNewCompany(email,password,nomeEmpresa)
+    const response = await RegisterNewCompany(email,password,nomeEmpresa)
 
     if (response == 'ok'){
       MostrarAlerta('Registrando o Novo Usuario')
