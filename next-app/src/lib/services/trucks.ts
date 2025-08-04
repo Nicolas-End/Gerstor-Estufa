@@ -24,7 +24,6 @@ export const getAllTrucks = async (): Promise<TruckData[] | string> => {
   try {
     const api = await createApiWithAuth()
     const response = await api.post<ApiResponse>('/get-trucks');
-    
     if (response.status === 200 && response.data.trucks) {
       return response.data.trucks;
     } else {

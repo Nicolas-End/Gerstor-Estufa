@@ -9,12 +9,14 @@ load_dotenv()
 class TruckController:
     def __init__(self):
         self.client_collection = os.getenv('TRUCK_COLLECTION')
+        
         self.db = DataBase().database
         self.coll = self.db[self.client_collection]
 
     def get_trucks(self,company_email):
         try:
             has_truck = list(self.coll.find({'company_email': company_email}))
+
             if has_truck:
                 dict_truck = []
                 for i in has_truck:

@@ -65,7 +65,7 @@ export async function SendRecuperationEmail(email: string, newPassword: string) 
   }
 }
 
-export async function RegisterNewCompnay(email:string,password:string,companyName:string){
+export async function RegisterNewCompany(email:string,password:string,companyName:string){
   try{
     const response = await addNewCompany(email,"1",password,companyName)
 

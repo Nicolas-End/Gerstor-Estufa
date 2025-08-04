@@ -434,9 +434,9 @@ def get_trucks():
         datas = CriptographyController().decripto_datas(token)
         if not datas:
             return jsonify({'status':'error','message':'Authorization?'}),400
-        
         status, trucks= TruckController().get_trucks(datas['company_email'])
         if status:
+            
             return jsonify({'status':'ok','trucks':trucks}),200
         
         return jsonify({'status':'error','message':'internalError'}),400
