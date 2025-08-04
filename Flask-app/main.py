@@ -442,8 +442,31 @@ def get_trucks():
         return jsonify({'status':'error','message':'internalError'}),400
     except Exception as e:
         print('Error: ',e)
-        return jsonify({'status': 'error', 'message': 'internalError'}), 400
+        return jsonify({'status': 'error', 'message': 'internalError'}), 500
 
+@app.route('/add-new-truck',methods=['POST','GET'])
+def AddNewTruck():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'error','message':'Authorization?'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error','message':'Authorization?'}),400
+
+        forms_data = request.get_json()['FormsData']
+
+        created_truck = TruckController().add_new_truck(datas['company_email'],forms_data['chassi'],forms_data['placa'],
+                                                        forms_data['cor'],forms_data['modelo'],forms_data['eixos'],forms_data['mercosul'])
+    
+        if created_truck:
+            return jsonify({'status':'ok'}),200
+        else:
+            return jsonify({'status':'alreadyExist'}),409
+    except Exception as e:
+        print("Error: ",e)
+        return jsonify ({'status': 'error', 'message': 'internalError'}),500
 
 if __name__ == '__main__':
     app.run(debug=True)

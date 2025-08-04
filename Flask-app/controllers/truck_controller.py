@@ -21,7 +21,7 @@ class TruckController:
                     clients= {
                             'chassi': i['chassi'],
                             'placa': i['placa'],
-                            'porte': i['porte'],
+                            'cor': i['cor'],
                             'modelo': i['modelo'],
                             'eixos': i['eixos']
                         }
@@ -32,3 +32,17 @@ class TruckController:
         except Exception as e:
             print('Error:',e)
             return False , e
+    
+    def add_new_truck(self,company_email,chassi,placa,cor,modelo,eixos,mercosul=False):
+        try:
+            truck_exist = self.coll.find_one({'company_email':company_email,'placa':placa})
+            print(truck_exist)
+            if truck_exist:
+                return False
+            truck_datas = {'company_email':company_email,'chassi':chassi,'placa':placa,'cor':cor,'modelo':modelo,'eixos':eixos,'mercosul':mercosul}
+            self.coll.insert_one(truck_datas)
+
+            return True
+        except Exception as e:
+            print("Error: ",e)
+            return e

@@ -26,6 +26,7 @@ export default function ClientsPage() {
                 router.push("/home");
                 return;
             }
+            setIsLoading(false);
             const clients: any = await GetAllClients();
             if (typeof clients === "string"){
                 switch (clients){
@@ -35,7 +36,6 @@ export default function ClientsPage() {
                         break;
                     default:
                         showError("Houve um erro interno tente novamente mais tarde")
-                        setIsLoading(false)
                         return;
                 }
             }
@@ -44,7 +44,7 @@ export default function ClientsPage() {
             setClientsDatas(clients);
             const quantidy: number|undefined = clients?.length
             setClientCount(quantidy || 0);
-            setIsLoading(false);
+
         } catch (error) {
             showError("Houve um erro tente novamente mais tarde")
             setIsLoading(false)

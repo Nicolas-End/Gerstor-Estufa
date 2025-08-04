@@ -15,7 +15,7 @@ import { addClient, getClients } from "@/lib/services/clients";
 // Faz os preocessos de login, cadastro , acesso do usuario
 import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
-import { getAllTrucks } from "@/lib/services/trucks";
+import { addNewTruck, getAllTrucks } from "@/lib/services/trucks";
 
 
 
@@ -233,7 +233,7 @@ export async function getTrucks() {
   }
 }
 
-export async function addNewTruck(data: {
+export async function AddNewTruck(data: {
   modelo: string;
   placa: string;
   chassi?: string;
@@ -242,14 +242,12 @@ export async function addNewTruck(data: {
   mercosul?: boolean;
 }) {
   try {
-    const res = await fetch("/api/trucks", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    });
-    return res.ok ? "ok" : "error";
-  } catch {
-    return "error";
+    const resposne = addNewTruck(data)
+
+    return resposne
+  } catch (error){
+    console.log("Erro Adicionar Caminhão: ",error)
+    throw error
   }
 }
 
