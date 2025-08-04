@@ -32,6 +32,7 @@ export default function ClientsPage() {
                     case "Credencial Invalida":
                         showAlert("Suas credenciais sõa invalidas")
                         router.push('/logout')
+                        break;
                     default:
                         showError("Houve um erro interno tente novamente mais tarde")
                         setIsLoading(false)

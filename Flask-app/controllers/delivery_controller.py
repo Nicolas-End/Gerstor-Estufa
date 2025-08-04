@@ -149,7 +149,7 @@ class DeliveryContoller:
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
                 'EmailEntrega':company_email,
-                'status':'pending'
+                'status':'pendente'
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)
@@ -183,7 +183,7 @@ class DeliveryContoller:
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
                 'EmailEntrega':company_email,
-                'status':'pending'
+                'status':'pendente'
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)

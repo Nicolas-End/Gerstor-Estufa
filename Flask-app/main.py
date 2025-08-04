@@ -339,17 +339,18 @@ def add_new_functionary():
         functionary_pass = functionary_datas['password']
         functionary_email = functionary_datas['email']
         functionary_role = functionary_datas['role']
+
         result, status = FunctionariesController().add_new_functionary(datas['company_email'],datas['company_name'],
                                                                        functionary_name,functionary_pass,functionary_email,functionary_role)
         if (result == "AlreadyExist"):
 
-            return 409
+            return jsonify({'status':'AlreadyExist'}),409
         else:
-            return 200
+            return jsonify({'status':'ok'}),200
     
     except Exception as e:
         print('Error: ',e)
-        return jsonify({'status': 'error', 'message': str(e)})
+        return jsonify({'status': 'error', 'message': str(e)}),500
     
 @app.route('/get-functionaries-quantity',methods=['POST'])
 def get_functionaries_quantity():

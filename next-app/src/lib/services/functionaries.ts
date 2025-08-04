@@ -12,7 +12,7 @@ interface ApiResponse{
 export const getFunctionaries = async() =>{
   try{
     const api = await createApiWithAuth();
-    const response = await api.post<apiResponse>('/get-functionaries')
+    const response = await api.post<ApiResponse>('/get-functionaries')
 
     switch (response.status){
       case 200:
@@ -53,7 +53,7 @@ export const addNewFunctionary = async(name:string,email:string,password:string,
     const api = await createApiWithAuth()
     const data = {"name":name,"email":email,"password":password,"role":role}
 
-    const response = await api.post<ApiResponse>('/add-new-functionary')
+    const response = await api.post<ApiResponse>('/add-new-functionary',data)
 
     switch(response.status){
       case 200:

@@ -180,7 +180,7 @@ export async function GetEspecificDelivery(id:string) {
 export async function AddNewDelivery(FormsData:any) {
   try{
     const response = await addNewDelivery(FormsData)
-    console.log(response)
+
     return response
   }catch(error){
     console.log("Erro adicionar nova entrega: ",error)
@@ -259,7 +259,6 @@ export async function GetAllClients() {
   try {
 
     const response= await getClients()
-    console.log(response)
     return response 
   } catch (error) {
     console.log("Error Clientes: ", error);

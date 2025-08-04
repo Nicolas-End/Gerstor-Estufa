@@ -63,16 +63,20 @@ export default function RegisterEmployeePage() {
             switch(response){
                 case true:
                     showSucess("Funcionário cadastrado com sucesso!");
+                    break;
                 case 'Credencial Invalida':
                     showError('Credencial Invalida')
                     router.push('/logout')
+                    break;
                 case 'Erro Interno':
                     showError('Houve um erro no sistema tente novamente mais tarde')
                     setIsLoading(false)
-                    return;
+                    break;
+
                 case 'Já Existe':
                     showAlert("Funcionario Já Existente")
                     router.push('/functionaries')
+                    break;
             }
 
             
