@@ -16,6 +16,7 @@ import { addClient, getClients } from "@/lib/services/clients";
 import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, getAllTrucks } from "@/lib/services/trucks";
+import { addCookies } from "../controller/cookiesController";
 
 
 
@@ -30,9 +31,7 @@ export async function ValidateLogin(email:string, password:string) {
         case "ok":
           const user_token: any = response.token;
           const user_role: any = response.role
-          const cookiesStore = await cookies()
-          cookiesStore.set('token_from_user',user_token)
-          cookiesStore.set('role_from_user',user_role)
+          await addCookies(user_token,user_role)
           return 'ok'
         default:
           return "User not found";
@@ -58,7 +57,7 @@ export async function SendRecuperationEmail(email: string, newPassword: string) 
   try {
 
     const response = await sendEmailRecovery(email, newPassword);
-    console.log(response)
+
     return response
   } catch (error) {
 

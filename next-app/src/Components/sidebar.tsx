@@ -28,6 +28,7 @@ export default function Sidebar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const pathname = usePathname();
 
+  
   const isActive = (path: string) => (pathname === path ? styles.navItemActive : "");
 
   const sidebarClass = minimized
@@ -89,6 +90,8 @@ export default function Sidebar() {
         </Link>
 
         {/* Mobile-only menu button */}
+
+        
         <div className={`${styles.navItem} ${styles.mobileOnly}`} onClick={toggleMobileMenu}>
           <MoreVertical size={20} />
           <span className="text-xs">Mais</span>
