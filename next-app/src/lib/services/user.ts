@@ -12,7 +12,7 @@ interface ApiResponse {
 export const validateUserAcess = async() =>{
   try{
     let api = await createApiWithAuth()
-    const response = await api.post<ApiResponse>('/home-acess')
+    const response = await api.post('/home-acess')
 
     if(response.status === 200 && response.data){
       return "ok"
@@ -31,7 +31,7 @@ export const validateUserAcess = async() =>{
 export const addNewCompany = async (email:string,id:string,password:string,companyEmail:string) =>{
   try{
     let datas = {email,id,password,companyEmail}
-    const response = await axios.post<ApiResponse>('http://127.0.0.1:5000/add-new-company',datas,{
+    const response = await axios.post('http://127.0.0.1:5000/add-new-company',datas,{
       validateStatus: () => true
     })
 
@@ -52,7 +52,7 @@ export const addNewCompany = async (email:string,id:string,password:string,compa
 export const login = async (email:string,password:string) =>{
   try{
       let data = {email, password}
-      const response = await axios.post<ApiResponse>('http://127.0.0.1:5000/user-login',data ,  
+      const response = await axios.post('http://127.0.0.1:5000/user-login',data ,  
       {
         validateStatus: () => true  
       })

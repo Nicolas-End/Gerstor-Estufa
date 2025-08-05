@@ -23,7 +23,7 @@ const baseUrl = "http://127.0.0.1:5000";
 export const getAllTrucks = async (): Promise<TruckData[] | string> => {
   try {
     const api = await createApiWithAuth()
-    const response = await api.post<ApiResponse>('/get-trucks');
+    const response = await api.post('/get-trucks');
     if (response.status === 200 && response.data.trucks) {
       return response.data.trucks;
     } else {
@@ -41,7 +41,7 @@ export const addNewTruck = async (formsDatas:any) =>{
   try{
     const api = await createApiWithAuth()
     const datas = {'FormsData':formsDatas}
-    const response = await api.post<ApiResponse>('/add-new-truck',datas)
+    const response = await api.post('/add-new-truck',datas)
 
     switch(response.status){
       case 200:

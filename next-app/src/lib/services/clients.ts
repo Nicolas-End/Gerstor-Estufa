@@ -11,7 +11,7 @@ interface ApiResponse {
 export const getClients = async() =>{
   try{
     const api = await createApiWithAuth()
-    const response = await api.post<ApiResponse>('/get-clients')
+    const response = await api.post('/get-clients')
 
     switch(response.status){
       case 200:
@@ -28,30 +28,6 @@ export const getClients = async() =>{
   }
 }
 
-export function AddClient (name:string, address: {[key:string]:string|number}, document: {[key:string]:string}): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) =>{
-    const token = localStorage.getItem('token_from_user')
-    axios.post<ApiResponse>('http://127.0.0.1:5000/add-new-client', 
-        {
-          "name":name,
-          "address":address,
-          "document":document
-        },
-        {
-        headers:{
-            'Authorization':  token || ''
-        }
-      }
-    )
-      .then(response => {
-
-        resolve(response.data);
-      })
-      .catch(error => {
-        resolve({ status: 'error'});
-      });
-})
-}
 
 export const addClient = async (name:string,address:{[key:string]:string|number}, document: {[key:string]:string}) =>{
   try{
