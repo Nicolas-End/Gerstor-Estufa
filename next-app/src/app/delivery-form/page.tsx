@@ -98,6 +98,7 @@ export default function DeliveryFormPage() {
         setDeliveryDate("");
         setItems([]);
         setIsLoading(false);
+        
       } else if(data === "Erro Interno"){
         ShowAlert("Opss.. Houve um erro");
         ShowAlert("Tente novamente mais tarde");

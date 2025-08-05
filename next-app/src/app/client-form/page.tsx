@@ -64,15 +64,17 @@ export default function RegisterClientPage() {
       switch (result) {
         case true:
           showSucess("Cliente Cadastro no sistema com sucesso")
+          break;
         case "Credencial Invalida":
           showAlert("Suas credenciais são invalidas")
           router.push('/logout')
           return;
         case "Cliente ja Existe":
           showAlert("Cliente ja Constatado no sistema")
+          break;
         default:
           showError("Houver um error interno tente novamente mais tarde")
-
+          break;
       }
 
 
