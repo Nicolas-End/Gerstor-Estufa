@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { SendRecuperationEmail } from "@/lib/ts/api";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import  Head  from "next/head";
+
 const ForgetPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,39 +67,39 @@ const ForgetPassword: React.FC = () => {
 
   return (
     <>
-      <head>
+      <Head>
         <title>Registro - Controle Verde</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
-      </head>
-      <div className="flex h-screen bg-gradient-to-r from-[#0a2c26] to-[#fff] items-center justify-center">
-        <div className="w-full max-w-md bg-[#0a2c26] text-[#fff] p-8 rounded-lg shadow-2xl">
+      </Head>
+      <div className="flex h-screen bg-gradient-to-r from-green-200 to-emerald-20 items-center justify-center">
+        <div className="w-full max-w-md bg-white text-[#fff] p-8 rounded-lg shadow-2xl">
           <div className="flex items-center mb-6">
             <img src="/Logo.png" alt="Logo" className="w-12 h-12 mr-3" />
-            <h1 className="text-4xl font-bold fontQuick">Controle Verde</h1>
+            <h1 className="text-4xl text-emerald-800 font-bold fontQuick">Controle Verde</h1>
           </div>
-          <p className="text-sm mb-8 fontRobo">Esqueci Minha Senha</p>
+          <p className="text-sm mb-8 fontRobo text-emerald-700">Esqueci Minha Senha</p>
           {/* Campo de Nome da Empresa */}
 
           {/* Campo de Email */}
-          <label className="text-sm mb-2 fontRobo">Email:</label>
+          <label className="text-sm mb-2 text-black fontRobo">Email:</label>
           <input
             value={email}
             type="email"
-            className="w-full mb-4 p-3 rounded bg-[#fff] text-[#0a2c26] shadow-md"
+            className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             onChange={(e) => setEmail(e.target.value)}
           />
 
 
           {/* Campo de Senha */}
-          <label className="text-sm mb-2 fontRobo">Nova senha:</label>
+          <label className="text-sm mb-2 fontRobo text-black">Nova senha:</label>
           <div className="relative mb-4">
             <input
               value={password}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#fff] text-[#0a2c26] shadow-md"
+              className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
@@ -114,12 +116,12 @@ const ForgetPassword: React.FC = () => {
           </div>
 
           {/* Campo de Confirmação de Senha */}
-          <label className="text-sm mb-2 fontRobo">Confirme a Senha:</label>
+          <label className="text-sm mb-2 fontRobo text-black">Confirme a Senha:</label>
           <div className="relative mb-6">
             <input
               value={confirmPassword}
               type={isVisible ? "text" : "password"}
-              className="w-full p-3 pr-10 rounded bg-[#fff] text-[#0a2c26] shadow-md"
+              className="w-full h-10 rounded-md border border-gray-300 px-3 py-2 text-sm text-[#000] shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <button
@@ -147,7 +149,7 @@ const ForgetPassword: React.FC = () => {
 
           {/* Botão de Enviar Email para Validação */}
           <button
-            className="w-full fontQuick border-2 border-solid border-[#fff] bg-[#fff] text-[#0a2c26] rounded-lg py-3 shadow-lg transition transform hover:bg-[#0a2c26] hover:text-[#fff] hover:-translate-y-1"
+            className="w-full fontMedium border-2 border-solid border-[#fff] bg-emerald-600 hover:bg-emerald-700 text-[#fff] rounded-lg py-3 shadow-lg transition transform"
             onClick={handleEmail}
             disabled={isLoading}
           >
@@ -160,11 +162,19 @@ const ForgetPassword: React.FC = () => {
               "Enviar Email de Validação"
             )}
           </button>
+          <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500">ou</span>
+                </div>
+              </div>
 
           {/* Link para a página de Login */}
           <Link
             href="/login"
-            className="block w-full text-center fontQuick border-2 border-solid border-[#fff] bg-[#fff] text-[#0a2c26] rounded-lg py-3 shadow-lg mt-4 transition transform hover:bg-[#0a2c26] hover:text-[#fff] hover:-translate-y-1"
+            className="block w-full text-center text-[#fff] fontMedium bg-emerald-600 hover:bg-emerald-700 border-2 border-solid border-[#fff] bg-[#fff] text-[#0a2c26] rounded-lg py-3 shadow-lg mt-4"
           >
             Já tem uma conta? Faça login
           </Link>

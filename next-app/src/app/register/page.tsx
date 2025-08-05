@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import Link from "next/link";
 import { RegisterNewCompany } from "@/lib/ts/api";
+import  Head  from "next/head";
 
 
 const RegisterPage = () => {
@@ -68,20 +69,20 @@ const RegisterPage = () => {
   };
 
   return (
+    
     <>
-      <head>
+      <Head>
         <title>Registro - Controle Verde</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
       
-      </head>
-      
+      </Head>
       <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-green-200 px-4 space-y-4">
 
   {/* Logo + Título */}
   <div className="text-center">
-    <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600 rounded-2xl mb-4 shadow-lg">
+    <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-700 rounded-2xl mb-4 shadow-lg">
       <img src="/Logo.png" alt="Logo" className="w-8 h-8 object-contain" />
     </div>
     <h1 className="text-3xl font-bold text-emerald-800 mb-1">Controle Verde</h1>
