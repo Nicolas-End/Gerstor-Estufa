@@ -31,7 +31,7 @@ export const validateUserAcess = async() =>{
 export const addNewCompany = async (email:string,id:string,password:string,companyEmail:string) =>{
   try{
     let datas = {email,id,password,companyEmail}
-    const response = await axios.post('https://gerenciador-empresarial.vercel.app/add-new-company',datas,{
+    const response = await axios.post('https://gerenciador-empresarial-1cfr.vercel.app/add-new-company',datas,{
       validateStatus: () => true
     })
 
@@ -52,7 +52,7 @@ export const addNewCompany = async (email:string,id:string,password:string,compa
 export const login = async (email:string,password:string) =>{
   try{
       let data = {email, password}
-      const response = await axios.post('https://gerenciador-empresarial.vercel.app/user-login',data ,  
+      const response = await axios.post('https://gerenciador-empresarial-1cfr.vercel.app/user-login',data ,  
       {
         validateStatus: () => true  
       })
