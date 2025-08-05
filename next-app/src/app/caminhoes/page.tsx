@@ -3,10 +3,12 @@
 import Sidebar from "@/Components/sidebar";
 import styles from "../functionaries/page.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ToastContainer, toast } from "react-toastify";
 import { faSearch, faTruck } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { getTrucks } from "@/lib/api"; 
+import { GetTrucks,ValidateHomeAcess } from "@/lib/ts/api"; 
 import { useRouter } from "next/navigation";
+import { showError } from "@/lib/controller/alertsController";
 
 export default function CaminhoesPage() {
     const router = useRouter();
@@ -15,14 +17,38 @@ export default function CaminhoesPage() {
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        const fetchTrucks = async () => {
-            const data = await getTrucks();
-            setTrucks(data);
-            setIsLoading(false);
-        };
-        fetchTrucks();
+        initializeTrucks();
     }, []);
 
+    const initializeTrucks = async () => {
+            try {
+                const can_access_home = await ValidateHomeAcess(router);
+                if (!can_access_home) {
+                    router.push("/logout");
+                    return;
+                }
+                const data: any = await GetTrucks();
+                if (typeof data === 'string') {
+                    switch (data){
+                        case 'Login':
+                            showError('Por favor refaça o Login')
+                            router.push('/logout')
+                        default :
+                            showError ('Ops houve um erro interno')
+                            showError('Tente novamente mais tarde pfv')
+                            return;
+                    }
+                
+                }
+                setTrucks(data)
+                setIsLoading(false)
+                return;
+
+            } catch (error) {
+                console.error("Erro ao verificar acesso do cliente:", error);
+                router.push("/login");
+            }
+        };
     const resultados = trucks.filter((t) =>
         t.placa.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -34,6 +60,7 @@ export default function CaminhoesPage() {
           <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
           <span className="text-xl font-medium">Carregando...</span>
         </div>
+        <ToastContainer position="top-right" autoClose={4000} />    
       </div>
         );
     }
@@ -83,6 +110,7 @@ export default function CaminhoesPage() {
                     )}
                 </div>
             </div>
+            <ToastContainer position="top-right" autoClose={4000} />
         </div>
     );
 }

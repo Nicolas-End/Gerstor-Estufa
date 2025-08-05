@@ -45,7 +45,8 @@ class DeliveryContoller:
                         'Produto': i['TipoProduto'],
                         'Quantidade': i['Quantidade'],
                         'LocalEntrega': i['LocalEntrega'],
-                        'DataEntrega': i['dataParaEntrega']
+                        'DataEntrega': i['dataParaEntrega'],
+                        'status':i['status']
                      }
                     dict_deliverys.append(deliverys_to_do.copy())
 
@@ -147,7 +148,8 @@ class DeliveryContoller:
                 'Quantidade': itens_quantidy,
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
-                'EmailEntrega':company_email
+                'EmailEntrega':company_email,
+                'status':'pendente'
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)
@@ -161,6 +163,7 @@ class DeliveryContoller:
             id_unico = str(uuid.uuid4())
             
             itens_quantidy = 0
+            # aqui ficara os produtos relacionados a entrega
             products = []
             for i in itens:
                 product_data = {
@@ -179,7 +182,8 @@ class DeliveryContoller:
                 'Quantidade': itens_quantidy,
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
-                'EmailEntrega':company_email
+                'EmailEntrega':company_email,
+                'status':'pendente'
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)

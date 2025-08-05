@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { validateHomeAcess } from "@/lib/api";
-import { ToastContainer, toast } from "react-toastify";
+import { ValidateHomeAcess, AddNewClient } from "@/lib/ts/api";
+import { ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 export default function RegisterClientPage() {
   const router = useRouter();
@@ -17,25 +18,16 @@ export default function RegisterClientPage() {
 
   // Campos de endereço
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [street, setStreet] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
-  const [number, setNumber] = useState("");
+  const [number, setNumber] = useState(0);
   const [reference, setReference] = useState("");
 
-  function ShowAlert(text: string) {
-    toast(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
+
 
   const initializePage = async () => {
     try {
-      const canAccess = await validateHomeAcess(router);
+      const canAccess = await ValidateHomeAcess(router);
       if (!canAccess) {
         router.push("/login");
         return;
@@ -53,29 +45,47 @@ export default function RegisterClientPage() {
     // Remover formatação para envio
     const rawId = idValue.replace(/\D/g, '');
 
-    const formData = {
-      name,
-      email,
-      document: { type: idType, value: rawId },
-      address: { street, neighborhood, number, reference },
-    };
 
     try {
-      setIsLoading(true);
-      console.log("Dados do cliente:", formData);
-      ShowAlert("Cliente cadastrado com sucesso!");
+      const address = {
+        "street": street,
+        "neighborhood": neighborhood,
+        "number": number,
+        "reference": reference
+      }
+      const document = {
+        "type": idType,
+        "value": rawId
 
-      // Resetar campos
+      }
+      setIsLoading(true);
+      const result = await AddNewClient(name, address, document)
+
+      switch (result) {
+        case true:
+          showSucess("Cliente Cadastro no sistema com sucesso")
+        case "Credencial Invalida":
+          showAlert("Suas credenciais são invalidas")
+          router.push('/logout')
+          return;
+        case "Cliente ja Existe":
+          showAlert("Cliente ja Constatado no sistema")
+        default:
+          showError("Houver um error interno tente novamente mais tarde")
+
+      }
+
+
       setName("");
-      setEmail("");
       setIdValue("");
       setStreet("");
       setNeighborhood("");
-      setNumber("");
+      setNumber(0);
       setReference("");
       setIsLoading(false);
+      return;
     } catch (error) {
-      ShowAlert("Erro ao cadastrar. Tente novamente.");
+      showAlert("Houve um erro Interno Tente novamente mais tarde")
       setIsLoading(false);
     }
   };
@@ -128,16 +138,7 @@ export default function RegisterClientPage() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-green-900 text-[18px] mb-2">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg p-2 text-black"
-                  placeholder="Digite o email"
-                  required
-                />
+
               </div>
 
               {/* Escolha por radio */}
@@ -213,9 +214,9 @@ export default function RegisterClientPage() {
                 <label htmlFor="number" className="block text-green-900 text-[18px] mb-2">Número</label>
                 <input
                   id="number"
-                  type="text"
+                  type="number"
                   value={number}
-                  onChange={e => setNumber(e.target.value)}
+                  onChange={e => setNumber(parseInt(e.target.value))}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
                   placeholder="Número da residência"
                   required

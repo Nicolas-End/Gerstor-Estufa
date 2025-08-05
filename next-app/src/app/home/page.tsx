@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  validateHomeAcess,
+  ValidateHomeAcess,
   countDeliveryQuantidy,
-  funtionariesQuantity,
-} from "@/lib/api";
+  FunctionariesQuantity,
+} from "@/lib/ts/api";
 import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
@@ -14,11 +14,11 @@ import Sidebar from "@/Components/sidebar";
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [deliveryQuantidy, setDeliveryQuantidy] = useState(0);
+  const [deliveryQuantidy, setDeliveryQuantidy] = useState(-1);
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
   const initializeDashboard = async () => {
     try {
-      const can_access_home = await validateHomeAcess(router);
+      const can_access_home = await ValidateHomeAcess(router);
       if (!can_access_home) {
         router.push("/login");
         return;
@@ -26,7 +26,7 @@ export default function Home() {
       setIsLoading(false);
 
       const deliverys_quantidy: any = await countDeliveryQuantidy();
-      const functionaries_quantity: any = await funtionariesQuantity();
+      const functionaries_quantity: any = await FunctionariesQuantity(router);
       // Após a verficação do usuario
       // Verifica a quantidade de entregas pendentes a fazer
 
@@ -65,7 +65,7 @@ export default function Home() {
             >
               <h2 className="text-xl font-semibold mb-2">Pedidos</h2>
               <p className="text-4xl font-bold">
-                {deliveryQuantidy || (
+                {deliveryQuantidy !== -1? deliveryQuantidy: (
                   <svg
                     aria-hidden="true"
                     className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

@@ -6,10 +6,12 @@ import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getDeliverys, deleteEspecificDelivery} from "@/lib/api";
+import { DeleteEspecificDelivery, GetDeliverys } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { cookies } from "next/headers";
+import { showError } from "@/lib/controller/alertsController";
 
 
 export default function PedidosPage() {
@@ -17,63 +19,105 @@ export default function PedidosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-
-
-  useEffect(() => {
-       initializeDeliverys();
-   }, []);
-
-  useEffect(() => {
-
-
-    setInterval(() => {
-      initializeDeliverys();
-    }, 120000)// a cada 2 minuto ele atualiza os pedidos 
-
-  },[deliverysToDo]);
   
+  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos')
 
-  function ShowAlert(text: string) {
-          toast(text, {
-              style: {
-                  backgroundColor: "#fff",
-                  color: "#2b192e",
-                  fontFamily: "Arial, sans-serif",
-              },
-          });
+
+  function confirmToast(id: string) {
+    const toastId = toast.info(
+      <div>
+        <p>Tem certeza que deseja excluir essa entrega?</p>
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={() => {
+              toast.dismiss(toastId);
+              toast.success("Excluido com sucesso");
+              deleteDelivery(id)
+
+            }}
+            className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+          >
+            Sim
+          </button>
+          <button
+            onClick={() => toast.dismiss(toastId)}
+            className="bg-red-600 text-white px-3 py-1 rounded"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>,
+      {
+        closeOnClick: false,
+        closeButton: false,
       }
-  async function deleteDelivery(delivery_id:string){
-    const data = await deleteEspecificDelivery(delivery_id)
-    
-    if (data){
+    )
+  }
+  function ShowAlert(text: string) {
+    toast.error(text, {
+      style: {
+        backgroundColor: "#fff",
+        color: "#2b192e",
+        fontFamily: "Arial, sans-serif",
+      },
+    });
+  }
+
+  async function deleteDelivery(delivery_id: string) {
+    const data = await DeleteEspecificDelivery(delivery_id)
+    if (data === true) {
+      router.refresh()
+    } else if (data === "Credencial Invalida") {
+      ShowAlert("Credencial invalida")
+      router.push('/logout')
+    } else {
+      ShowAlert('Houve um erro interno Tente apagae denovo mais tarde')
+    }
+
+    if (data) {
       initializeDeliverys()
-      return ;
+      return;
     }
     ShowAlert('Houve algum erro no processo !!')
-    
+
 
   }
   const initializeDeliverys = async () => {
     try {
 
-      const deliverys: any = await getDeliverys();
-      if (deliverys === "invalid" || deliverys === "error") {
-        router.push("/login");
-        return; 
+      const deliverys: any = await GetDeliverys();
+
+      if (typeof deliverys == "string") {
+        switch (deliverys) {
+          case "Credencial Invalida":
+            ShowAlert("Credencias Invalidas")
+
+            router.push("/logout")
+            return;
+          default:
+            ShowAlert("Houver um erro Interno Tente novamente mais tarde ")
+            setIsLoading(false)
+            return;
+        }
       }
+
       if (!Array.isArray(deliverys)) {
         setDeliverysToDo([]);
         setIsLoading(false);
         return;
       }
+      
       setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
-      console.log("Erro ao iniciar dashboard:", error);
-      router.push("/login");
+      showError("Houve um erro interno tente novamente mais tarde")
+      setIsLoading(false)
     }
   };
 
+  useEffect(() => {
+    initializeDeliverys();
+  }, []);
 
   if (isLoading) {
     return (
@@ -100,8 +144,24 @@ export default function PedidosPage() {
               + Adicionar
             </button>
           </div>
+          <select
+            value={searchStatus}
+            onChange={e =>
+              setSearchStatus(e.target.value as 'Todos' | 'pendente' | 'em andamento' | 'finalizado')
+            }
+            className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+          >
+            <option value="Todos">Todos</option>
+            <option value="pendente">Pendente</option>
+            <option value="em andamento">Em andamento</option>
+            <option value="finalizado">Finalizado</option>
+          </select>
           <div className={styles.ordersList}>
-            {deliverysToDo.map((order, index) => (
+
+            {deliverysToDo.filter(order => {if (searchStatus === 'Todos') return true;
+              return order.status === searchStatus
+            })
+            .map((order, index) => (
               <div
                 key={index}
                 className={styles.card}
@@ -116,14 +176,14 @@ export default function PedidosPage() {
                     <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
                     <span className={styles.orderUnit}>Caixas</span>
                   </div>
-                   <div className="gap-6 flex flex-row-reverse">
-                      <div><button onClick={()=> deleteDelivery(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
-                      <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
-                      <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
-                    </div>
+                  <div className="gap-6 flex flex-row-reverse">
+                    <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                    <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                    <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
+                  </div>
                 </div>
                 {selectedOrder?.id === order.id && (
-                    <div className={styles.details}>
+                  <div className={styles.details}>
                     <p className="text-black">
                       <strong>Local de Entrega:</strong> {order.LocalEntrega}
                     </p>
@@ -137,15 +197,15 @@ export default function PedidosPage() {
           </div>
         </div>
         <ToastContainer
-                        position="top-right"
-                        autoClose={4000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-          />
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
 
       </div>
     );

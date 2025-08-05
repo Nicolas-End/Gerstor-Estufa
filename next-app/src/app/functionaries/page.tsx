@@ -4,10 +4,12 @@ import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { getFunctionaries } from "@/lib/api";
-import { validateHomeAcess } from "@/lib/api";
+import { GetFunctionaries, ValidateHomeAcess } from "@/lib/ts/api";
+import { ToastContainer } from "react-toastify";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { showAlert, showError } from "@/lib/controller/alertsController";
 
 export default function FuncionarioPage() {
     const router = useRouter();
@@ -22,23 +24,29 @@ export default function FuncionarioPage() {
     )
     const initializeFunctionary = async () => {
         try {
-            const can_access_home = await validateHomeAcess(router);
+            const can_access_home = await ValidateHomeAcess(router);
             if (!can_access_home) {
                 router.push("/login");
                 return;
             }
-            const functionaries = await getFunctionaries();
-            if (functionaries === "invalid" || functionaries === "error") {
-                router.push("/home");
-                return;
+            const functionaries = await GetFunctionaries();
+            if (typeof functionaries === "string"){
+                switch(functionaries){
+                    case "Credencial Invalida":
+                        showAlert("Suas Credenciais são invalidas")
+                        router.push("/logout")
+                    case "Erro Interno":
+                        showAlert("Houve um erro interno tente novamente mais tarde")
+                }
             }
             setFunctionariesDatas(functionaries);
             const quantidy: number|undefined = functionaries?.length
             setFunctionaryCount(quantidy || 0);
             setIsLoading(false);
         } catch (error) {
-            console.error("Erro ao verificar acesso do funcionário:", error);
-            router.push("/login");
+            showError("Houve um error tente novamente mais tarde")
+            setIsLoading(false)
+            return;
         }
     };
 
@@ -97,6 +105,16 @@ export default function FuncionarioPage() {
                         ))}
                     </div>
                 </div>
+                  <ToastContainer
+                position="top-right"
+                autoClose={4000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+            />
             </div>
         );
     }

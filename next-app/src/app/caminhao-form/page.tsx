@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { addNewTruck } from "@/lib/api";
+import { AddNewTruck } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 export default function CaminhaoForm() {
     const router = useRouter();
@@ -17,31 +18,48 @@ export default function CaminhaoForm() {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        setIsLoading(true);
+        try {
+            e.preventDefault();
+            setIsLoading(true);
 
-        const result = await addNewTruck({
-            modelo,
-            placa,
-            chassi,
-            cor,
-            eixos,
-            mercosul,
-        });
+            const response = await AddNewTruck({
+                modelo,
+                placa,
+                chassi,
+                cor,
+                eixos,
+                mercosul,
+            });
+            switch (response) {
+                case "Credenciais Invalidas":
+                    showAlert("Suas credenciais são invalidas")
+                    router.push('/logout')
+                    return;
+                case "Ja Cadastrado":
+                    showAlert("Este Caminhão Já esta cadastrado no sistema")
+                    setIsLoading(false);
+                    return;
+                case true:
+                    showSucess('Caminhão cadastado com sucesso no sistema')
+                    break;
+                default:
+                    showError('Houve um erro interno tente novamente mais tarde')
+                    setIsLoading(false);
+                    return;
+            }
 
-        if (result === "ok") {
-            toast.success("Caminhão adicionado com sucesso!");
             setModelo("");
             setPlaca("");
             setChassi("");
             setCor("");
             setEixos("");
             setMercosul(false);
-        } else {
-            toast.error("Erro ao adicionar caminhão.");
-        }
 
-        setIsLoading(false);
+
+            setIsLoading(false);
+        } catch (error) {
+            showError("Houve um erro interno no sisteam tente novamente mais tarde")
+        }
     };
 
     return (

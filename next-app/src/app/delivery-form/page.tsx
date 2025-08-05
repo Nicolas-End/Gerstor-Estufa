@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { addNewItemDelivery, validateHomeAcess } from "@/lib/api";
+import { AddNewDelivery, ValidateHomeAcess } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -60,7 +60,7 @@ export default function DeliveryFormPage() {
   // Inicia a Pagina Form Verifica se o usuario é valido
   const initializeDeliverForm = async () => {
     try {
-      const can_access_home = await validateHomeAcess(router);
+      const can_access_home = await ValidateHomeAcess(router);
 
       if (!can_access_home) {
         router.push("/login");
@@ -90,21 +90,25 @@ export default function DeliveryFormPage() {
 
     try {
       setIsLoading(true);
-      const data = await addNewItemDelivery(formData);
-      if (data === "ok") {
+      const data = await AddNewDelivery(formData);
+      if (data === true) {
         ShowAlert("Entrega Adicionada com Sucesso");
         setAddress("");
         setCustomerName("");
         setDeliveryDate("");
         setItems([]);
         setIsLoading(false);
-      } else {
+      } else if(data === "Erro Interno"){
         ShowAlert("Opss.. Houve um erro");
         ShowAlert("Tente novamente mais tarde");
         setIsLoading(false);
+      }else{
+        router.push('/logout')
       }
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      ShowAlert("Opss.. Houve um erro");
+      ShowAlert("Tente novamente mais tarde");
+      setIsLoading(false);
     }
   };
 

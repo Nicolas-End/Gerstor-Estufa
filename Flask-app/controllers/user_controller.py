@@ -47,7 +47,8 @@ class UserController:
             if has_email:
                 company_email = has_email['company_email']
                 company_name = has_email['company_name']
-                return company_email,company_name,True
+                role = has_email['role']
+                return company_email,company_name, role
             
             return "noexist",False
         except Exception as e:
@@ -59,7 +60,7 @@ class UserController:
             company_exist = {"id":id,"company_email":email}
 
             if self.coll.find_one(company_exist):
-                return 'Adm Already Exist',False
+                return 'Already Exist',False
         
             # se n exister criptografa a senha do usuario
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
