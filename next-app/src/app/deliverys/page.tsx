@@ -63,7 +63,7 @@ export default function PedidosPage() {
       showAlert("Credencial invalida")
       router.push('/logout')
     } else {
-      showAlert('Houve um erro interno Tente apagae denovo mais tarde')
+      showAlert('Houve um erro interno Tente apagar denovo mais tarde')
     }
 
     if (data) {
@@ -115,7 +115,7 @@ export default function PedidosPage() {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
         <div className="flex items-center space-x-2">
-          <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-4 border-[#005E40] border-t-transparent rounded-full animate-spin" />
           <span className="text-xl font-medium">Carregando...</span>
         </div>
       </div>

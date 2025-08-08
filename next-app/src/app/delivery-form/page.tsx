@@ -146,7 +146,7 @@ export default function DeliveryFormPage() {
   } else {
     return (
       <>
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex h-auto min-h-screen bg-gray-100">
           <Sidebar /> {/* Barra lateral */}
           <div className="flex-1 p-8 flex flex-col min-h-screen">
             {/* Cabeçalho */}
@@ -163,7 +163,7 @@ export default function DeliveryFormPage() {
             {/* Formulário de pedido */}
             <form
               onSubmit={handleSubmit}
-              className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col mb-6"
+              className="bg-white p-6 rounded-lg shadow overflow-auto flex flex-col mb-6 min-h-fit"
             >
               {/* Campos Nome, Endereço e Data de Entrega */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -332,6 +332,7 @@ export default function DeliveryFormPage() {
                       </div>
                     </div>
                   ))}
+                  <br />
                 </div>
               </div>
               {/* Botão Enviar Pedido */}

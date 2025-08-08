@@ -37,7 +37,7 @@
 }
 
 .count {
-  background-color: #0a3b2c;
+  background-color: #045038;
   color: white;
   border-radius: 9999px;
   width: 3rem;
@@ -51,7 +51,7 @@
 }
 
 .addButton {
-  background-color: #0a3b2c;
+  background-color: #005E40;
   color: white;
   font-weight: 600;
   padding: 0.5rem 1rem;
@@ -63,7 +63,7 @@
 }
 
 .addButton:hover {
-  background-color: #117255;
+  background-color: #005E40;
 }
 
 .ordersList {
@@ -75,7 +75,7 @@
 }
 
 .orderItem {
-  background-color: #0a3b2c;
+  background-color: #045038;
   color: #ffffff;
   padding: 1.5rem;
   border-radius: 0.75rem;
@@ -105,7 +105,7 @@
 
 .orderCount {
   background-color: #ffffff;
-  color: #0a3b2c;
+  color: #005E40;
   border-radius: 9999px;
   width: 2.5rem;
   height: 2.5rem;

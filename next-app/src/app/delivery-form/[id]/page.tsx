@@ -148,7 +148,7 @@ export default function DeliveryFormPage() {
   } else {
   return (
     <>
-      <div className="flex flex-col min-h-screen bg-gray-100 overflow-y-auto">
+      <div className="flex flex-row min-h-screen bg-gray-100 overflow-y-auto">
         <Sidebar /> {/* Barra lateral */}
         <div className="flex-1 p-8 flex flex-col">
           {/* Cabeçalho */}
