@@ -1,6 +1,6 @@
 // sidebar.tsx
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -21,14 +21,23 @@ import {
   HardHat
 } from "lucide-react";
 import styles from "./sidebar.module.css";
+import { getRoleCookie } from "@/lib/controller/cookiesController";
 
 export default function Sidebar() {
   const [minimized, setMinimized] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [role, setRole] = useState<string | null>(null)
   const pathname = usePathname();
 
-  
+  useEffect(() => {
+    const getRole = async () => {
+      const role = await getRoleCookie();
+
+      setRole(role)
+    };
+    getRole();
+  }, [])
   const isActive = (path: string) => (pathname === path ? styles.navItemActive : "");
 
   const sidebarClass = minimized
@@ -91,40 +100,56 @@ export default function Sidebar() {
 
         {/* Mobile-only menu button */}
 
-        
-        <div className={`${styles.navItem} ${styles.mobileOnly}`} onClick={toggleMobileMenu}>
-          <MoreVertical size={20} />
-          <span className="text-xs">Mais</span>
-          {showMobileMenu && (
-            <div className={`${styles.accountMenu} ${styles.mobileDropdown}`}>
-              <Link href="/functionaries" className={styles.menuItem}>
-                <HardHat size={16} /> <span>Funcionários</span>
+        {["ADM", "Secretaria", "Caminhoneiro", "Funcionario Comum", null].includes(role) && (
+          <div
+            className={`${styles.navItem} ${styles.mobileOnly}`}
+            onClick={toggleMobileMenu}
+          >
+            <MoreVertical size={20} />
+            <span className="text-xs">Mais</span>
+            {showMobileMenu && (
+              <div className={`${styles.accountMenu} ${styles.mobileDropdown}`}>
+                {(role === "ADM" || role === "Secretaria") && (
+                  <Link href="/functionaries" className={styles.menuItem}>
+                    <HardHat size={16} /> <span>Funcionários</span>
+                  </Link>
+                )}
+                {(role === "ADM" || role === "Secretaria" || role === "Caminhoneiro") && (
+                  <>
+                    <Link href="/clients" className={styles.menuItem}>
+                      <Users size={16} /> <span>Clientes</span>
+                    </Link>
+                    <Link href="/caminhoes" className={styles.menuItem}>
+                      <Truck size={16} /> <span>Caminhões</span>
+                    </Link>
+                  </>
+                )}
+
+              </div>
+            )}
+          </div>
+        )}
+
+        {role && (
+          <div className="hidden md:flex flex-col">
+            {(role === "ADM" || role === "Secretaria") && (
+              <Link href="/functionaries" className={`${styles.navItem} mt-2`}>
+                <UserPlus size={20} /> <span>Funcionários</span>
               </Link>
-              <Link href="/clients" className={styles.menuItem}>
-                <Users size={16} /> <span>Clientes</span>
-              </Link>
-              <Link href="/caminhoes" className={styles.menuItem}>
-                <Truck size={16} /> <span>Caminhões</span>
-              </Link>
-            </div>
-          )}
-        </div>
+            )}
 
-        {/* Desktop extra links */}
-        <div className="hidden md:flex flex-col">
-
-          <Link href="/functionaries" className={`${styles.navItem} mt-2`}>
-            <UserPlus size={20} /> <span>Funcionários</span>
-          </Link>
-
-
-          <Link href="/clients" className={`${styles.navItem} mt-2`}>
-            <Users size={20} /> <span>Clientes</span>
-          </Link>
-          <Link href="/caminhoes" className={`${styles.navItem} mt-2`}>
-            <Truck size={20} /> <span>Caminhões</span>
-          </Link>
-        </div>
+            {(role === "ADM" || role === "Secretaria" || role === "Caminhoneiro") && (
+              <>
+                <Link href="/clients" className={`${styles.navItem} mt-2`}>
+                  <Users size={20} /> <span>Clientes</span>
+                </Link>
+                <Link href="/caminhoes" className={`${styles.navItem} mt-2`}>
+                  <Truck size={20} /> <span>Caminhões</span>
+                </Link>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Desktop account avatar */}
         <div

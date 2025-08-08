@@ -2,10 +2,12 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { AddNewDelivery, ValidateHomeAcess } from "@/lib/ts/api";
+import { AddNewDelivery, ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { ClientPageRoot } from "next/dist/client/components/client-page";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -17,7 +19,7 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
-  
+
   function ShowAlert(text: string) {
     toast(text, {
       style: {
@@ -34,6 +36,8 @@ export default function DeliveryFormPage() {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [clientInfo, setClientInfo] = useState<any>({});
+  const [clients, setClients] = useState<any[]>([]);
 
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
@@ -63,10 +67,24 @@ export default function DeliveryFormPage() {
       const can_access_home = await ValidateHomeAcess(router);
 
       if (!can_access_home) {
-        router.push("/login");
+        router.push("/logout");
         return;
       }
       setPageIsLoading(false);
+      const clients = await GetAllClients()
+      if (typeof clients === "string") {
+        switch (clients) {
+          case "Credencial Invalida":
+            showAlert("Suas credenciais sõa invalidas")
+            router.push('/logout')
+            break;
+          default:
+            showError("não possivel mostar os cliente tente novamte mais tarde")
+            return;
+        }
+      }
+      setClients(clients)
+
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
       router.push("/login");
@@ -98,11 +116,11 @@ export default function DeliveryFormPage() {
         setDeliveryDate("");
         setItems([]);
         setIsLoading(false);
-      } else if(data === "Erro Interno"){
+      } else if (data === "Erro Interno") {
         ShowAlert("Opss.. Houve um erro");
         ShowAlert("Tente novamente mais tarde");
         setIsLoading(false);
-      }else{
+      } else {
         router.push('/logout')
       }
     } catch (error) {
@@ -179,7 +197,10 @@ export default function DeliveryFormPage() {
                     id="address"
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => {
+                      
+                      setAddress(e.target.value)
+                    }}
                     className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
                     placeholder="Digite o endereço"
                     required
@@ -202,7 +223,36 @@ export default function DeliveryFormPage() {
                     required
                   />
                 </div>
+                <div>
+                  <label
+                    htmlFor="deliveryDate"
+                    className="block text-green-900 text-[18px] mb-2"
+                  >Cliente
+                  </label>
+                  <select
+                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    onChange={(e) => {
+                      const selectedClient = clients.find(
+                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
+                      );
+                      if (selectedClient) {
+                        setClientInfo(selectedClient);
+                        
+                        setAddress(selectedClient.address);
+                      }
+                    }}
+                    className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                  >
+                    <option value="">Escolha um cliente (Opcional)</option>
+                    {clients.map((client: any, index: number) => (
+                      <option key={index} value={client.cpf || client.cnpj}>
+                        {client.name} - {client.cpf || client.cnpj}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
               {/* Seção Dinâmica */}
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-2">

@@ -28,12 +28,15 @@ export default function ProdutoPage() {
         switch (delivery) {
           case "Credencial Invalida":
             router.push('/logout')
+            break;
           case "Entrega inexistente":
             showAlert('Entrega não Existente')
             router.push('/deliverys')
+            break;
           default:
             showAlert('Entrega Interno tente novamente mais tarde')
             router.push('/deliverys')
+            break;
         }
       }
       setDeliveryDatas(delivery.deliveryDatas);

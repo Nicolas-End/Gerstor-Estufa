@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { cookies } from "next/headers";
-import { showError } from "@/lib/controller/alertsController";
+import { showAlert, showError } from "@/lib/controller/alertsController";
 
 
 export default function PedidosPage() {
@@ -53,32 +53,24 @@ export default function PedidosPage() {
       }
     )
   }
-  function ShowAlert(text: string) {
-    toast.error(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
+ 
 
   async function deleteDelivery(delivery_id: string) {
     const data = await DeleteEspecificDelivery(delivery_id)
     if (data === true) {
       router.refresh()
     } else if (data === "Credencial Invalida") {
-      ShowAlert("Credencial invalida")
+      showAlert("Credencial invalida")
       router.push('/logout')
     } else {
-      ShowAlert('Houve um erro interno Tente apagae denovo mais tarde')
+      showAlert('Houve um erro interno Tente apagae denovo mais tarde')
     }
 
     if (data) {
       initializeDeliverys()
       return;
     }
-    ShowAlert('Houve algum erro no processo !!')
+    showAlert('Houve algum erro no processo !!')
 
 
   }
@@ -90,12 +82,12 @@ export default function PedidosPage() {
       if (typeof deliverys == "string") {
         switch (deliverys) {
           case "Credencial Invalida":
-            ShowAlert("Credencias Invalidas")
+            showAlert("Credencias Invalidas")
 
             router.push("/logout")
             return;
           default:
-            ShowAlert("Houver um erro Interno Tente novamente mais tarde ")
+            showAlert("Houver um erro Interno Tente novamente mais tarde ")
             setIsLoading(false)
             return;
         }

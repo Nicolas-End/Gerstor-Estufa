@@ -33,6 +33,7 @@ export default function CaminhoesPage() {
                         case 'Login':
                             showError('Por favor refaça o Login')
                             router.push('/logout')
+                            break;
                         default :
                             showError ('Ops houve um erro interno')
                             showError('Tente novamente mais tarde pfv')

@@ -117,16 +117,16 @@ export default function DeliveryFormPage() {
         case true:
           showSucess('Entrega Editada com Sucesso')
           esperar()
-         
+          break;
         case "Credencial Invalida":
           showError("Suas Credencias são Invalidas")
           esperar()
-          
+          break;
         default:
           showAlert('Houve um erro Interno')
           showAlert('Tente novamente mais tarde')
           setIsLoading(false)
-
+          break;
       }
 
     } catch (error) {

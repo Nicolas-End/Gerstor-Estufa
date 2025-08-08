@@ -28,7 +28,7 @@ export const deleteCookies = async (): Promise<boolean> => {
     }
 }
 
-export const getRoleCookie = async ():Promise<string> => {
+export const getRoleCookie =  async ():Promise<string> => {
     try {
         const cookiesStore = await cookies()
         const cookiesRole = cookiesStore.get("role_from_user")?.value
