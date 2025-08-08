@@ -10,7 +10,7 @@ import { addNewFunctionary, functionariesQuantity, getFunctionaries } from "@/li
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
 // processos relacioandos ao cliente
-import { addClient, getClients } from "@/lib/services/clients";
+import { addClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
@@ -274,6 +274,17 @@ export async function AddNewClient(name:string, address: {[key:string]:string|nu
   }
 }
 
+export async function GetEspecificClient(id:string) {
+  try{
+    const response = await getEspecificClient(id)
+
+    return response
+  }catch(error){
+    console.log("Error ao pegar cliente especifico: ",error)
+    throw error
+  }
+  
+}
 //====== CAMINHÕES ======
 export async function GetTrucks(){
   try {

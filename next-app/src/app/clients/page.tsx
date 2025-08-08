@@ -92,7 +92,7 @@ export default function ClientsPage() {
                     </div>
                     <div className={styles.ordersList}>
                         {hasClient? clientsDatas.map((client:any,index:any) => (
-                            <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf || client.cnpj}`)}>
+                            <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf? 'cpf': 'cnpj'}&${client.cpf || client.cnpj}`)}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
                                 <p className={styles.clientName}>{client.name}</p>
                             </div>

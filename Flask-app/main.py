@@ -59,7 +59,7 @@ def add_new_Adm():
         responseApi, returnApi = UserController().add_new_Company(company_id,company_email,company_password,company_name)
 
         if returnApi:
-            return jsonify({'status':'ok'}),201
+            return jsonify({'status':'ok'}),200
         elif  returnApi == "Already Exist":
             return jsonify({'status': responseApi}), 409
         else:
@@ -421,7 +421,25 @@ def add_client():
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':'error'}),500
-    
+
+@app.route('/get-especific-client',methods=['POST'])
+def get_especific_client():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
+        
+        clients_datas = request.get_json()['id']
+        tipo, client_id = clients_datas.split('%')
+        status, clients_infos = ClientController().get_especific_data_from_client() 
+        return jsonify({'status':clients_datas}),200
+    except Exception as e:
+        print('Error: ',e)
+        return jsonify({'status':'error'}),500
 #====CAMINHÕES=====
 @app.route('/get-trucks', methods=['POST'])
 def get_trucks():   

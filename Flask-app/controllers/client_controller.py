@@ -60,3 +60,10 @@ class ClientController:
         except Exception as e:
             print ('Error: ',e)
             return False
+    def get_especific_data_from_client(self,company_email,id,tipo):
+        try:
+            print('lo')
+            
+        except Exception as e:
+            print('Error: ',e)
+            return False

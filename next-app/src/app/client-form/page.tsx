@@ -108,7 +108,8 @@ export default function RegisterClientPage() {
   }
 
   // Determinar comprimento máximo de dígitos
-  const maxLength = idType === 'cpf' ? 11 : 14;
+  const minLengt = idType === 'cpf' ? 11 : 14;
+  const maxLengt = idType === 'cpf' ? 11 : 14;
 
   return (
     <>
@@ -181,9 +182,12 @@ export default function RegisterClientPage() {
                   type="text"
                   value={idValue}
                   onChange={e => setIdValue(e.target.value.replace(/\D/g, ''))}
-                  maxLength={maxLength}
+                  minLength={minLengt}
+                  maxLength={maxLengt}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
                   placeholder={idType === 'cpf' ? 'Só dígitos, ex: 00000000000' : 'Só dígitos, ex: 00000000000000'}
+                  
+                  
                   required
                 />
               </div>
