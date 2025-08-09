@@ -2,11 +2,15 @@
 import { cookies } from "next/headers"
 
 
-export const addCookies = async (token: string, role: string):Promise<boolean> => {
+export const addCookies = async (token: string, role: string): Promise<boolean> => {
+
     try {
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7);
         const cookiesStore = await cookies()
-        cookiesStore.set('token_from_user', token,{httpOnly:true})
-        cookiesStore.set('role_from_user', role,{httpOnly:true})
+        // Criação dos cookeis que guarda os dados do usuario 
+        cookiesStore.set('token_from_user', token, { httpOnly: true ,expires: expirationDate})
+        cookiesStore.set('role_from_user', role, { httpOnly: true ,expires: expirationDate})
 
         return true
     } catch (error) {
@@ -28,7 +32,7 @@ export const deleteCookies = async (): Promise<boolean> => {
     }
 }
 
-export const getRoleCookie =  async ():Promise<string> => {
+export const getRoleCookie = async (): Promise<string> => {
     try {
         const cookiesStore = await cookies()
         const cookiesRole = cookiesStore.get("role_from_user")?.value

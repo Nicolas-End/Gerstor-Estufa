@@ -98,34 +98,39 @@ export default function DeliveryFormPage() {
 
   // Envia o formulário ao back-end
   const handleSubmit = async (e: React.FormEvent) => {
+    const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
+    const typeClientId = clientInfo.cpf? 'cpf' :clientInfo.cnpj? 'cnpj':'id'
     e.preventDefault();
     const formData = {
       name: customerName,
       address,
       deliveryDate,
       items,
+      clientId,
+      typeClientId
     };
 
     try {
       setIsLoading(true);
       const data = await AddNewDelivery(formData);
       if (data === true) {
-        ShowAlert("Entrega Adicionada com Sucesso");
+        showSucess("Entrega Adicionada com Sucesso");
         setAddress("");
         setCustomerName("");
         setDeliveryDate("");
         setItems([]);
+        setClientInfo("")
         setIsLoading(false);
       } else if (data === "Erro Interno") {
-        ShowAlert("Opss.. Houve um erro");
-        ShowAlert("Tente novamente mais tarde");
+        showAlert("Opss.. Houve um erro");
+        showAlert("Tente novamente mais tarde");
         setIsLoading(false);
       } else {
         router.push('/logout')
       }
     } catch (error) {
-      ShowAlert("Opss.. Houve um erro");
-      ShowAlert("Tente novamente mais tarde");
+      showAlert("Opss.. Houve um erro");
+      showAlert("Tente novamente mais tarde");
       setIsLoading(false);
     }
   };
@@ -198,7 +203,7 @@ export default function DeliveryFormPage() {
                     type="text"
                     value={address}
                     onChange={(e) => {
-                      
+                      setClientInfo("")
                       setAddress(e.target.value)
                     }}
                     className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
@@ -232,6 +237,7 @@ export default function DeliveryFormPage() {
                   <select
                     value={clientInfo?.cpf || clientInfo?.cnpj || ""}
                     onChange={(e) => {
+                      
                       const selectedClient = clients.find(
                         (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
                       );
@@ -239,6 +245,9 @@ export default function DeliveryFormPage() {
                         setClientInfo(selectedClient);
                         
                         setAddress(selectedClient.address);
+                      }else{
+                        setClientInfo("")
+                        setAddress("")
                       }
                     }}
                     className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"

@@ -237,9 +237,11 @@ def add_new_delivery():
         itens = formsData['items']
         address = formsData['address']
         date = formsData['deliveryDate']
-        name = formsData['name'] #Pegando os dados do ususario
+        name = formsData['name']
+        clientId = formsData['clientId']
+        idType = formsData['typeClientId'] #Pegando os dados do ususario
         
-        ok = DeliveryContoller().add_new_delivery(datas['company_email'],itens,address,date,name)
+        ok = DeliveryContoller().add_new_delivery(datas['company_email'],itens,address,date,name,clientId,idType)
         if ok:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),500
@@ -264,8 +266,10 @@ def edit_delivery():
         address = formsData['address']
         date = formsData['deliveryDate']
         name = formsData['name']
+        clientId = formsData['clientId']
+        idType = formsData['typeClientId']
         
-        ok = DeliveryContoller().edit_delivery(datas['company_email'],delivery_id,itens,address,date,name)
+        ok = DeliveryContoller().edit_delivery(datas['company_email'],delivery_id,itens,address,date,name,clientId,idType)
         if ok:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400

@@ -84,13 +84,22 @@ class DeliveryContoller:
             has_deliverys = self.delivery_coll.find_one({"EmailEntrega": company_email, "idEntrega": product_id})
 
             if has_deliverys:
-
+                if 'cpf' in has_deliverys:
+                    tipoId = 'cpf'
+                    clienteId = has_deliverys['cpf']
+                elif 'cnpj' in has_deliverys:
+                    tipoId = 'cnpj'
+                    clienteId = has_deliverys['cnpj']
+                else: 
+                    tipoId = 'id'
+                    clienteId = 'none'
                 delivery_datas = {
                     'id' : has_deliverys['idEntrega'],
                     'produto': has_deliverys['TipoProduto'],
                     'quantidade': has_deliverys['Quantidade'],
                     'endereco': has_deliverys['LocalEntrega'],
-                    'data': has_deliverys['dataParaEntrega']
+                    'data': has_deliverys['dataParaEntrega'],
+                    tipoId:clienteId
                 }
 
                 return delivery_datas, True
@@ -122,7 +131,7 @@ class DeliveryContoller:
             print('Error: ', e)
             return False
     
-    def edit_delivery(self,company_email,delivery_id,itens,address,date,name):
+    def edit_delivery(self,company_email,delivery_id,itens,address,date,name,clientId,typeId):
         try:   
             self.delete_delivery(company_email,delivery_id)
             self.delete_product(company_email,delivery_id)
@@ -142,6 +151,12 @@ class DeliveryContoller:
                 }
                 itens_quantidy += i['quantity']
                 products.append(product_data)
+            if typeId and clientId:
+                idType = typeId
+                idClient = clientId
+            else:
+                idType = 'id'
+                idClient = 'idCliente'
             delivery_data = {
                 'idEntrega':id_unico,
                 'TipoProduto': name,
@@ -149,7 +164,9 @@ class DeliveryContoller:
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
                 'EmailEntrega':company_email,
-                'status':'pendente'
+                'status':'pendente',
+                idType:idClient
+                
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)
@@ -158,7 +175,7 @@ class DeliveryContoller:
         except Exception as e:
             print('Error: ', e)
             return False
-    def add_new_delivery(self,company_email,itens,address,date,name):
+    def add_new_delivery(self,company_email,itens,address,date,name,clientId,typeId):
         try:
             id_unico = str(uuid.uuid4())
             
@@ -183,7 +200,8 @@ class DeliveryContoller:
                 'LocalEntrega':address,
                 'dataParaEntrega':date,
                 'EmailEntrega':company_email,
-                'status':'pendente'
+                'status':'pendente',
+                typeId:clientId
             }
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)
