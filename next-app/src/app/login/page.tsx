@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { showAlert, showError } from "@/lib/controller/alertsController";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -15,21 +16,13 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const showToast = (text: string) => {
-    toast(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#0a2c26",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  };
+
 
   const handleLogin = async () => {
     setIsLoading(true);
 
     if (!email || !password) {
-      showToast("Preencha todos os campos");
+      showAlert("Preencha todos os campos");
       setIsLoading(false);
       return;
     }
@@ -39,11 +32,11 @@ const Login: React.FC = () => {
       if (response === "ok") {
         router.push('/home')
       } else {
-        showToast("Email ou senha incorretos");
+        showAlert("Email ou senha incorretos");
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      showToast("Erro interno ao fazer login");
+      showError("Erro interno ao fazer login");
     } finally {
       setIsLoading(false);
     }
