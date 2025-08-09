@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
+from jwt.exceptions import InvalidSignatureError
 import os
 from controllers.cripto_controller import CriptographyController
 from controllers.user_controller import UserController
@@ -168,9 +169,12 @@ def count_deliverys():
         
         return jsonify({'status': 'ok', 'count': count}), 200
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500 
     
 
 #retorna os produtos de entregas da empresa
@@ -193,6 +197,10 @@ def get_deliverys_products():
         
         return jsonify({'status':'ok','deliverys':deliverys}),200
     
+    
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500 
@@ -218,9 +226,12 @@ def get_especific_delivery():
         
         return jsonify({'status':'sem entrga'}),200
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
-        return jsonify({'status': 'error', 'message': str(e)}), 200 
+        return jsonify({'status': 'error', 'message': str(e)}), 500 
 
 @app.route('/add-new-delivery',methods=['POST'])
 def add_new_delivery():
@@ -245,6 +256,9 @@ def add_new_delivery():
         if ok:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),500
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500 
@@ -274,6 +288,9 @@ def edit_delivery():
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200
@@ -298,6 +315,9 @@ def delete_delivery():
 
         return jsonify({'status':'error'}),500   
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -322,6 +342,9 @@ def get_functionarys():
             return jsonify({'status':'ok','functionaries':functionaries}),200
         
         return jsonify({'status':'error'}),500
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -352,6 +375,9 @@ def add_new_functionary():
         else:
             return jsonify({'status':'ok'}),200
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status': 'error', 'message': str(e)}),500
@@ -372,6 +398,9 @@ def get_functionaries_quantity():
             return jsonify({'status':'ok','functionaries_quantity':functionaries_quantity}),200
         
         return jsonify({'status':'error'}),500
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 200 para erro interno
@@ -397,6 +426,9 @@ def get_clients():
             return jsonify({'status':'ok','clients':clients}),200
         return jsonify({'status':'error'}),500
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e: 
         print('Error: ', e)
         return jsonify({'status':'error'}),500
@@ -422,6 +454,9 @@ def add_client():
         else:
             return jsonify({'status':'ok'}),409
     
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':'error'}),500
@@ -441,6 +476,9 @@ def get_especific_client():
         tipo, client_id = clients_datas.split('%')
         status, clients_infos = ClientController().get_especific_data_from_client() 
         return jsonify({'status':clients_datas}),200
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':'error'}),500
@@ -462,6 +500,9 @@ def get_trucks():
             return jsonify({'status':'ok','trucks':trucks}),200
         
         return jsonify({'status':'error','message':'internalError'}),400
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status': 'error', 'message': 'internalError'}), 500
@@ -486,6 +527,9 @@ def AddNewTruck():
             return jsonify({'status':'ok'}),200
         else:
             return jsonify({'status':'alreadyExist'}),409
+    except InvalidSignatureError as i:
+        return jsonify({'status': 'invalid'}), 400
+        
     except Exception as e:
         print("Error: ",e)
         return jsonify ({'status': 'error', 'message': 'internalError'}),500

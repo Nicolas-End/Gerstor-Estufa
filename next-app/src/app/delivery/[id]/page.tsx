@@ -6,12 +6,14 @@ import { GetEspecificDelivery } from "@/lib/ts/api";
 import Sidebar from "@/Components/sidebar";
 import { showAlert } from "@/lib/controller/alertsController";
 import { ToastContainer, toast } from "react-toastify";
+import { Link } from "lucide-react";
 
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysDatas, setDeliveryDatas] = useState<any>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+  const [clientInfo, setClientInfo] = useState<any>({})
   const router = useRouter();
   const params = useParams();
   const id: any = params?.id ? params.id : null;
@@ -39,7 +41,11 @@ export default function ProdutoPage() {
             break;
         }
       }
+      const clienttypeId = delivery.deliveryDatas.cpf?'cpf':delivery.deliveryDatas.cnpj?'cnpj':''
+      const clientId  = delivery.deliveryDatas.cpf || delivery.deliveryDatas.cnpj || ''
+      
       setDeliveryDatas(delivery.deliveryDatas);
+      setClientInfo({clientId:clientId,typeId:clienttypeId})
       setProducts(delivery.products);
       setIsLoading(false);
     } catch (error) {
@@ -96,7 +102,7 @@ export default function ProdutoPage() {
         </div>
 
         <div className="bg-[#0a2c26] text-white rounded-xl p-6 shadow-md flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">{deliverysDatas.produto}</h2>
+          <h2 className="text-xl font-semibold">{deliverysDatas.produto} === <span  className="hover:cursor-pointer duration-200 hover:text-2xl"onClick={() => router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)}>Cliente: {clientInfo.clientId || clientInfo.clientId  || 'Nenhum cadastrado'}</span></h2>
           <div className="flex flex-col items-end">
             <span className="text-3xl font-bold">{deliverysDatas.quantidade}</span>
             <span className="text-sm uppercase tracking-wider">Caixas</span>

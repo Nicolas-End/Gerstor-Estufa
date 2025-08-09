@@ -154,9 +154,9 @@ export default function DeliveryFormPage() {
         default:
           showAlert('Houve um erro Interno')
           showAlert('Tente novamente mais tarde')
-          setIsLoading(false)
           break;
       }
+      setIsLoading(false)
 
     } catch (error) {
       showError("Houve erro Interno")
@@ -230,7 +230,9 @@ export default function DeliveryFormPage() {
                     id="address"
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) =>{ 
+                      setClientInfo("")
+                      setAddress(e.target.value)}}
                     className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
                     placeholder="Digite o endereço"
                     required

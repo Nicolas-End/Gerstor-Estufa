@@ -50,7 +50,7 @@ export const editDelivery = async(FormsData:any) => {
   try{
     const api = await createApiWithAuth()
     const data = {'FormsData':FormsData}
-    const response = api.post('/edit-delivery',data)
+    const response = await api.post('/edit-delivery',data)
     switch(response.status){
       case 200:
         return true
@@ -115,7 +115,7 @@ export const deleteEspecificDelivery = async(delivery_id:string) =>{
     const api = await createApiWithAuth()
     const data = {'delivery_id':delivery_id}
 
-    const response = api.post('/delete-delivery',data)
+    const response = await api.post('/delete-delivery',data)
     switch (response.status){
       case 200: 
         return true

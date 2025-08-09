@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { cookies } from "next/headers";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 
 export default function PedidosPage() {
@@ -31,7 +31,7 @@ export default function PedidosPage() {
           <button
             onClick={() => {
               toast.dismiss(toastId);
-              toast.success("Excluido com sucesso");
+
               deleteDelivery(id)
 
             }}
@@ -59,6 +59,8 @@ export default function PedidosPage() {
     const data = await DeleteEspecificDelivery(delivery_id)
     if (data === true) {
       router.refresh()
+      showSucess("Excluido com sucesso")
+      
     } else if (data === "Credencial Invalida") {
       showAlert("Credencial invalida")
       router.push('/logout')
@@ -76,7 +78,7 @@ export default function PedidosPage() {
   }
   const initializeDeliverys = async () => {
     try {
-
+      
       const deliverys: any = await GetDeliverys();
 
       if (typeof deliverys == "string") {

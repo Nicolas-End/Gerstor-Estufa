@@ -20,7 +20,7 @@ export default function Home() {
     try {
       const can_access_home = await ValidateHomeAcess(router);
       if (!can_access_home) {
-        router.push("/login");
+        router.push("/logout");
         return;
       }
       setIsLoading(false);

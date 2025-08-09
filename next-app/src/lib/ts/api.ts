@@ -215,6 +215,7 @@ export async function GetDeliverys() {
 export async function DeleteEspecificDelivery(delivery_id:string) {
     try{
         const response = await deleteEspecificDelivery(delivery_id)
+        
         return response
     }catch(error){
       console.log('Erro ao Deletar Entrega: ',error)

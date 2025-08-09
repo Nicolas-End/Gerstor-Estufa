@@ -10,28 +10,37 @@ import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { showAlert, showError } from "@/lib/controller/alertsController";
+import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { PassThrough } from "stream";
 
 export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [functionariesDatas, setFunctionariesDatas] = useState<any>([]);
-    
+
     const [functionaryCount, setFunctionaryCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const resultados = functionariesDatas.filter((item:any) =>
+    const resultados = functionariesDatas.filter((item: any) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
+    const VerifyRole = async () => {
+        const role = await getRoleCookie()
+        switch (role) {
+            case "ADM":
+                break;
+            case "Secretaria":
+                break
+            default:
+                router.push('/home')
+        }
+    }
     const initializeFunctionary = async () => {
         try {
-            const can_access_home = await ValidateHomeAcess(router);
-            if (!can_access_home) {
-                router.push("/login");
-                return;
-            }
+
             const functionaries = await GetFunctionaries();
-            if (typeof functionaries === "string"){
-                switch(functionaries){
+            if (typeof functionaries === "string") {
+                switch (functionaries) {
                     case "Credencial Invalida":
                         showAlert("Suas Credenciais são invalidas")
                         router.push("/logout")
@@ -40,7 +49,7 @@ export default function FuncionarioPage() {
                 }
             }
             setFunctionariesDatas(functionaries);
-            const quantidy: number|undefined = functionaries?.length
+            const quantidy: number | undefined = functionaries?.length
             setFunctionaryCount(quantidy || 0);
             setIsLoading(false);
         } catch (error) {
@@ -51,6 +60,7 @@ export default function FuncionarioPage() {
     };
 
     useEffect(() => {
+        VerifyRole()
         initializeFunctionary();
     }, []);
 
@@ -91,30 +101,30 @@ export default function FuncionarioPage() {
                     </div>
                     <div className={styles.ordersList}>
                         {searchTerm ?
-                        resultados.map((functionary:any,index:any)=>(
-                            <div className={styles.functionaryCard} key={index}>
-                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                <p className={styles.functionaryName}>{functionary.name}</p>
-                            </div>
-                        )): 
-                        functionariesDatas.map((functionary:any,index:any) => (
-                            <div className={styles.functionaryCard} key={index}>
-                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                <p className={styles.functionaryName}>{functionary.name}</p>
-                            </div>
-                        ))}
+                            resultados.map((functionary: any, index: any) => (
+                                <div className={styles.functionaryCard} key={index}>
+                                    <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                    <p className={styles.functionaryName}>{functionary.name}</p>
+                                </div>
+                            )) :
+                            functionariesDatas.map((functionary: any, index: any) => (
+                                <div className={styles.functionaryCard} key={index}>
+                                    <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                    <p className={styles.functionaryName}>{functionary.name}</p>
+                                </div>
+                            ))}
                     </div>
                 </div>
-                  <ToastContainer
-                position="top-right"
-                autoClose={4000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-            />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                />
             </div>
         );
     }
