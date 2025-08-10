@@ -21,6 +21,7 @@ export default function ProdutoPage() {
   const [neighborhood, setNeighborhood] = useState("");
   const [number, setNumber] = useState(0);
   const [reference, setReference] = useState("");
+  const [clientInfo, setClientInfo] = useState<any>({})
   const params = useParams();
 
 
@@ -52,7 +53,7 @@ export default function ProdutoPage() {
           showError("Houver um erro interno tente novamente mais tarde")
           break;
       }
-
+      setClientInfo(response)
       setPageIsLoading(false);
     } catch (error) {
       showError("Houver um erro Interno Tente novamente mais tarde")
@@ -87,6 +88,7 @@ export default function ProdutoPage() {
   } else {
     return (
       <>
+        Endreço =:{clientInfo.address} ID=: {clientInfo.cnpj?clientInfo.cnpj:clientInfo.cpf} Nome=: {clientInfo.name} 
         <div className="flex min-h-screen bg-gray-100">
           <Sidebar />
           <div className="flex-1 p-8 flex flex-col">
