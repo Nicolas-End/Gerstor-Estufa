@@ -61,6 +61,7 @@ export default function ProdutoPage() {
 
     }
   };
+  
 
   // useEffect no topo do componente para inicializar página
   useEffect(() => {
@@ -88,12 +89,11 @@ export default function ProdutoPage() {
   } else {
     return (
       <>
-        Referencia =: {clientInfo.refe} Endreço =:{clientInfo.address} ID=: {clientInfo.cnpj?clientInfo.cnpj:clientInfo.cpf} Nome=: {clientInfo.name} 
         <div className="flex min-h-screen bg-gray-100">
           <Sidebar />
           <div className="flex-1 p-8 flex flex-col">
             <div className="flex justify-between items-center mb-6 p-4 bg-white rounded-lg shadow">
-              <h1 className="text-2xl font-bold text-gray-800">Cadastrar Cliente</h1>
+              <h1 className="text-2xl font-bold text-gray-800">Consultar Cliente</h1>
               <button
                 type="button"
                 onClick={() => router.push("/clients")}
@@ -110,16 +110,12 @@ export default function ProdutoPage() {
                   <input
                     id="name"
                     type="text"
-                    value={name}
+                    value={clientInfo.name}
                     onChange={e => setName(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg p-2 text-black"
                     placeholder="Digite o nome completo"
                     required
                   />
-                </div>
-
-                <div>
-
                 </div>
 
                 {/* Escolha por radio */}
@@ -156,54 +152,27 @@ export default function ProdutoPage() {
                   <input
                     id="idValue"
                     type="text"
-                    value={idValue}
+                    value={clientInfo.cnpj?clientInfo.cnpj:clientInfo.cpf}
                     onChange={e => setIdValue(e.target.value.replace(/\D/g, ''))}
                     minLength={minLengt}
                     maxLength={maxLengt}
                     className="w-full border border-gray-300 rounded-lg p-2 text-black"
                     placeholder={idType === 'cpf' ? 'Só dígitos, ex: 00000000000' : 'Só dígitos, ex: 00000000000000'}
-
-
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="street" className="block text-green-900 text-[18px] mb-2">Rua</label>
-                  <input
-                    id="street"
-                    type="text"
-                    value={street}
-                    onChange={e => setStreet(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-black"
-                    placeholder="Digite a rua"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="neighborhood" className="block text-green-900 text-[18px] mb-2">Bairro</label>
-                  <input
-                    id="neighborhood"
-                    type="text"
-                    value={neighborhood}
-                    onChange={e => setNeighborhood(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-black"
-                    placeholder="Digite o bairro"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="number" className="block text-green-900 text-[18px] mb-2">Número</label>
-                  <input
-                    id="number"
-                    type="number"
-                    value={number}
-                    onChange={e => setNumber(parseInt(e.target.value))}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-black"
-                    placeholder="Número da residência"
-                    required
+                  <label htmlFor="address" className="block text-green-900 text-[18px] mb-2">
+                    Endereço
+                  </label >
+                  <input 
+                  id="idAddress"
+                  type="text" 
+                  defaultValue={clientInfo.address}
+                  className="w-full border border-gray-300 rounded-lg p-2 text-black"
+                  placeholder="Endereço completo (rua, número, bairro, complemento...)"
+                  required
                   />
                 </div>
 
@@ -212,7 +181,7 @@ export default function ProdutoPage() {
                   <input
                     id="reference"
                     type="text"
-                    value={reference}
+                    value= {clientInfo.refe}
                     onChange={e => setReference(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg p-2 text-black"
                     placeholder="Referência (opcional)"
@@ -225,7 +194,7 @@ export default function ProdutoPage() {
                 disabled={isLoading}
                 className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Cadastrando Cliente..." : "Cadastrar"}
+                {isLoading ? "Concluindo..." : "Concluido"}
               </button>
             </form>
           </div>
