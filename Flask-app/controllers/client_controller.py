@@ -68,6 +68,7 @@ class ClientController:
                 datas_clients = {
                     'name':client_exist['name'],
                     'address':client_exist['address'],
+                    'refe':client_exist['referencia'],
                     tipo:client_exist[tipo]
                 }
                 return datas_clients

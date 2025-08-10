@@ -88,7 +88,7 @@ export default function ProdutoPage() {
   } else {
     return (
       <>
-        Endreço =:{clientInfo.address} ID=: {clientInfo.cnpj?clientInfo.cnpj:clientInfo.cpf} Nome=: {clientInfo.name} 
+        Referencia =: {clientInfo.refe} Endreço =:{clientInfo.address} ID=: {clientInfo.cnpj?clientInfo.cnpj:clientInfo.cpf} Nome=: {clientInfo.name} 
         <div className="flex min-h-screen bg-gray-100">
           <Sidebar />
           <div className="flex-1 p-8 flex flex-col">
