@@ -89,7 +89,7 @@ export async function ValidateHomeAcess(router: AppRouterInstance) {
     const cookiesStore = await cookies()
     let token: string | undefined = cookiesStore.get('token_from_user')?.value
     if (token == undefined) {
-      router.push('/login')
+      
       return false
     }
     const response = await validateUserAcess();
@@ -278,7 +278,7 @@ export async function AddNewClient(name:string, address: {[key:string]:string|nu
 export async function GetEspecificClient(id:string) {
   try{
     const response = await getEspecificClient(id)
-
+    
     return response
   }catch(error){
     console.log("Error ao pegar cliente especifico: ",error)

@@ -99,10 +99,17 @@ export default function ProdutoPage() {
           >
             Voltar
           </button>
+          {clientInfo.clientId?<button
+            type="button"
+            onClick={() => router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)}
+            className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
+          >
+            Acessar Cliente
+          </button>:null}
         </div>
 
         <div className="bg-[#0a2c26] text-white rounded-xl p-6 shadow-md flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">{deliverysDatas.produto} === <span  className="hover:cursor-pointer duration-200 hover:text-2xl"onClick={() => router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)}>Cliente: {clientInfo.clientId || clientInfo.clientId  || 'Nenhum cadastrado'}</span></h2>
+          <h2 className="text-xl font-semibold">{deliverysDatas.produto}</h2>
           <div className="flex flex-col items-end">
             <span className="text-3xl font-bold">{deliverysDatas.quantidade}</span>
             <span className="text-sm uppercase tracking-wider">Caixas</span>

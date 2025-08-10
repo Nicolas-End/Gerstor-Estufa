@@ -56,13 +56,15 @@ export const getEspecificClient = async(id:string) =>{
 
     const api = await createApiWithAuth()
     const data = {'id':id}
+    
     const response = await api.post('/get-especific-client',data)
+
     switch(response.status){
       case 200:
-        return response.status
+        return response.data.clientInfos
       case 400:
         return "Credenciais Invalidas"
-      case 409:
+      case 404:
         return "Cliente Não Existe"
       default :
         return "Erro Interno"

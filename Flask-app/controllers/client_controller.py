@@ -62,8 +62,17 @@ class ClientController:
             return False
     def get_especific_data_from_client(self,company_email,id,tipo):
         try:
-            print('lo')
             
+            client_exist = self.coll.find_one({'company_email':company_email,tipo:id})
+            if client_exist:
+                datas_clients = {
+                    'name':client_exist['name'],
+                    'address':client_exist['address'],
+                    tipo:client_exist[tipo]
+                }
+                return datas_clients
+            
+            return None
         except Exception as e:
             print('Error: ',e)
             return False

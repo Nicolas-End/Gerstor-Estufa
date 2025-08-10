@@ -29,7 +29,7 @@ export default function RegisterClientPage() {
     try {
       const canAccess = await ValidateHomeAcess(router);
       if (!canAccess) {
-        router.push("/login");
+        router.push("/logout");
         return;
       }
       setPageIsLoading(false);

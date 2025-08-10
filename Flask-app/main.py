@@ -473,9 +473,12 @@ def get_especific_client():
             return jsonify({'status':'error'}),400
         
         clients_datas = request.get_json()['id']
-        tipo, client_id = clients_datas.split('%')
-        status, clients_infos = ClientController().get_especific_data_from_client() 
-        return jsonify({'status':clients_datas}),200
+        tipo, client_id = clients_datas.split('&')
+        clients_infos = ClientController().get_especific_data_from_client(datas['company_email'],client_id,tipo) 
+        
+        if clients_infos:
+            return({'status':'ok','clientInfos':clients_infos}),200
+        return jsonify({'status':'none'}),404
     except InvalidSignatureError as i:
         return jsonify({'status': 'invalid'}), 400
         

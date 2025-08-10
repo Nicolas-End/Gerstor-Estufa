@@ -16,14 +16,14 @@ import { PassThrough } from "stream";
 export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [functionariesDatas, setFunctionariesDatas] = useState<any>([]);
-
+    const [functionariesDatas, setFunctionariesDatas] = useState<any[]>([]); 
     const [functionaryCount, setFunctionaryCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const resultados = functionariesDatas.filter((item: any) =>
+    const resultados = (Array.isArray(functionariesDatas) ? functionariesDatas : []).filter((item: any) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    );
+
     const VerifyRole = async () => {
         const role = await getRoleCookie()
         switch (role) {
@@ -37,28 +37,28 @@ export default function FuncionarioPage() {
     }
     const initializeFunctionary = async () => {
         try {
-
             const functionaries = await GetFunctionaries();
-            if (typeof functionaries === "string") {
+
+            if (!Array.isArray(functionaries)) {
                 switch (functionaries) {
                     case "Credencial Invalida":
-                        showAlert("Suas Credenciais são invalidas")
-                        router.push("/logout")
+                        showAlert("Suas Credenciais são inválidas");
+                        router.push("/logout");
+                        return; // impede continuar
                     case "Erro Interno":
-                        showAlert("Houve um erro interno tente novamente mais tarde")
+                        showAlert("Houve um erro interno, tente novamente mais tarde");
+                        return;
                 }
             }
+
             setFunctionariesDatas(functionaries);
-            const quantidy: number | undefined = functionaries?.length
-            setFunctionaryCount(quantidy || 0);
+            setFunctionaryCount(functionaries.length);
             setIsLoading(false);
         } catch (error) {
-            showError("Houve um error tente novamente mais tarde")
-            setIsLoading(false)
-            return;
+            showError("Houve um erro, tente novamente mais tarde");
+            setIsLoading(false);
         }
     };
-
     useEffect(() => {
         VerifyRole()
         initializeFunctionary();
