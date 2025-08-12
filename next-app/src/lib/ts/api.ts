@@ -5,7 +5,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import {deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
-import { addNewFunctionary, functionariesQuantity, getFunctionaries } from "@/lib/services/functionaries";
+import { addNewFunctionary, functionariesQuantity, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
@@ -17,6 +17,8 @@ import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, getAllTrucks } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
+import { AArrowUp } from "lucide-react";
+import { RedirectType } from "next/navigation";
 
 
 
@@ -161,6 +163,16 @@ export async function AddNewFunctionary(name: string, email: string, password: s
   }catch(error){
     console.log("Erro adicionar Funcionario: ",error)
     throw error
+  }
+}
+
+export async function GetEspecificFunctionary(email:string):Promise<any> {
+  try{
+    const response = await getEspecificFunctionary(email)
+    return response
+  }catch(error){
+    console.log("Erro Especific Functionary: ",error)
+    throw (error)
   }
 }
 //========= ENTREGAS =========

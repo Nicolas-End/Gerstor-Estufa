@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { createApiWithAuth } from '@/lib/config/axiosConfig'
+import { AwardIcon } from 'lucide-react';
 interface ApiResponse{
     'status':string,
     'message'?:string,
@@ -62,6 +63,28 @@ export const addNewFunctionary = async(name:string,email:string,password:string,
         return 'Já Existe'
       case 401:
         return "Credencial Invalida"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw (error)
+  }
+}
+export const getEspecificFunctionary = async(id:string) => {
+  try{
+    const api = await createApiWithAuth()
+    const data = {'email':id}
+
+    const response = await api.post('/get-especific-functionary',data)  
+  
+
+    switch(response.status){
+      case 200:
+        return response.data.functionary
+      case 409:
+        return "Funcionario Não Cadastrado"
+      case 400:
+        return "Credenciais Invalidas"
       default:
         return "Erro Interno"
     }

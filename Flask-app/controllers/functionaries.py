@@ -67,3 +67,21 @@ class FunctionariesController():
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
+    def GetEspecificFunctionary(self,company_email,email):
+        try:
+            
+            find_funcitonary = self.coll.find_one({'company_email':company_email,"email":email})
+            
+            if find_funcitonary :
+                functionary_data = {
+                
+                    "email":find_funcitonary['email'],
+                    "role":find_funcitonary['role'],
+                    "name":find_funcitonary['name']
+                }
+                
+                return functionary_data
+            return None
+        except Exception as e:
+            print('Error: ',e)
+            return e

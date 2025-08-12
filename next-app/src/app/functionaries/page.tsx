@@ -32,11 +32,13 @@ export default function FuncionarioPage() {
             case "Secretaria":
                 break
             default:
-                router.push('/home')
+                router.push('/not-found')
+                return;
         }
     }
     const initializeFunctionary = async () => {
         try {
+            await VerifyRole()
             const functionaries = await GetFunctionaries();
 
             if (!Array.isArray(functionaries)) {
@@ -60,7 +62,7 @@ export default function FuncionarioPage() {
         }
     };
     useEffect(() => {
-        VerifyRole()
+        
         initializeFunctionary();
     }, []);
 
@@ -102,13 +104,13 @@ export default function FuncionarioPage() {
                     <div className={styles.ordersList}>
                         {searchTerm ?
                             resultados.map((functionary: any, index: any) => (
-                                <div className={styles.functionaryCard} key={index}>
+                                <div className={styles.functionaryCard} key={index} onClick={() => router.push(`functionary/${functionary.email}`)}>
                                     <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
                                     <p className={styles.functionaryName}>{functionary.name}</p>
                                 </div>
                             )) :
                             functionariesDatas.map((functionary: any, index: any) => (
-                                <div className={styles.functionaryCard} key={index}>
+                                <div className={styles.functionaryCard} key={index} onClick={() => router.push(`functionary/${functionary.email}`)}>
                                     <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
                                     <p className={styles.functionaryName}>{functionary.name}</p>
                                 </div>

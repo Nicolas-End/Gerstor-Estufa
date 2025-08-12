@@ -405,8 +405,34 @@ def get_functionaries_quantity():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 500  # Retorna 200 para erro interno
     
+@app.route('/get-especific-functionary',methods=['POST'])
+def get_especific_functionary():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'invalid'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error'}),400
 
+        email = request.get_json()['email']
+        find_functionary = FunctionariesController().GetEspecificFunctionary(datas['company_email'],email)
+
+        if find_functionary:
+            return jsonify({'functionary':find_functionary}),200
+        return "Funcionario não Encontrado",409
+
+        
+    except InvalidSignatureError as i:
+        return "Credencial Invalida", 400
+        
+    except Exception as e:
+        print('Error:', e)
+        return "Erro Interno", 500  
     
+
+
 
 #========== CLIENTES =========    
 @app.route('/get-clients', methods=['POST'])

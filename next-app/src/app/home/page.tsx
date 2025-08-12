@@ -10,14 +10,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/Components/sidebar";
+import { getRoleCookie } from "@/lib/controller/cookiesController";
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliveryQuantidy, setDeliveryQuantidy] = useState(-1);
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
+  const [role, setRole] = useState("")
   const initializeDashboard = async () => {
     try {
+      setRole(await getRoleCookie())
       const can_access_home = await ValidateHomeAcess(router);
       if (!can_access_home) {
         router.push("/logout");
@@ -65,7 +68,7 @@ export default function Home() {
             >
               <h2 className="text-xl font-semibold mb-2">Pedidos</h2>
               <p className="text-4xl font-bold">
-                {deliveryQuantidy !== -1? deliveryQuantidy: (
+                {deliveryQuantidy !== -1 ? deliveryQuantidy : (
                   <svg
                     aria-hidden="true"
                     className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -85,7 +88,7 @@ export default function Home() {
                 )}
               </p>
             </Link>
-            <Link
+            {role === "ADM" || role === "Secretaria" ? <Link
               href="/functionaries"
               className="bg-[#005E40] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
             >
@@ -110,7 +113,8 @@ export default function Home() {
                   </svg>
                 )}
               </p>
-            </Link>
+            </Link> : null}
+
             <div className="bg-[#005E40] text-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-2">Notificações</h2>
               <p className="text-4xl font-bold">3</p>
