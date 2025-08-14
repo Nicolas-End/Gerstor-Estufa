@@ -16,10 +16,10 @@ class EmailController :
         self.email_system = os.getenv("EMAIL_SYSTEM")
         self.password = os.getenv("APP_PASSWORD")
         
-    def send_recuperation_email (self,user_email,new_password):
+    def SendRecuperationEmail(self,user_email,new_password):
         try: 
             unique_token_acess = str(uuid.uuid4())
-            ControllerToken().new_recuperation_token(unique_token_acess,user_email,new_password)
+            ControllerToken().NewRecuperationToken(unique_token_acess,user_email,new_password)
             email_to_user =f"""
                 <html>
                     <body>

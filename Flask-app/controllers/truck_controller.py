@@ -13,7 +13,7 @@ class TruckController:
         self.db = DataBase().database
         self.coll = self.db[self.client_collection]
 
-    def get_trucks(self,company_email):
+    def GetTrucks(self,company_email):
         try:
             has_truck = list(self.coll.find({'company_email': company_email}))
 
@@ -35,7 +35,7 @@ class TruckController:
             print('Error:',e)
             return False , e
     
-    def add_new_truck(self,company_email,chassi,placa,cor,modelo,eixos,mercosul=False):
+    def AddNewTruck(self,company_email,chassi,placa,cor,modelo,eixos,mercosul=False):
         try:
             truck_exist = self.coll.find_one({'company_email':company_email,'placa':placa})
            

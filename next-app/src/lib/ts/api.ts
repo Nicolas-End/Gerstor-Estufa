@@ -169,6 +169,7 @@ export async function AddNewFunctionary(name: string, email: string, password: s
 export async function GetEspecificFunctionary(email:string):Promise<any> {
   try{
     const response = await getEspecificFunctionary(email)
+    
     return response
   }catch(error){
     console.log("Erro Especific Functionary: ",error)

@@ -14,7 +14,7 @@ class UserController:
         self.db = DataBase().database
         self.coll = self.db[self.collection_name]
 
-    def add_new_user(self,name,id,role,email,password):
+    def AddNewUser(self,name,id,role,email,password):
         try:
             # filtro para verificar se o usuario ja existe
             worker_filter = {"id":id,"company_email":email}
@@ -40,7 +40,7 @@ class UserController:
             print('Error: ',e)
             return 'Error',False,
     
-    def get_company_email(self,email):
+    def GetCompanyEmail(self,email):
         try:
             has_email = self.coll.find_one( {"email": email} ) 
 
@@ -54,7 +54,7 @@ class UserController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
-    def add_new_Company(self,id,email,password,company_name):
+    def AddNewCompany(self,id,email,password,company_name):
         try:
             # filtro para verificar se o usuario ja existe
             company_exist = {"id":id,"company_email":email}
@@ -81,7 +81,7 @@ class UserController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
-    def validate_user(self,email,password):
+    def ValidateUser(self,email,password):
         try: 
             
             # pega o dados do usuario e verifica se ele existe no banco de dados
@@ -103,7 +103,7 @@ class UserController:
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
-    def find_user(self, company_email):
+    def FindUser(self, company_email):
         try:
             company = self.coll.find_one( {"company_email": company_email} ) 
 
@@ -114,7 +114,7 @@ class UserController:
             print('Error: ',e)
             return 'Error',False
             
-    def change_user_password(self,company_email,new_password):
+    def ChangeUserPassword(self,company_email,new_password):
         try:
             # pega o dados do usuario e verifica se ele existe no banco de dados
             worker_datas = {

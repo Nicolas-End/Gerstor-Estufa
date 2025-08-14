@@ -9,7 +9,7 @@ load_dotenv()
     Sistema para gestionar e contolar os estoques de entregas
     da empresa em questão
 """
-class DeliveryContoller:
+class DeliveryController:
     def __init__(self):
         self.delivery_collection = os.getenv('DELIVERY_COLLECTION')
         self.product_collection = os.getenv('PRODUCTS_COLLECTION')
@@ -19,7 +19,7 @@ class DeliveryContoller:
         
         
         
-    def quantidy_deliverys(self, company_email):
+    def QuantidyDelivery(self, company_email):
         try:
             deliverys = self.delivery_coll.count_documents({"EmailEntrega": company_email})
 
@@ -32,7 +32,7 @@ class DeliveryContoller:
             print('Error:', e)
             return 'Error', False
         
-    def get_deliverys(self,company_email):
+    def GetDeliverys(self,company_email):
         try:
 
             has_deliverys = list(self.delivery_coll.find({"EmailEntrega": company_email}))
@@ -57,7 +57,7 @@ class DeliveryContoller:
             print('Error: ', e)
             return 'Error', False
     
-    def get_products_from_a_delivery(self,company_email,delivery_id):
+    def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
             has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))
             
@@ -78,7 +78,7 @@ class DeliveryContoller:
         except Exception as e:
             print('Error: ', e)
             return 'Error', False
-    def get_especific_delivery(self,company_email,product_id):
+    def GetEspecificDelivery(self,company_email,product_id):
         try:
             
             has_deliverys = self.delivery_coll.find_one({"EmailEntrega": company_email, "idEntrega": product_id})
@@ -109,7 +109,7 @@ class DeliveryContoller:
         except Exception as e:
             print('Error: ', e)
             return 'Error', False
-    def delete_delivery(self,company_email,delivery_id):
+    def DeleteDelivery(self,company_email,delivery_id):
         try:
             was_deleted = self.delivery_coll.delete_one({"EmailEntrega": company_email, "idEntrega": delivery_id})    
             if was_deleted:
@@ -120,7 +120,7 @@ class DeliveryContoller:
             print('Error: ', e)
             return False
         
-    def delete_product(self,company_email,delivery_id):
+    def DeleteProduct(self,company_email,delivery_id):
         try:
             was_deleted = self.product_coll.delete_many({"companyEmail": company_email,"delivery_id": delivery_id})    
             if was_deleted:
@@ -131,7 +131,7 @@ class DeliveryContoller:
             print('Error: ', e)
             return False
     
-    def edit_delivery(self,company_email,delivery_id,itens,address,date,name,clientId,typeId):
+    def EditDelivery(self,company_email,delivery_id,itens,address,date,name,clientId,typeId):
         try:   
             self.delete_delivery(company_email,delivery_id)
             self.delete_product(company_email,delivery_id)
@@ -175,7 +175,7 @@ class DeliveryContoller:
         except Exception as e:
             print('Error: ', e)
             return False
-    def add_new_delivery(self,company_email,itens,address,date,name,clientId,typeId):
+    def AddNewDelivery(self,company_email,itens,address,date,name,clientId,typeId):
         try:
             id_unico = str(uuid.uuid4())
             

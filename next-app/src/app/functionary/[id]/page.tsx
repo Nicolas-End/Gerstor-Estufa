@@ -11,6 +11,7 @@ export default function ProdutoPage() {
   const router = useRouter();
   const params = useParams();
   const [pageIsLoading, setPageIsLoading] = useState(true);
+  const [functionaryInfo, setFunctionaryInfo] = useState<any>({})
 
 
   // Carrega e valida acesso
@@ -22,25 +23,26 @@ export default function ProdutoPage() {
         router.push("/logout");
         return;
       }
-      
-     const functionary = await GetEspecificFunctionary(decodeURIComponent(id))
-    if (typeof functionary === "string"){
-     switch(functionary){
-        case "Funcionario Não Cadastrado":
+
+      const functionary = await GetEspecificFunctionary(decodeURIComponent(id))
+      if (typeof functionary === "string") {
+        switch (functionary) {
+          case "Funcionario Não Cadastrado":
             showAlert("Funcionario Não Cadastrado no Sistema")
             break;
-        case "Credenciais Invalidas":
+          case "Credenciais Invalidas":
             showAlert("Suas Credenciais são invalidas")
             router.push("/logout")
             return;
-        case "Erro Interno":
+          case "Erro Interno":
             showError("Houver um erro Interno Tente novamente mais tarde")
             router.push("/functionaries")
             return;
-        
-     }
-    }
-     setPageIsLoading(false)
+
+        }
+      }
+      setFunctionaryInfo(functionary)
+      setPageIsLoading(false)
     } catch (err) {
       showError("Erro ao carregar. Redirecionando...");
       router.push("/login");
@@ -49,7 +51,7 @@ export default function ProdutoPage() {
 
   useEffect(() => {
     initializePage();
-  
+
   }, []);
 
   if (pageIsLoading) {
@@ -81,7 +83,7 @@ export default function ProdutoPage() {
 
         {/* Banner escuro com nome do cliente */}
         <section className={styles.banner}>
-
+          Email :=: {functionaryInfo.email}, Name :=: {functionaryInfo.name}, Cargo :=: {functionaryInfo.role === "ADM"? "Administrador":functionaryInfo.role === "Secretaria"?"Secretaria":functionaryInfo.role}
           {/* se quiser mostrar telefone/email adicione clientInfo.phone/email */}
         </section>
       </main>
