@@ -38,7 +38,7 @@ class TruckController:
     def add_new_truck(self,company_email,chassi,placa,cor,modelo,eixos,mercosul=False):
         try:
             truck_exist = self.coll.find_one({'company_email':company_email,'placa':placa})
-            print(truck_exist)
+           
             if truck_exist:
                 return False
             truck_datas = {'company_email':company_email,'chassi':chassi,'placa':placa,'cor':cor,'modelo':modelo,'eixos':eixos,'mercosul':mercosul}
@@ -47,4 +47,20 @@ class TruckController:
             return True
         except Exception as e:
             print("Error: ",e)
+            return e
+    def GetEspecificTruck(self,company_email,placa):
+        try:
+            truck_exist = self.coll.find_one({'company_email':company_email,'placa':placa})
+            if truck_exist:
+                truck_datas = {
+                    'placa':truck_exist['placa'],
+                    'chassi':truck_exist['chassi'],
+                    'cor':truck_exist['cor'],
+                    'modelo':truck_exist['modelo'],
+                    'eixos':truck_exist['eixos'],
+                    'mercosul':truck_exist['mercosul']
+                }
+                return truck_datas
+            return False
+        except Exception as e:
             return e

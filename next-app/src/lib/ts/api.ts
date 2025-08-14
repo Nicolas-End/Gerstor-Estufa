@@ -15,7 +15,7 @@ import { addClient, getClients, getEspecificClient } from "@/lib/services/client
 // Faz os preocessos de login, cadastro , acesso do usuario
 import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
-import { addNewTruck, getAllTrucks } from "@/lib/services/trucks";
+import { addNewTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
 import { AArrowUp } from "lucide-react";
 import { RedirectType } from "next/navigation";
@@ -321,4 +321,15 @@ export async function GetTrucks(){
     console.error("Erro ao acessar a conta:", error);
     return "Erro na requisição";
   }
+}
+export async function GetEspecificTruck(placa:string):Promise<any> {
+  try{
+    const response = await getEspecificTruck(placa)
+    
+    return response
+  }catch(error){
+    console.log("Error: ",error)
+    throw error
+  }
+  
 }

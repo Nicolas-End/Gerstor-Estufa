@@ -57,28 +57,30 @@ export const addNewTruck = async (formsDatas:any) =>{
     throw error;
   }
 }
-export function GetSpecificTruck(id: string): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-    const token = localStorage.getItem("token_from_user");
 
-    axios
-      .post<ApiResponse>(
-        `${baseUrl}/get-truck`,
-        { id },
-        {
-          headers: {
-            Authorization: token || "",
-          },
-        }
-      )
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch(() => {
-        resolve({ status: "error" });
-      });
-  });
+export const getEspecificTruck = async (placa:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const datas = {'placa':placa}
+    const response = await api.post('/get-especific-truck',datas)
+    
+    switch(response.status){
+      case 200:
+        
+        return response.data
+      case 400:
+        return "Credenciais invalidas"
+      case 404:
+        return "Caminhão não encontrado"
+      default:
+        return "Erro Interno"
+
+    }
+  }catch(error){
+    throw error;
+  }
 }
+
 
 export function DeleteTruck(id: string): Promise<ApiResponse> {
   return new Promise<ApiResponse>((resolve) => {

@@ -536,7 +536,7 @@ def get_trucks():
         print('Error: ',e)
         return jsonify({'status': 'error', 'message': 'internalError'}), 500
 
-@app.route('/add-new-truck',methods=['POST','GET'])
+@app.route('/add-new-truck',methods=['POST'])
 def AddNewTruck():
     try:
         token = request.headers.get('Authorization')
@@ -562,6 +562,33 @@ def AddNewTruck():
     except Exception as e:
         print("Error: ",e)
         return jsonify ({'status': 'error', 'message': 'internalError'}),500
+
+@app.route('/get-especific-truck',methods=['POST'])
+def EspecificTruck():
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'status': 'error','message':'Authorization?'}), 400
+        
+        datas = CriptographyController().decripto_datas(token)
+        if not datas:
+            return jsonify({'status':'error','message':'Authorization?'}),400
+
+        placa = request.get_json()['placa']
+        truck_datas = TruckController().GetEspecificTruck(datas['company_email'],placa)
+
+        if truck_datas:
+                
+            return truck_datas , 200
+        else:
+            return "Não Encontrado",404
+    except InvalidSignatureError as i:
+        return "Credenciais Invalidas", 400
+        
+    except Exception as e:
+        print("Error: ",e)
+        return "Error Interno",500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

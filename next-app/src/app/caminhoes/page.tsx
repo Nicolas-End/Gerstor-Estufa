@@ -100,7 +100,7 @@ export default function CaminhoesPage() {
                         </div>
                     ) : (
                         (searchTerm ? resultados : trucks).map((truck, index) => (
-                            <div key={index} className={styles.functionaryCard}>
+                            <div key={index} className={styles.functionaryCard} onDoubleClick={() => {router.push(`caminhao/${truck.placa}`)}}>
                                 <FontAwesomeIcon icon={faTruck} className={styles.functionaryIcon} />
                                 <div>
                                     <p className={styles.functionaryName}>Placa: {truck.placa}</p>
