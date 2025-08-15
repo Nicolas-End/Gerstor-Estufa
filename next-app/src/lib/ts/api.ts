@@ -19,29 +19,32 @@ import { addNewTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/tru
 import { addCookies } from "../controller/cookiesController";
 import { AArrowUp } from "lucide-react";
 import { RedirectType } from "next/navigation";
+import { addRole } from "../controller/localStorageController";
 
 
 
 export async function ValidateLogin(email:string, password:string) {
   try{
     const response = await login(email,password)
-
+    
     if (typeof response === "string"){
-      return "Internal Error"
+      return {status:"Internal Error"}
     }else{
-      switch(response?.status){
+      switch(response?.status){ 
         case "ok":
           const user_token: any = response.token;
           const user_role: any = response.role
           await addCookies(user_token,user_role)
-          return 'ok'
+          
+          return {status:'ok',role:user_role}
         default:
-          return "User not found";
+          return {status:'not_found'};
       }
     }
   }catch(error){
     throw error
   }
+  
 }
 export async function validateTokenUser(token: string) {
   try {

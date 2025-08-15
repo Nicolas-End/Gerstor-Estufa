@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { showAlert, showError } from "@/lib/controller/alertsController";
+import { addRole } from "@/lib/controller/localStorageController";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +30,9 @@ const Login: React.FC = () => {
 
     try {
       const response = await ValidateLogin(email, password);
-      if (response === "ok") {
+      if (response.status === "ok") {
+        const role = response.role
+        addRole(role)
         router.push('/home')
       } else {
         showAlert("Email ou senha incorretos");

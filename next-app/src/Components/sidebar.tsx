@@ -22,22 +22,16 @@ import {
 } from "lucide-react";
 import styles from "./sidebar.module.css";
 import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { getRole } from "@/lib/controller/localStorageController";
 
 export default function Sidebar() {
   const [minimized, setMinimized] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [role, setRole] = useState<string | null>(null)
+  
   const pathname = usePathname();
+  const role = getRole()
 
-  useEffect(() => {
-    const getRole = async () => {
-      const role = await getRoleCookie();
-
-      setRole(role)
-    };
-    getRole();
-  }, [])
   const isActive = (path: string) => (pathname === path ? styles.navItemActive : "");
 
   const sidebarClass = minimized
