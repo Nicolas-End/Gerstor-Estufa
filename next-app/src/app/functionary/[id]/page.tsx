@@ -71,7 +71,7 @@ export default function ProdutoPage() {
       <Sidebar />
       <main className={styles.content}>
         <header className={styles.topHeader}>
-          <h1 className={styles.title}>Consultar Funcionario</h1>
+          <h1 className={styles.title}>Consultar Cliente</h1>
           <button
             type="button"
             onClick={() => router.push("/functionaries")}
@@ -83,8 +83,33 @@ export default function ProdutoPage() {
 
         {/* Banner escuro com nome do cliente */}
         <section className={styles.banner}>
-          Email :=: {functionaryInfo.email}, Name :=: {functionaryInfo.name}, Cargo :=: {functionaryInfo.role === "ADM"? "Administrador":functionaryInfo.role === "Secretaria"?"Secretaria":functionaryInfo.role}
-          {/* se quiser mostrar telefone/email adicione clientInfo.phone/email */}
+          <div>
+            <div className={styles.bannerTitle}>{functionaryInfo?.name || "Funcionário"}</div>
+            {functionaryInfo?.obs ? <div className={styles.bannerSub}>{functionaryInfo.obs}</div> : null}
+          </div>
+
+          {/* caso queira remover contador, deixei a área, mas vazia por padrão */}
+          <div className={styles.bannerRight}>
+            {/* se quiser mostrar algo aqui, preencha */}
+          </div>
+        </section>
+
+        {/* Somente as informações carregadas do cliente (visíveis e legíveis) */}
+        <section className={styles.clientBox}>
+          <div className={styles.clientRow}>
+            <div className={styles.clientLabel}>Nome:</div>
+            <div className={styles.clientValue}>{functionaryInfo?.name || "-"}</div>
+          </div>
+
+          <div className={styles.clientRow}>
+            <div className={styles.clientLabel}>E-mail:</div>
+            <div className={styles.clientValue}>{functionaryInfo?.email}</div>
+          </div>
+
+          <div className={styles.clientRow}>
+            <div className={styles.clientLabel}>Cargo:</div>
+            <div className={styles.clientValue}>{functionaryInfo.role === "ADM"? "Administrador":functionaryInfo.role === "Secretaria"?"Secretaria":functionaryInfo.role}</div>
+          </div>
         </section>
       </main>
 
