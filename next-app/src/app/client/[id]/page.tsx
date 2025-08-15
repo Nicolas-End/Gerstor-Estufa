@@ -88,7 +88,7 @@ export default function ProdutoPage() {
             {id ? (
               <button
                 type="button"
-                onClick={() => router.push(`/clients/edit/${encodeURIComponent(id)}`)}
+                onClick={() => router.push(`../clients/${decodeURIComponent(id)}`)}
                 className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
               >
                 Editar
