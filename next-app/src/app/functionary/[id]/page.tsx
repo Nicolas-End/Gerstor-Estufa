@@ -13,8 +13,6 @@ export default function ProdutoPage() {
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [functionaryInfo, setFunctionaryInfo] = useState<any>({})
 
-
-  // Carrega e valida acesso
   const initializePage = async () => {
     try {
       const id: any = params?.id ?? null;
@@ -38,7 +36,6 @@ export default function ProdutoPage() {
             showError("Houver um erro Interno Tente novamente mais tarde")
             router.push("/functionaries")
             return;
-
         }
       }
       setFunctionaryInfo(functionary)
@@ -51,7 +48,6 @@ export default function ProdutoPage() {
 
   useEffect(() => {
     initializePage();
-
   }, []);
 
   if (pageIsLoading) {
@@ -81,34 +77,32 @@ export default function ProdutoPage() {
           </button>
         </header>
 
-        {/* Banner escuro com nome do cliente */}
         <section className={styles.banner}>
           <div>
             <div className={styles.bannerTitle}>{functionaryInfo?.name || "Funcionário"}</div>
             {functionaryInfo?.obs ? <div className={styles.bannerSub}>{functionaryInfo.obs}</div> : null}
           </div>
 
-          {/* caso queira remover contador, deixei a área, mas vazia por padrão */}
           <div className={styles.bannerRight}>
-            {/* se quiser mostrar algo aqui, preencha */}
           </div>
         </section>
 
-        {/* Somente as informações carregadas do cliente (visíveis e legíveis) */}
-        <section className={styles.clientBox}>
-          <div className={styles.clientRow}>
-            <div className={styles.clientLabel}>Nome:</div>
-            <div className={styles.clientValue}>{functionaryInfo?.name || "-"}</div>
+        <section className={styles.functionaryBox}>
+          <div className={styles.functionaryRow}>
+            <div className={styles.functionaryLabel}>Nome:</div>
+            <div className={styles.functionaryValue}>{functionaryInfo?.name || "-"}</div>
           </div>
 
-          <div className={styles.clientRow}>
-            <div className={styles.clientLabel}>E-mail:</div>
-            <div className={styles.clientValue}>{functionaryInfo?.email}</div>
+          <div className={styles.functionaryRow}>
+            <div className={styles.functionaryLabel}>E-mail:</div>
+            <div className={styles.functionaryValue}>{functionaryInfo?.email}</div>
           </div>
 
-          <div className={styles.clientRow}>
-            <div className={styles.clientLabel}>Cargo:</div>
-            <div className={styles.clientValue}>{functionaryInfo.role === "ADM"? "Administrador":functionaryInfo.role === "Secretaria"?"Secretaria":functionaryInfo.role}</div>
+          <div className={styles.functionaryRow}>
+            <div className={styles.functionaryLabel}>Cargo:</div>
+            <div className={styles.functionaryValue}>
+              {functionaryInfo.role === "ADM" ? "Administrador" : functionaryInfo.role === "Secretaria" ? "Secretaria" : functionaryInfo.role}
+            </div>
           </div>
         </section>
       </main>
