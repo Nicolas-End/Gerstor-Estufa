@@ -15,7 +15,7 @@ export default function EditClientPage() {
   const [clientInfo, setClientInfo] = useState<any>({});
 
   // Tipo de documento: CPF ou CNPJ
-  const [idType, setIdType] = useState<'cpf' | 'cnpj'>('cpf');
+  const [idType, setIdType] = useState<"cpf" | "cnpj">("cpf");
   const [idValue, setIdValue] = useState("");
 
   // Campos de endereço / formulário (controlados)
@@ -53,11 +53,9 @@ export default function EditClientPage() {
               return;
           }
         }
-
-        // Preenche clientInfo e os estados do formulário
+        
         setClientInfo(response || {});
 
-        // documento: prioriza cnpj -> cpf
         if (response?.cnpj) {
           setIdType("cnpj");
           setIdValue(String(response.cnpj || "").replace(/\D/g, ""));
@@ -69,11 +67,30 @@ export default function EditClientPage() {
           setIdValue("");
         }
 
-        // demais campos (ajuste conforme a forma que sua API retorna)
         setName(response?.name || "");
-        setStreet(response?.street || response?.address || "");
-        setNeighborhood(response?.neighborhood || "");
-        setNumber(response?.number ?? "");
+
+        let rua = response?.street || "";
+        let bairro = response?.neighborhood || "";
+        let numero: number | "" =
+          typeof response?.number === "number" ? response.number : "";
+
+        if ((!rua || !bairro || numero === "") && response?.address) {
+          const parts = String(response.address)
+            .split(",")
+            .map((p: string) => p.trim());
+          // parts[0]=rua, parts[1]=bairro, parts[2]=numero
+          if (!rua) rua = parts[0] || "";
+          if (!bairro) bairro = parts[1] || "";
+          if (numero === "") {
+            const nStr = parts[2] || "";
+            const nVal = parseInt(nStr, 10);
+            numero = isNaN(nVal) ? "" : nVal;
+          }
+        }
+
+        setStreet(rua);
+        setNeighborhood(bairro);
+        setNumber(numero);
         setReference(response?.refe || response?.reference || "");
       }
 
@@ -84,44 +101,33 @@ export default function EditClientPage() {
     }
   };
 
-  useEffect(() => { initializePage(); /* eslint-disable-line react-hooks/exhaustive-deps */ }, []);
+  useEffect(() => {
+    initializePage();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Remover formatação para envio
-    const rawId = idValue.replace(/\D/g, '');
+    const rawId = idValue.replace(/\D/g, "");
 
     try {
       const address = {
-        "street": street,
-        "neighborhood": neighborhood,
-        "number": typeof number === "string" ? (number === "" ? 0 : parseInt(number)) : number,
-        "reference": reference
+        street,
+        neighborhood,
+        number: typeof number === "string" ? (number === "" ? 0 : parseInt(number)) : number,
+        reference,
       };
+
       const document = {
-        "type": idType,
-        "value": rawId
+        type: idType,
+        value: rawId,
       };
 
       setIsLoading(true);
-
-      // Chamada à API (se quiser usar AddNewClient ou UpdateClient)
-      // Exemplo (comentado): await AddNewClient(name, address, document);
-      // Por enquanto o seu código apenas limpa os campos (mantive isso)
-      // Caso queira que eu invoque AddNewClient/UpdateClient aqui, me fala que eu já colo.
-
-      // limpeza de formulário (se esse for o comportamento desejado)
-      setName("");
-      setIdValue("");
-      setStreet("");
-      setNeighborhood("");
-      setNumber(0);
-      setReference("");
       setIsLoading(false);
       return;
     } catch (error) {
-      showAlert("Houve um erro Interno Tente novamente mais tarde");
+      showAlert("Houve um erro Interno. Tente novamente mais tarde");
       setIsLoading(false);
     }
   };
@@ -138,8 +144,8 @@ export default function EditClientPage() {
   }
 
   // Determinar comprimento máximo de dígitos (conforme idType)
-  const minLengt = idType === 'cpf' ? 11 : 14;
-  const maxLengt = idType === 'cpf' ? 11 : 14;
+  const minLengt = idType === "cpf" ? 11 : 14;
+  const maxLengt = idType === "cpf" ? 11 : 14;
 
   return (
     <>
@@ -157,22 +163,28 @@ export default function EditClientPage() {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col gap-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Nome */}
               <div>
-                <label htmlFor="name" className="block text-green-900 text-[18px] mb-2">Nome</label>
+                <label htmlFor="name" className="block text-green-900 text-[18px] mb-2">
+                  Nome
+                </label>
                 <input
                   id="name"
                   type="text"
                   value={name}
-                  onChange={e => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
                   placeholder="Digite o nome completo"
                   required
                 />
               </div>
 
-              <div></div>
+              <div />
 
               {/* Escolha por radio (CPF / CNPJ) */}
               <div className="md:col-span-2 flex items-center gap-4">
@@ -183,7 +195,10 @@ export default function EditClientPage() {
                     name="idType"
                     value="cpf"
                     checked={idType === "cpf"}
-                    onChange={() => { setIdType("cpf"); setIdValue(""); }}
+                    onChange={() => {
+                      setIdType("cpf");
+                      setIdValue("");
+                    }}
                     required
                   />
                   CPF
@@ -194,13 +209,17 @@ export default function EditClientPage() {
                     name="idType"
                     value="cnpj"
                     checked={idType === "cnpj"}
-                    onChange={() => { setIdType("cnpj"); setIdValue(""); }}
+                    onChange={() => {
+                      setIdType("cnpj");
+                      setIdValue("");
+                    }}
                     required
                   />
                   CNPJ
                 </label>
               </div>
 
+              {/* Valor do documento */}
               <div>
                 <label htmlFor="idValue" className="block text-green-900 text-[18px] mb-2">
                   {idType.toUpperCase()}
@@ -209,35 +228,80 @@ export default function EditClientPage() {
                   id="idValue"
                   type="text"
                   value={idValue}
-                  onChange={e => setIdValue(e.target.value.replace(/\D/g, ''))}
+                  onChange={(e) => setIdValue(e.target.value.replace(/\D/g, ""))}
                   minLength={minLengt}
                   maxLength={maxLengt}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
-                  placeholder={idType === 'cpf' ? 'Só dígitos, ex: 00000000000' : 'Só dígitos, ex: 00000000000000'}
+                  placeholder={
+                    idType === "cpf"
+                      ? "Só dígitos, ex: 00000000000"
+                      : "Só dígitos, ex: 00000000000000"
+                  }
                   required
                 />
               </div>
 
+              {/* Rua */}
               <div>
-                <label htmlFor="street" className="block text-green-900 text-[18px] mb-2">Endereço</label>
+                <label htmlFor="street" className="block text-green-900 text-[18px] mb-2">
+                  Rua
+                </label>
                 <input
                   id="street"
                   type="text"
                   value={street}
-                  onChange={e => setStreet(e.target.value)}
+                  onChange={(e) => setStreet(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
                   placeholder="Digite a rua"
                   required
                 />
               </div>
 
+              {/* Bairro */}
+              <div>
+                <label htmlFor="neighborhood" className="block text-green-900 text-[18px] mb-2">
+                  Bairro
+                </label>
+                <input
+                  id="neighborhood"
+                  type="text"
+                  value={neighborhood}
+                  onChange={(e) => setNeighborhood(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-2 text-black"
+                  placeholder="Digite o bairro"
+                  required
+                />
+              </div>
+
+              {/* Número */}
+              <div>
+                <label htmlFor="number" className="block text-green-900 text-[18px] mb-2">
+                  Número
+                </label>
+                <input
+                  id="number"
+                  type="number"
+                  value={number}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setNumber(v === "" ? "" : parseInt(v, 10));
+                  }}
+                  className="w-full border border-gray-300 rounded-lg p-2 text-black"
+                  placeholder="Digite o número"
+                  required
+                />
+              </div>
+
+              {/* Referência */}
               <div className="md:col-span-2">
-                <label htmlFor="reference" className="block text-green-900 text-[18px] mb-2">Referência</label>
+                <label htmlFor="reference" className="block text-green-900 text-[18px] mb-2">
+                  Referência
+                </label>
                 <input
                   id="reference"
                   type="text"
-                  value={clientInfo?.refe}
-                  onChange={e => setReference(e.target.value)}
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
                   placeholder="Referência (opcional)"
                 />
