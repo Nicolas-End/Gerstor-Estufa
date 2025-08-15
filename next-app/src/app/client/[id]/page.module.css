@@ -1,14 +1,11 @@
-/* page.module.css (sem :root, usando #0a2c26 diretamente) */
 
-/* Layout básico */
 .container {
   display: flex;
   min-height: 100vh;
   background: #f5f7f6;
-  font-family: 'Ubuntu', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-family: 'Ubuntu', sans-serif;
 }
 
-/* Conteúdo principal (área branca central) */
 .content {
   flex: 1;
   margin: 20px;
@@ -18,7 +15,6 @@
   box-shadow: 0 10px 30px rgba(6, 22, 17, 0.06);
 }
 
-/* Loader */
 .loaderWrap {
   display:flex;
   align-items:center;
@@ -41,7 +37,6 @@
   font-size:16px;
 }
 
-/* Top header */
 .topHeader {
   display:flex;
   justify-content:space-between;
@@ -51,7 +46,7 @@
 .title {
   color: #0a2c26;
   font-size:28px;
-  font-weight:800;
+  font-weight:750;
   margin:0;
   letter-spacing:0.2px;
 }
@@ -66,7 +61,6 @@
   box-shadow: 0 3px 0 rgba(0,0,0,0.06) inset;
 }
 
-/* Banner do cliente */
 .banner {
   display:flex;
   justify-content:space-between;
@@ -81,7 +75,7 @@
 
 .bannerTitle {
   font-size:18px;
-  font-weight:900;
+  font-weight:800;
   color: #ffffff;
 }
 .bannerSub {
@@ -94,7 +88,6 @@
   color: rgba(255,255,255,0.95);
 }
 
-/* Caixa com dados do cliente: contraste alto e fontes maiores */
 .clientBox {
   background: #ffffff;
   border-radius: 10px;
@@ -103,7 +96,6 @@
   box-shadow: 0 2px 8px rgba(6,22,17,0.03);
 }
 
-/* Linha do dado (label + value) */
 .clientRow {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -114,24 +106,20 @@
 }
 .clientRow:last-child { border-bottom: none; }
 
-/* Label (esquerda) */
 .clientLabel {
   color: #0a2c26;
-  font-weight:800;
-  font-size:16px;
-  letter-spacing:0.6px;
+  font-weight:700;
+  font-size:18px;
 }
 
-/* Value (direita) — maior e legível */
 .clientValue {
-  color: #0b0b0b;
-  font-weight:750;
-  font-size:15.5px;
+  color: #0a2c26;
+  font-weight:550;
+  font-size:16px;
   text-align:right;
   word-break:break-word;
 }
 
-/* Responsividade */
 @media (max-width: 700px) {
   .clientRow { grid-template-columns: 1fr; }
   .clientValue { text-align:left; margin-top:6px; }

@@ -81,20 +81,16 @@ export default function ProdutoPage() {
           </button>
         </header>
 
-        {/* Banner escuro com nome do cliente */}
         <section className={styles.banner}>
           <div>
             <div className={styles.bannerTitle}>{clientInfo?.name || "Cliente"}</div>
             {clientInfo?.obs ? <div className={styles.bannerSub}>{clientInfo.obs}</div> : null}
           </div>
 
-          {/* caso queira remover contador, deixei a área, mas vazia por padrão */}
           <div className={styles.bannerRight}>
-            {/* se quiser mostrar algo aqui, preencha */}
           </div>
         </section>
 
-        {/* Somente as informações carregadas do cliente (visíveis e legíveis) */}
         <section className={styles.clientBox}>
           <div className={styles.clientRow}>
             <div className={styles.clientLabel}>Nome:</div>
