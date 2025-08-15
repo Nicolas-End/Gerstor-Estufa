@@ -12,18 +12,19 @@ export default function ProdutoPage() {
   const params = useParams();
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [clientInfo, setClientInfo] = useState<any>({});
+  const [id, setId] = useState("");
 
   // Carrega e valida acesso
   const initializePage = async () => {
     try {
-      const id: any = params?.id ?? null;
+      const idParam: any = params?.id ?? null;
       const canAccess = await ValidateHomeAcess(router);
       if (!canAccess) {
         router.push("/login");
         return;
       }
 
-      const response = await GetEspecificClient(decodeURIComponent(id));
+      const response = await GetEspecificClient(decodeURIComponent(idParam));
       if (typeof response === "string") {
         switch (response) {
           case "Credenciais Invalidas":
@@ -42,6 +43,7 @@ export default function ProdutoPage() {
       }
 
       setClientInfo(response || {});
+      setId(decodeURIComponent(idParam));
       setPageIsLoading(false);
     } catch (err) {
       showError("Erro ao carregar. Redirecionando...");
@@ -70,15 +72,29 @@ export default function ProdutoPage() {
     <div className={styles.container}>
       <Sidebar />
       <main className={styles.content}>
-        <header className={styles.topHeader}>
-          <h1 className={styles.title}>Consultar Cliente</h1>
-          <button
-            type="button"
-            onClick={() => router.push("/clients")}
-            className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
-          >
-            Voltar
-          </button>
+        <header className={styles.topHeader} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <h1 className={styles.title} style={{ flex: 1 }}>Consultar Cliente</h1>
+
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={() => router.push("/clients")}
+              className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
+            >
+              Voltar
+            </button>
+
+            {/* Botão Editar - só aparece se houver id */}
+            {id ? (
+              <button
+                type="button"
+                onClick={() => router.push(`/clients/edit/${encodeURIComponent(id)}`)}
+                className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
+              >
+                Editar
+              </button>
+            ) : null}
+          </div>
         </header>
 
         <section className={styles.banner}>
@@ -87,8 +103,7 @@ export default function ProdutoPage() {
             {clientInfo?.obs ? <div className={styles.bannerSub}>{clientInfo.obs}</div> : null}
           </div>
 
-          <div className={styles.bannerRight}>
-          </div>
+          <div className={styles.bannerRight}></div>
         </section>
 
         <section className={styles.clientBox}>
@@ -99,10 +114,10 @@ export default function ProdutoPage() {
 
           <div className={styles.clientRow}>
             <div className={styles.clientLabel}>
-              {clientInfo?.cnpj ? 'CNPJ:' : clientInfo?.cpf ? 'CPF:' : 'Documento'}
+              {clientInfo?.cnpj ? "CNPJ:" : clientInfo?.cpf ? "CPF:" : "Documento"}
             </div>
             <div className={styles.clientValue}>
-              {clientInfo?.cnpj || clientInfo?.cpf || '-'}
+              {clientInfo?.cnpj || clientInfo?.cpf || "-"}
             </div>
           </div>
 
