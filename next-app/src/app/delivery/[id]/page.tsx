@@ -6,9 +6,10 @@ import { GetEspecificDelivery } from "@/lib/ts/api";
 import Sidebar from "@/Components/sidebar";
 import { showAlert } from "@/lib/controller/alertsController";
 import { ToastContainer, toast } from "react-toastify";
-import { Link } from "lucide-react";
+  
 
 export default function ProdutoPage() {
+  
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysDatas, setDeliveryDatas] = useState<any>([]);
   const [products, setProducts] = useState<any[]>([]);
@@ -56,6 +57,7 @@ export default function ProdutoPage() {
   useEffect(() => {
     if (id !== null) {
       initializeDeliverys();
+      // serve para salvar as produtos ja preparados
       const savedChecks = localStorage.getItem(localStorageKey);
       if (savedChecks) {
         setCheckedItems(JSON.parse(savedChecks));

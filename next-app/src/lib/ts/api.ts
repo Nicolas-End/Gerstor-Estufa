@@ -3,7 +3,7 @@ import { cookies } from "next/headers"
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import {deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
+import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
 import { addNewFunctionary, functionariesQuantity, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
@@ -13,38 +13,44 @@ import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecove
 import { addClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
-import {  addNewCompany, login, validateUserAcess } from "@/lib/services/user";
+import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
 import { AArrowUp } from "lucide-react";
 import { RedirectType } from "next/navigation";
 import { addRole } from "../controller/localStorageController";
+import { getSocket, initSocket } from "../config/sockteioConfig";
 
 
 
-export async function ValidateLogin(email:string, password:string) {
-  try{
-    const response = await login(email,password)
-    
-    if (typeof response === "string"){
-      return {status:"Internal Error"}
-    }else{
-      switch(response?.status){ 
+export async function ValidateLogin(email: string, password: string) {
+  try {
+    const response = await login(email, password)
+
+    if (typeof response === "string") {
+      return { status: "Internal Error" }
+    } else {
+      switch (response?.status) {
         case "ok":
           const user_token: any = response.token;
           const user_role: any = response.role
-          await addCookies(user_token,user_role)
+          await addCookies(user_token, user_role)
+          // inicia o socket Sistema
+          const socket = await initSocket()
           
-          return {status:'ok',role:user_role}
+          socket.connect()
+          socket.emit('join')
+          
+          return { status: 'ok', role: user_role }
         default:
-          return {status:'not_found'};
+          return { status: 'not_found' };
       }
     }
-  }catch(error){
+  } catch (error) {
     throw error
   }
-  
+
 }
 export async function validateTokenUser(token: string) {
   try {
@@ -70,11 +76,11 @@ export async function SendRecuperationEmail(email: string, newPassword: string) 
   }
 }
 
-export async function RegisterNewCompany(email:string,password:string,companyName:string){
-  try{
-    const response = await addNewCompany(email,"1",password,companyName)
+export async function RegisterNewCompany(email: string, password: string, companyName: string) {
+  try {
+    const response = await addNewCompany(email, "1", password, companyName)
 
-    switch (response){
+    switch (response) {
       case "created":
         return "ok"
       case "Already Exist":
@@ -82,7 +88,7 @@ export async function RegisterNewCompany(email:string,password:string,companyNam
       default:
         return "error"
     }
-  }catch(error){
+  } catch (error) {
     throw (error)
   }
 }
@@ -90,25 +96,25 @@ export async function RegisterNewCompany(email:string,password:string,companyNam
 // Essa função vai servir para validar se o usuario pode acessar o Home
 
 export async function ValidateHomeAcess(router: AppRouterInstance) {
-  try{
+  try {
     const cookiesStore = await cookies()
     let token: string | undefined = cookiesStore.get('token_from_user')?.value
     if (token == undefined) {
-      
+
       return false
     }
     const response = await validateUserAcess();
-    switch(response){
-      case("ok"):
+    switch (response) {
+      case ("ok"):
         return Promise.all([true])
       default:
         router.push('/login')
         return Promise.all([false])
     }
-  }catch(error){
-    throw(error)
+  } catch (error) {
+    throw (error)
   }
-  
+
 }
 // Usado no Home
 export async function countDeliveryQuantidy() {
@@ -130,113 +136,113 @@ export async function countDeliveryQuantidy() {
 //======= FUNCIONARIOS ========
 
 export async function GetFunctionaries() {
-  try{
+  try {
     const response = getFunctionaries()
     return response
-  }catch(error){
-    console.log("Error Funcionarios: ",error)
+  } catch (error) {
+    console.log("Error Funcionarios: ", error)
     throw (error)
   }
-  
+
 }
 export async function FunctionariesQuantity(router: AppRouterInstance) {
-  try{
+  try {
     const response = await functionariesQuantity()
-    if (typeof response === "string"){
-      switch(response){
+    if (typeof response === "string") {
+      switch (response) {
         case "Acesso Negado":
           router.push('/login')
           return 0
         default:
           return 0
       }
-    }else{
+    } else {
       return response.functionaries_quantity
     }
-  }catch(error){
+  } catch (error) {
     throw error
   }
-  
+
 }
 
 export async function AddNewFunctionary(name: string, email: string, password: string, role: string) {
-  try{
+  try {
     const response = await addNewFunctionary(name, email, password, role)
     return response
-  }catch(error){
-    console.log("Erro adicionar Funcionario: ",error)
+  } catch (error) {
+    console.log("Erro adicionar Funcionario: ", error)
     throw error
   }
 }
 
-export async function GetEspecificFunctionary(email:string):Promise<any> {
-  try{
+export async function GetEspecificFunctionary(email: string): Promise<any> {
+  try {
     const response = await getEspecificFunctionary(email)
-    
+
     return response
-  }catch(error){
-    console.log("Erro Especific Functionary: ",error)
+  } catch (error) {
+    console.log("Erro Especific Functionary: ", error)
     throw (error)
   }
 }
 //========= ENTREGAS =========
 
-export async function GetEspecificDelivery(id:string) {
-  try{
+export async function GetEspecificDelivery(id: string) {
+  try {
     const response = await getEspecificDeliveryDatas(id)
-    
+
     return response
-  }catch(error){
-    console.log('Erro Entrega Especifica: ',error)
-    throw(error)
+  } catch (error) {
+    console.log('Erro Entrega Especifica: ', error)
+    throw (error)
   }
 }
 
-export async function AddNewDelivery(FormsData:any) {
-  try{
+export async function AddNewDelivery(FormsData: any) {
+  try {
     const response = await addNewDelivery(FormsData)
 
     return response
-  }catch(error){
-    console.log("Erro adicionar nova entrega: ",error)
-    throw(error)
+  } catch (error) {
+    console.log("Erro adicionar nova entrega: ", error)
+    throw (error)
   }
-  
+
 }
 
 
-export async function EditDelivery(FormsData:any){
-  try{
+export async function EditDelivery(FormsData: any) {
+  try {
     const response = await editDelivery(FormsData)
 
     return response
-  }catch(error){
-    console.log("Erro no Edit Delivery: ",error)
+  } catch (error) {
+    console.log("Erro no Edit Delivery: ", error)
     throw error
   }
 }
 
 export async function GetDeliverys() {
-    try{
-      const response = await getDeliverysToDo();
+  try {
+    const response = await getDeliverysToDo();
 
-      return response
-    }catch(error){
-      console.log("Erro Pegar Entregas: ",error)
-      throw(error)
-    }
+    return response
+  } catch (error) {
+    console.log("Erro Pegar Entregas: ", error)
+    throw (error)
+  }
 }
 
 
-export async function DeleteEspecificDelivery(delivery_id:string) {
-    try{
-        const response = await deleteEspecificDelivery(delivery_id)
-        
-        return response
-    }catch(error){
-      console.log('Erro ao Deletar Entrega: ',error)
-      throw error
-    }
+export async function DeleteEspecificDelivery(delivery_id: string) {
+  try {
+    const response = await deleteEspecificDelivery(delivery_id)
+
+    return response
+  } catch (error) {
+    console.log('Erro ao Deletar Entrega: ', error)
+    throw error
+  }
 }
 
 // ======= CAMINHÕES ===========
@@ -261,8 +267,8 @@ export async function AddNewTruck(data: {
     const resposne = addNewTruck(data)
 
     return resposne
-  } catch (error){
-    console.log("Erro Adicionar Caminhão: ",error)
+  } catch (error) {
+    console.log("Erro Adicionar Caminhão: ", error)
     throw error
   }
 }
@@ -272,18 +278,18 @@ export async function AddNewTruck(data: {
 export async function GetAllClients() {
   try {
 
-    const response= await getClients()
-    return response 
+    const response = await getClients()
+    return response
   } catch (error) {
     console.log("Error Clientes: ", error);
-    throw(error)
+    throw (error)
   }
 }
 
 
-export async function AddNewClient(name:string, address: {[key:string]:string|number}, document: {[key:string]:string}) {
+export async function AddNewClient(name: string, address: { [key: string]: string | number }, document: { [key: string]: string }) {
   try {
-    const response = await addClient(name,address,document)
+    const response = await addClient(name, address, document)
     return response
   } catch (error) {
     console.log("Error Adicionar Cliente: ", error);
@@ -291,19 +297,19 @@ export async function AddNewClient(name:string, address: {[key:string]:string|nu
   }
 }
 
-export async function GetEspecificClient(id:string) {
-  try{
+export async function GetEspecificClient(id: string) {
+  try {
     const response = await getEspecificClient(id)
-    
+
     return response
-  }catch(error){
-    console.log("Error ao pegar cliente especifico: ",error)
+  } catch (error) {
+    console.log("Error ao pegar cliente especifico: ", error)
     throw error
   }
-  
+
 }
 //====== CAMINHÕES ======
-export async function GetTrucks(){
+export async function GetTrucks() {
   try {
     const data = await getAllTrucks();
     if (typeof data === 'string') {
@@ -326,14 +332,14 @@ export async function GetTrucks(){
     return "Erro na requisição";
   }
 }
-export async function GetEspecificTruck(placa:string):Promise<any> {
-  try{
+export async function GetEspecificTruck(placa: string): Promise<any> {
+  try {
     const response = await getEspecificTruck(placa)
-    
+
     return response
-  }catch(error){
-    console.log("Error: ",error)
+  } catch (error) {
+    console.log("Error: ", error)
     throw error
   }
-  
+
 }

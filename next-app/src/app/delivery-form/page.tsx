@@ -8,6 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import { ClientPageRoot } from "next/dist/client/components/client-page";
+import { getSocket, initSocket } from "@/lib/config/sockteioConfig";
+import { Socket } from "socket.io-client";
+import { SchoolIcon } from "lucide-react";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -30,6 +33,7 @@ export default function DeliveryFormPage() {
     });
   }
 
+
   // Estados dos campos principais
   const [customerName, setCustomerName] = useState("");
   const [address, setAddress] = useState("");
@@ -38,6 +42,7 @@ export default function DeliveryFormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [clientInfo, setClientInfo] = useState<any>({});
   const [clients, setClients] = useState<any[]>([]);
+
 
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
@@ -66,8 +71,10 @@ export default function DeliveryFormPage() {
     try {
       const can_access_home = await ValidateHomeAcess(router);
 
+
       if (!can_access_home) {
         router.push("/logout");
+
         return;
       }
       setPageIsLoading(false);
@@ -75,11 +82,13 @@ export default function DeliveryFormPage() {
       if (typeof clients === "string") {
         switch (clients) {
           case "Credencial Invalida":
-            showAlert("Suas credenciais sõa invalidas")
+            showAlert("Suas credenciais são invalidas")
             router.push('/logout')
+
             break;
           default:
             showError("não possivel mostar os cliente tente novamte mais tarde")
+
             return;
         }
       }
@@ -99,7 +108,7 @@ export default function DeliveryFormPage() {
   // Envia o formulário ao back-end
   const handleSubmit = async (e: React.FormEvent) => {
     const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
-    const typeClientId = clientInfo.cpf? 'cpf' :clientInfo.cnpj? 'cnpj':'id'
+    const typeClientId = clientInfo.cpf ? 'cpf' : clientInfo.cnpj ? 'cnpj' : 'id'
     e.preventDefault();
     const formData = {
       name: customerName,
@@ -113,19 +122,27 @@ export default function DeliveryFormPage() {
     try {
       setIsLoading(true);
       const data = await AddNewDelivery(formData);
+      const socket = await (await initSocket()).connect()
       if (data === true) {
         showSucess("Entrega Adicionada com Sucesso");
+        // enviando para o sistema que tem uma nova entrega disponivel
+
+        socket?.emit("new_delivery", formData)
+
         setAddress("");
         setCustomerName("");
         setDeliveryDate("");
         setItems([]);
         setClientInfo("")
         setIsLoading(false);
+
       } else if (data === "Erro Interno") {
         showAlert("Opss.. Houve um erro");
         showAlert("Tente novamente mais tarde");
         setIsLoading(false);
+
       } else {
+
         router.push('/logout')
       }
     } catch (error) {
@@ -136,7 +153,10 @@ export default function DeliveryFormPage() {
   };
 
   useEffect(() => {
-    initializeDeliverForm();
+
+  initializeDeliverForm();
+
+
   }, []);
 
   if (pageIsLoading) {
@@ -237,15 +257,15 @@ export default function DeliveryFormPage() {
                   <select
                     value={clientInfo?.cpf || clientInfo?.cnpj || ""}
                     onChange={(e) => {
-                      
+
                       const selectedClient = clients.find(
                         (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
                       );
                       if (selectedClient) {
                         setClientInfo(selectedClient);
-                        
+
                         setAddress(selectedClient.address);
-                      }else{
+                      } else {
                         setClientInfo("")
                         setAddress("")
                       }

@@ -1,10 +1,12 @@
 'use server'
 import axios from 'axios';
 import { cookies } from 'next/headers';
+import { getTokenCookie } from '../controller/cookiesController';
 
+// Cria o axios para fazer as requisições para api
+// Para ver requisições veja os servies
 export async function createApiWithAuth():Promise<any>{
-  const cookiesStore = await cookies()
-  const token = await cookiesStore.get('token_from_user')?.value;
+  const token = await getTokenCookie()
 
   return axios.create({
     baseURL: 'http://127.0.0.1:5000',

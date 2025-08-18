@@ -43,3 +43,15 @@ export const getRoleCookie = async (): Promise<string> => {
         throw (error)
     }
 }
+
+export const getTokenCookie = async (): Promise<string> => {
+    try {
+         const cookiesStore = await cookies()
+        const token = await cookiesStore.get('token_from_user')?.value;
+
+        return token || ''
+    } catch (error) {
+        console.log("Erro Cookies: ", error)
+        throw (error)
+    }
+}

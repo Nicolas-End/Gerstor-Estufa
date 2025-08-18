@@ -12,14 +12,17 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { cookies } from "next/headers";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import {getSocket, initSocket} from "@/lib/config/sockteioConfig";
+import { Socket } from "socket.io-client";
 
 
 export default function PedidosPage() {
+  
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-  
+
   const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos')
 
 
@@ -78,7 +81,7 @@ export default function PedidosPage() {
   }
   const initializeDeliverys = async () => {
     try {
-      
+
       const deliverys: any = await GetDeliverys();
 
       if (typeof deliverys == "string") {
@@ -109,9 +112,27 @@ export default function PedidosPage() {
     }
   };
 
-  useEffect(() => {
-    initializeDeliverys();
-  }, []);
+useEffect(() => {
+  let socketInstance: Socket;
+
+  async function setup() {
+    socketInstance = await initSocket();
+    socketInstance.connect();
+
+    socketInstance.on("new_delivery", (data) => {
+      showSucess("Nova Entrega Cadastrada");
+      router.refresh();
+    });
+
+    await initializeDeliverys();
+  }
+
+  setup();
+
+  return () => {
+    socketInstance?.off("new_delivery");
+  };
+}, []);
 
   if (isLoading) {
     return (
