@@ -12,6 +12,7 @@ export default function ProdutoPage() {
   const params = useParams();
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [truckInfo, setTruckInfo] = useState<any>({});
+  const id: any = params?.id ?? null;
 
   // Carrega e valida acesso
   const initializePage = async () => {
@@ -23,28 +24,26 @@ export default function ProdutoPage() {
         return;
       }
 
-      const response = await GetEspecificTruck(id)
-      if (typeof response === "string"){
-        switch (response){
-            case "Credenciais invalidas":
-                showAlert("Credenciais Invalidas")
-                router.push('/logout')
-                return;
-            case "Caminhão não encontrado":
-                showAlert("Caminhão não cadastrado no sistema")
-                router.push('/caminhoes')
-                return;
-            default:
-                showError("Erro Interno tente novamente mais tarde")
-                router.push('/home')
-                return;
-
+      const response = await GetEspecificTruck(id);
+      if (typeof response === "string") {
+        switch (response) {
+          case "Credenciais invalidas":
+            showAlert("Credenciais Invalidas");
+            router.push("/logout");
+            return;
+          case "Caminhão não encontrado":
+            showAlert("Caminhão não cadastrado no sistema");
+            router.push("/caminhoes");
+            return;
+          default:
+            showError("Erro Interno tente novamente mais tarde");
+            router.push("/home");
+            return;
         }
       }
-      setTruckInfo(response)
-      
-      setPageIsLoading(false)
-     
+      setTruckInfo(response);
+
+      setPageIsLoading(false);
     } catch (err) {
       showError("Erro ao carregar. Redirecionando...");
       router.push("/home");
@@ -74,32 +73,72 @@ export default function ProdutoPage() {
       <main className={styles.content}>
         <header className={styles.topHeader}>
           <h1 className={styles.title}>Consultar Caminhão</h1>
-          <button
-            type="button"
-            onClick={() => router.push("/caminhoes")}
-            className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
-          >
-            Voltar
-          </button>
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => router.push("/caminhoes")}
+              className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
+            >
+              Voltar
+            </button>
+
+            {id ? (
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`../caminhoes/${decodeURIComponent(id)}`)
+                }
+                className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
+              >
+                Editar
+              </button>
+            ) : null}
+          </div>
         </header>
 
-       
         <section className={styles.banner}>
           <div>
-            
-            placa = {truckInfo.placa}, chassi = {truckInfo.chassi}, cor = {truckInfo.cor },
-             eixos = {truckInfo.eixos}, mercosul = {truckInfo.mercosul}, modelo = {truckInfo.modelo}
+            <div className={styles.bannerTitle}>
+              {truckInfo?.placa || "Caminhão"}
+            </div>
           </div>
 
-          
-          <div className={styles.bannerRight}>
-            
-          </div>
+          <div className={styles.bannerRight}></div>
         </section>
 
-        
-        <section className={styles.clientBox}>
-         
+        <section className={styles.truckBox}>
+          <div className={styles.truckRow}>
+            <div className={styles.truckLabel}>Placa:</div>
+            <div className={styles.truckValue}>{truckInfo?.placa || "-"}</div>
+          </div>
+
+          <div className={styles.truckRow}>
+            <div className={styles.truckLabel}>Chassi:</div>
+            <div className={styles.truckValue}>{truckInfo?.chassi || "-"}</div>
+          </div>
+
+          <div className={styles.truckRow}>
+            <div className={styles.truckLabel}>Eixos:</div>
+            <div className={styles.truckValue}>{truckInfo?.eixos || "-"}</div>
+          </div>
+
+          <div className={styles.truckRow}>
+            <div className={styles.truckLabel}>Cor:</div>
+            <div className={styles.truckValue}>{truckInfo?.cor || "-"}</div>
+          </div>
+
+          <div className={styles.truckRow}>
+            <div className={styles.truckLabel}>Modelo:</div>
+            <div className={styles.truckValue}>{truckInfo?.modelo || "-"}</div>
+          </div>
+
+          <div className={styles.truckRow}>
+            <div className={styles.truckLabel}>Mercosul:</div>
+            <div className={styles.truckValue}>
+              {truckInfo?.mercosul || "-"}
+            </div>
+          </div>
         </section>
       </main>
 
