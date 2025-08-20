@@ -1,12 +1,12 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser, faSearch, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { GetFunctionaries, ValidateHomeAcess } from "@/lib/ts/api";
 import { ToastContainer } from "react-toastify";
-
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { showAlert, showError } from "@/lib/controller/alertsController";
@@ -16,9 +16,11 @@ import { PassThrough } from "stream";
 export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [functionariesDatas, setFunctionariesDatas] = useState<any[]>([]); 
+    const [functionariesDatas, setFunctionariesDatas] = useState<any[]>([]);
     const [functionaryCount, setFunctionaryCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
+    const params = useParams();
+    const id: any = params?.id ?? null;
 
     const resultados = (Array.isArray(functionariesDatas) ? functionariesDatas : []).filter((item: any) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,7 +64,7 @@ export default function FuncionarioPage() {
         }
     };
     useEffect(() => {
-        
+
         initializeFunctionary();
     }, []);
 
@@ -104,15 +106,39 @@ export default function FuncionarioPage() {
                     <div className={styles.ordersList}>
                         {searchTerm ?
                             resultados.map((functionary: any, index: any) => (
-                                <div className={styles.functionaryCard} key={index} onClick={() => router.push(`functionary/${functionary.email}`)}>
+                                <div className={styles.functionaryCard} key={index} onDoubleClick={() => router.push(`functionary/${functionary.email}`)}>
                                     <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
                                     <p className={styles.functionaryName}>{functionary.name}</p>
+                                    <div className="gap-6 flex flex-row-reverse">
+                                        <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                        <button
+                                            type="button"
+                                            onClick={() => router.push(`/functionaries/${functionary.email}`)} 
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faPenToSquare}
+                                                className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                            />
+                                        </button>
+                                    </div>
                                 </div>
                             )) :
                             functionariesDatas.map((functionary: any, index: any) => (
-                                <div className={styles.functionaryCard} key={index} onClick={() => router.push(`functionary/${functionary.email}`)}>
+                                <div className={styles.functionaryCard} key={index} onDoubleClick={() => router.push(`functionary/${functionary.email}`)}>
                                     <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
                                     <p className={styles.functionaryName}>{functionary.name}</p>
+                                    <div className="gap-6 flex flex-row-reverse">
+                                        <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                        <button
+                                            type="button"
+                                            onClick={() => router.push(`/functionaries/${functionary.email}`)} 
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faPenToSquare}
+                                                className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                            />
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                     </div>
