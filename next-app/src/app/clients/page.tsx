@@ -1,6 +1,6 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser, faSearch, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
@@ -34,7 +34,7 @@ export default function ClientsPage() {
     const initializeClients = async () => {
         try {
 
-            
+
             const clients: any = await GetAllClients();
             if (typeof clients === "string") {
                 switch (clients) {
@@ -53,7 +53,7 @@ export default function ClientsPage() {
             setClientsDatas(clients);
             const quantidy: number | undefined = clients?.length
             setClientCount(quantidy || 0);
-            
+
 
         } catch (error) {
             showError("Houve um erro tente novamente mais tarde")
@@ -106,6 +106,16 @@ export default function ClientsPage() {
                             <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
                                 <p className={styles.clientName}>{client.name}</p>
+                                <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                <button
+                                    type="button"
+                                    onClick={() => router.push(`clients/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faPenToSquare}
+                                        className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                    />
+                                </button>
                             </div>
                         )) : <div className="text-center text-gray-500 text-lg py-8">
                             Nenhum cliente {searchTerm ? "encontrado" : "cadastrado"}
