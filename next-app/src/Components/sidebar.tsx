@@ -11,7 +11,7 @@ import {
   Bell,
   UserPlus,
   LogOut,
-  HelpCircle,
+  Apple,
   ChevronLeft,
   ChevronRight,
   MoreVertical,
@@ -28,7 +28,7 @@ export default function Sidebar() {
   const [minimized, setMinimized] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  
+
   const pathname = usePathname();
   const role = getRole()
 
@@ -116,6 +116,9 @@ export default function Sidebar() {
                     <Link href="/caminhoes" className={styles.menuItem}>
                       <Truck size={16} /> <span>Caminhões</span>
                     </Link>
+                    <Link href="/products" className={`${styles.navItem} mt-2`}>
+                      <Apple size={16} /> <span>Produtos</span>
+                    </Link>
                   </>
                 )}
 
@@ -139,6 +142,9 @@ export default function Sidebar() {
                 </Link>
                 <Link href="/caminhoes" className={`${styles.navItem} mt-2`}>
                   <Truck size={20} /> <span>Caminhões</span>
+                </Link>
+                <Link href="/products" className={`${styles.navItem} mt-2`}>
+                  <Apple size={20} /> <span>Produtos</span>
                 </Link>
               </>
             )}
