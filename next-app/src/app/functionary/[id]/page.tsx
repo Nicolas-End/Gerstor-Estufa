@@ -12,10 +12,11 @@ export default function ProdutoPage() {
   const params = useParams();
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [functionaryInfo, setFunctionaryInfo] = useState<any>({})
+  const id: any = params?.id ?? null;
 
   const initializePage = async () => {
     try {
-      const id: any = params?.id ?? null;
+      
       const canAccess = await ValidateHomeAcess(router);
       if (!canAccess) {
         router.push("/logout");
@@ -68,13 +69,26 @@ export default function ProdutoPage() {
       <main className={styles.content}>
         <header className={styles.topHeader}>
           <h1 className={styles.title}>Consultar Cliente</h1>
-          <button
-            type="button"
-            onClick={() => router.push("/functionaries")}
-            className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
-          >
-            Voltar
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={() => router.push("/functionaries")}
+              className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
+            >
+              Voltar
+            </button>
+
+            {/* Botão Editar - só aparece se houver id */}
+            {id ? (
+              <button
+                type="button"
+                onClick={() => router.push(`../functionaries/${decodeURIComponent(id)}`)}
+                className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
+              >
+                Editar
+              </button>
+            ) : null}
+          </div>
         </header>
 
         <section className={styles.banner}>
