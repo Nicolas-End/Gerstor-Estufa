@@ -7,8 +7,8 @@ export async function initSocket() {
     if (!socket) {
         const token = await getTokenCookie();
 
-        socket = io("http://192.168.1.11:8080", {
-            autoConnect: false,
+        socket = io("http://127.0.0.1:8080", {
+            autoConnect: true,
             timeout: 6000,
             transports: ["websocket"],
             extraHeaders: {
@@ -16,7 +16,7 @@ export async function initSocket() {
             }
         });
     }
-    return await socket
+    return socket
 }
 export function getSocket() {
     if (!socket) {

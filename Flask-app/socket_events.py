@@ -18,7 +18,8 @@ socketio = SocketIO(
     cors_allowed_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "http://192.168.1.11:3001"  # adicione seu IP da rede local
+        "http://192.168.1.11:3001",
+        "*"# adicione seu IP da rede local
     ]
 )
 
@@ -43,7 +44,7 @@ def require_token(f):
 @require_token
 def join_company_room (token_datas):
     try:
-    
+       
         company_email = token_datas['company_email']
         join_room(company_email)
 
@@ -54,10 +55,9 @@ def join_company_room (token_datas):
 
 @socketio.on('new_delivery')
 @require_token
-def new_delivery(token_datas,data):
-    print('AQIIIIIIIi')
-    socketio.emit('new_delivery', {'nova_entrega':data}, room=token_datas['company_email']) 
-    print('room enviada: ',token_datas['company_email'])
+def new_delivery(token_datas):
+    
+    socketio.emit('new_delivery', room=token_datas['company_email']) 
 
 
 if __name__ == '__main__':

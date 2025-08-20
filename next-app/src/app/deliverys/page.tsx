@@ -111,15 +111,18 @@ export default function PedidosPage() {
       setIsLoading(false)
     }
   };
-
 useEffect(() => {
-  let socketInstance: Socket;
+  let socket: Socket | null = null;
 
   async function setup() {
-    socketInstance = await initSocket();
-    socketInstance.connect();
+    socket = await initSocket();
 
-    socketInstance.on("new_delivery", (data) => {
+    socket.on("connect", () => {
+      console.log("Conectado:", socket?.id);
+      socket?.emit("join"); // toda vez que conectar, entra na room
+    });
+
+    socket.on("new_delivery", () => {
       showSucess("Nova Entrega Cadastrada");
       router.refresh();
     });
@@ -130,7 +133,10 @@ useEffect(() => {
   setup();
 
   return () => {
-    socketInstance?.off("new_delivery");
+    if (socket) {
+      socket.off("new_delivery");
+      socket.off("connect");
+    }
   };
 }, []);
 
