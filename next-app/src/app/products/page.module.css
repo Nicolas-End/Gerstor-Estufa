@@ -172,14 +172,14 @@
       max-width: 100%;
     }
     
-    .functionaryName {
+    .productName {
       white-space: normal;
       overflow: visible;
       text-overflow: unset;
       font-size: 1.1rem;
     }
     
-    .functionaryIcon {
+    .productIcon {
       font-size: 2.5rem;
     }
   }
