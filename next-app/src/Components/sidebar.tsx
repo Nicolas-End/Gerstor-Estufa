@@ -58,9 +58,14 @@ export default function Sidebar() {
       </button>
 
       <div className={styles.logo}>
-        <div className={styles.logoContainer}>
+        <div className={styles.logoWrapper}>
           <div className={styles.logoCircle}>
-            <Image src="/Logo.png" alt="Logo" width={30} height={30} />
+            <img src="/Logo.png" alt="Logo" width={36} height={36} />
+          </div>
+
+          <div className={styles.logoText} aria-hidden={minimized}>
+            <span className={styles.logoMain}>Controle</span>
+            <span className={styles.logoSub}>Verde</span>
           </div>
         </div>
       </div>
