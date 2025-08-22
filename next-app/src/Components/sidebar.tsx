@@ -121,7 +121,7 @@ export default function Sidebar() {
                     <Link href="/caminhoes" className={styles.menuItem}>
                       <Truck size={16} /> <span>Caminhões</span>
                     </Link>
-                    <Link href="/products" className={`${styles.navItem} mt-2`}>
+                    <Link href="/products" className={styles.menuItem}>
                       <Apple size={16} /> <span>Produtos</span>
                     </Link>
                   </>
