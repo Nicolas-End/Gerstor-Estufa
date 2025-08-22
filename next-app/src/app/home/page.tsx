@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/Components/sidebar";
 import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { initSocket } from "@/lib/config/sockteioConfig";
+import { showSucess } from "@/lib/controller/alertsController";
+import { AsyncCallbackSet } from "next/dist/server/lib/async-callback-set";
 
 export default function Home() {
   const router = useRouter();
@@ -18,6 +21,7 @@ export default function Home() {
   const [deliveryQuantidy, setDeliveryQuantidy] = useState(-1);
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
   const [role, setRole] = useState("")
+
   const initializeDashboard = async () => {
     try {
       setRole(await getRoleCookie())
@@ -27,7 +31,7 @@ export default function Home() {
         return;
       }
       setIsLoading(false);
-
+      
       const deliverys_quantidy: any = await countDeliveryQuantidy();
       const functionaries_quantity: any = await FunctionariesQuantity(router);
       // Após a verficação do usuario
@@ -42,7 +46,18 @@ export default function Home() {
   };
 
   useEffect(() => {
-    initializeDashboard();
+    const setup = async() =>{
+      const socket = await initSocket()
+      socket.on('connect', () =>{
+        console.log('Socket Conecta')
+      })
+      socket.on('Nova', () =>{
+        console.log('ta chamando o nova')
+        showSucess('Nova conexão no place')
+      })
+      initializeDashboard()
+    }
+    setup()
   }, []);
   if (isLoading) {
     return (

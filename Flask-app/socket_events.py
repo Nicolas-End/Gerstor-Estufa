@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_socketio import SocketIO, join_room
+from flask_socketio import SocketIO, join_room, send, disconnect
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from jwt.exceptions import InvalidSignatureError
@@ -20,7 +20,8 @@ socketio = SocketIO(
         "http://127.0.0.1:3000",
         "http://192.168.1.11:3001",
         "*"# adicione seu IP da rede local
-    ]
+    ],
+    async_mode='eventlet'   
 )
 
 # Função decoradora que pega o token do usuario
@@ -38,27 +39,40 @@ def require_token(f):
         return f(token_datas, *args, **kwargs)
     return wrapper
 
+@app.route('/')
+def index():
+    return "O socket ta funcionando",200
 
-@socketio.on('join')
-#chamada da função decoradora
-@require_token
-def join_company_room (token_datas):
-    try:
-       
-        company_email = token_datas['company_email']
-        join_room(company_email)
+def token_desc(token):
+    if token:
+        desc_token = CriptographyController().DecriptoDatas(token)
+        return desc_token
+    return False
 
+
+@socketio.on('connect')
+def join_connect():
+    token = request.args.get('Token')
+    descripto = token_desc(token)
+
+    if not descripto:
+        print('Token inválido, desconectando...')
+        disconnect()
         return
-    except Exception as e:
-        print('Error Join: ',e)
 
+    join_room(descripto['company_email'])
 
-@socketio.on('new_delivery')
-@require_token
-def new_delivery(token_datas):
+    socketio.emit('Nova',room=descripto['company_email'])   
+    print('ta emitindo')
+
     
-    socketio.emit('new_delivery', room=token_datas['company_email']) 
-
+@socketio.on('disconnect')
+def disconnected():
+    try:
+        disconnect()
+    except Exception as e:
+        print('Error: ',e)
+    
 
 if __name__ == '__main__':
        socketio.run(app, debug=True, port=8080)  # Use socketio.run instead of app.run

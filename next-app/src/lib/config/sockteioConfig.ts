@@ -1,5 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { getTokenCookie } from "../controller/cookiesController";
+import { ReactServerDOMWebpackClient } from "next/dist/server/route-modules/app-page/vendored/ssr/entrypoints";
 
 var socket: Socket | null = null;
 
@@ -11,8 +12,9 @@ export async function initSocket() {
             autoConnect: true,
             timeout: 6000,
             transports: ["websocket"],
-            extraHeaders: {
-                'datas': token
+            
+            query:{
+                'Token':token
             }
         });
     }
@@ -26,7 +28,7 @@ export function getSocket() {
 }
 export function closeSocket() {
     if (socket) {
-        socket.close();
+        socket.disconnect()
         socket = null;
     }
 }
