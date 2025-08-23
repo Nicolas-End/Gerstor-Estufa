@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_socketio import SocketIO, join_room, send, disconnect
+from flask_socketio import SocketIO, join_room,emit,rooms, disconnect
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from jwt.exceptions import InvalidSignatureError
@@ -49,9 +49,8 @@ def token_desc(token):
         return desc_token
     return False
 
-
 @socketio.on('connect')
-def join_connect():
+def connection():
     token = request.args.get('Token')
     descripto = token_desc(token)
 
@@ -61,19 +60,31 @@ def join_connect():
         return
 
     join_room(descripto['company_email'])
+    print(descripto['email'])
+    print(rooms())
+    print(' ')
 
-    socketio.emit('Nova',room=descripto['company_email'])   
-    print('ta emitindo')
+    
+
+    
+    
+@socketio.on('join')
+def join_connect():
+    print('JOIN')
+    socketio.emit('newconnection',to=rooms())
+
+    
+    
 
     
 @socketio.on('disconnect')
-def disconnected():
-    try:
-        disconnect()
-    except Exception as e:
-        print('Error: ',e)
-    
+def disconnected(reason):
+    print(f'Cliente desconectado. Motivo: {reason}')
 
+@socketio.on_error()
+def handle_error(error):
+    print(f"Erro no Socket.IO: {error}") 
+    return 'Error', 500
 if __name__ == '__main__':
        socketio.run(app, debug=True, port=8080)  # Use socketio.run instead of app.run
    
