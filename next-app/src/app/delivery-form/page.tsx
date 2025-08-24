@@ -8,9 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import { ClientPageRoot } from "next/dist/client/components/client-page";
-import { getSocket, initSocket } from "@/lib/config/sockteioConfig";
+
 import { Socket } from "socket.io-client";
 import { SchoolIcon } from "lucide-react";
+import { socketService } from "@/lib/config/sockteioConfig";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -122,12 +123,11 @@ export default function DeliveryFormPage() {
     try {
       setIsLoading(true);
       const data = await AddNewDelivery(formData);
-      const socket = await (await initSocket()).connect()
+      const socket = await socketService.initSocket()
       if (data === true) {
         showSucess("Entrega Adicionada com Sucesso");
         // enviando para o sistema que tem uma nova entrega disponivel
-
-        socket?.emit("new_delivery", formData)
+        socket?.emit('new_delivery')
 
         setAddress("");
         setCustomerName("");

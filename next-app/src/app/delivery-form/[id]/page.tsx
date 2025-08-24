@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import socket from "@/lib/config/sockteioConfig";
+
 // Define formato de cada item
 interface ItemEntry {
   id: number;

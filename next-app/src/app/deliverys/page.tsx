@@ -12,12 +12,13 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { cookies } from "next/headers";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-import {getSocket, initSocket} from "@/lib/config/sockteioConfig";
+
 import { Socket } from "socket.io-client";
+import { socketService } from "@/lib/config/sockteioConfig";
 
 
 export default function PedidosPage() {
-  
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
@@ -56,14 +57,14 @@ export default function PedidosPage() {
       }
     )
   }
- 
+
 
   async function deleteDelivery(delivery_id: string) {
     const data = await DeleteEspecificDelivery(delivery_id)
     if (data === true) {
       router.refresh()
       showSucess("Excluido com sucesso")
-      
+
     } else if (data === "Credencial Invalida") {
       showAlert("Credencial invalida")
       router.push('/logout')
@@ -103,7 +104,7 @@ export default function PedidosPage() {
         setIsLoading(false);
         return;
       }
-      
+
       setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
@@ -111,34 +112,35 @@ export default function PedidosPage() {
       setIsLoading(false)
     }
   };
-useEffect(() => {
-  let socket: Socket | null = null;
-
-  async function setup() {
-    socket = await initSocket();
-
-    socket.on("connect", () => {
-      console.log("Conectado:", socket?.id);
-      socket?.emit("join"); // toda vez que conectar, entra na room
+  function esperar(): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 5000);
     });
-
-    socket.on("new_delivery", () => {
-      showSucess("Nova Entrega Cadastrada");
-      router.refresh();
-    });
-
-    await initializeDeliverys();
   }
+  useEffect(() => {
+    let socket: any
 
-  setup();
+    async function setup() {
 
-  return () => {
-    if (socket) {
-      socket.off("new_delivery");
-      socket.off("connect");
+
+      initializeDeliverys();
+
+      const socket = await socketService.initSocket()
+
+      socket?.on('add_delivery', () => {
+        showSucess('Nova entrega cadastrada, Atualize a pagina')
+      })
+
     }
-  };
-}, []);
+
+    setup();
+
+    return () => {
+      socket?.off('add_delivery')
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -179,42 +181,43 @@ useEffect(() => {
           </select>
           <div className={styles.ordersList}>
 
-            {deliverysToDo.filter(order => {if (searchStatus === 'Todos') return true;
+            {deliverysToDo.filter(order => {
+              if (searchStatus === 'Todos') return true;
               return order.status === searchStatus
             })
-            .map((order, index) => (
-              <div
-                key={index}
-                className={styles.card}
-              >
+              .map((order, index) => (
                 <div
-                  onDoubleClick={() => router.push(`delivery/${order.id}`)}
-                  onClick={() => setSelectedOrder(order)}
-                  className={styles.orderItem}
+                  key={index}
+                  className={styles.card}
                 >
-                  <p className={styles.orderName}>{order.Produto}</p>
-                  <div className={styles.orderQuantity}>
-                    <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
-                    <span className={styles.orderUnit}>Caixas</span>
+                  <div
+                    onDoubleClick={() => router.push(`delivery/${order.id}`)}
+                    onClick={() => setSelectedOrder(order)}
+                    className={styles.orderItem}
+                  >
+                    <p className={styles.orderName}>{order.Produto}</p>
+                    <div className={styles.orderQuantity}>
+                      <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
+                      <span className={styles.orderUnit}>Caixas</span>
+                    </div>
+                    <div className="gap-6 flex flex-row-reverse">
+                      <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                      <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                      <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
+                    </div>
                   </div>
-                  <div className="gap-6 flex flex-row-reverse">
-                    <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
-                    <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
-                    <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
-                  </div>
+                  {selectedOrder?.id === order.id && (
+                    <div className={styles.details}>
+                      <p className="text-black">
+                        <strong>Local de Entrega:</strong> {order.LocalEntrega}
+                      </p>
+                      <p className="text-black">
+                        <strong>Data de Entrega:</strong> {order.DataEntrega}
+                      </p>
+                    </div>
+                  )}
                 </div>
-                {selectedOrder?.id === order.id && (
-                  <div className={styles.details}>
-                    <p className="text-black">
-                      <strong>Local de Entrega:</strong> {order.LocalEntrega}
-                    </p>
-                    <p className="text-black">
-                      <strong>Data de Entrega:</strong> {order.DataEntrega}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <ToastContainer

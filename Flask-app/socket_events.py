@@ -55,31 +55,39 @@ def connection():
     descripto = token_desc(token)
 
     if not descripto:
+        print(' ')
         print('Token inválido, desconectando...')
         disconnect()
         return
 
     join_room(descripto['company_email'])
+    print('')
     print(descripto['email'])
     print(rooms())
     print(' ')
 
-    
+@socketio.on('new_delivery')
+def new_deli():
+    try:
+        print(rooms())
+        emit('add_delivery', to=rooms(), include_self=False)
+    except Exception as e:
+        print('Error: ',e)
 
     
     
-@socketio.on('join')
-def join_connect():
-    print('JOIN')
-    socketio.emit('newconnection',to=rooms())
+
+
+
+    
+@socketio.on('certo')
+def certo():
+    print('Certinho')
 
     
     
 
     
-@socketio.on('disconnect')
-def disconnected(reason):
-    print(f'Cliente desconectado. Motivo: {reason}')
 
 @socketio.on_error()
 def handle_error(error):

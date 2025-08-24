@@ -9,8 +9,9 @@ import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { showAlert, showError } from "@/lib/controller/alertsController";
 import { addRole } from "@/lib/controller/localStorageController";
-import { getSocket, initSocket } from "@/lib/config/sockteioConfig";
 import { Socket } from "socket.io-client";
+import { socketService } from "@/lib/config/sockteioConfig";
+
 
 
 
@@ -35,7 +36,8 @@ const Login: React.FC = () => {
     try {
       const response = await ValidateLogin(email, password);
       if (response.status === "ok") {
-        router.push('/home')
+        const socket = socketService.getSocket()
+        socket?.emit('login')
         const role = response.role
         addRole(role)
         router.push('/home')

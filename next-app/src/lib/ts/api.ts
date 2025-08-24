@@ -20,7 +20,7 @@ import { addCookies } from "../controller/cookiesController";
 import { AArrowUp } from "lucide-react";
 import { RedirectType } from "next/navigation";
 import { addRole } from "../controller/localStorageController";
-import { getSocket, initSocket } from "../config/sockteioConfig";
+
 import { Socket } from "socket.io-client";
 
 
@@ -37,10 +37,6 @@ export async function ValidateLogin(email: string, password: string) {
           const user_role: any = response.role
           await addCookies(user_token, user_role)
           // inicia o socket Sistema
-          const socket = await initSocket()
-
-
-          socket.emit('join')
 
           return { status: 'ok', role: user_role }
         default:
@@ -202,10 +198,7 @@ export async function GetEspecificDelivery(id: string) {
 export async function AddNewDelivery(FormsData: any) {
   try {
     const response = await addNewDelivery(FormsData)
-    if (response === true) {
-      const socket = await initSocket()
-      socket.emit('new_delivery')
-    }
+
     return response
   } catch (error) {
     console.log("Erro adicionar nova entrega: ", error)

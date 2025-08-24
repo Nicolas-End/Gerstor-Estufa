@@ -11,9 +11,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/Components/sidebar";
 import { getRoleCookie } from "@/lib/controller/cookiesController";
-import { initSocket } from "@/lib/config/sockteioConfig";
+import { socketService } from '@/lib/config/sockteioConfig'
 import { showSucess } from "@/lib/controller/alertsController";
 import { AsyncCallbackSet } from "next/dist/server/lib/async-callback-set";
+import { Socket } from "socket.io-client";
 
 export default function Home() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function Home() {
   const [deliveryQuantidy, setDeliveryQuantidy] = useState(-1);
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
   const [role, setRole] = useState("")
-
+  let socket: Socket | null
   const initializeDashboard = async () => {
     try {
       setRole(await getRoleCookie())
@@ -31,7 +32,7 @@ export default function Home() {
         return;
       }
       setIsLoading(false);
-      
+
       const deliverys_quantidy: any = await countDeliveryQuantidy();
       const functionaries_quantity: any = await FunctionariesQuantity(router);
       // Após a verficação do usuario
@@ -42,23 +43,30 @@ export default function Home() {
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
       router.push("/login");
-    }
+    } socketService
   };
 
   useEffect(() => {
-    const setup = async() =>{
-      const socket = await initSocket()
-      socket.on('connect', () =>{
-        console.log('Socket Conecta')
-      })
-      socket.on('Nova', () =>{
-        console.log('ta chamando o nova')
-        showSucess('Nova conexão no place')
-      })
-      initializeDashboard()
-    }
-    setup()
+    const setup = async () => {
+      initializeDashboard();
+
+      const socket = await socketService.initSocket()
+
+      if (socket) {
+        socket.on('newconnection', () => {
+          showSucess('Novo Login')
+          
+        })
+        socket.emit('certo')
+      }
+      return () => {
+
+      };
+    };
+
+    setup();
   }, []);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
@@ -129,7 +137,7 @@ export default function Home() {
                 )}
               </p>
             </Link> : null}
-            
+
 
             <div className="bg-[#005E40] text-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-2">Notificações</h2>
