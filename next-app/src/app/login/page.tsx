@@ -36,8 +36,7 @@ const Login: React.FC = () => {
     try {
       const response = await ValidateLogin(email, password);
       if (response.status === "ok") {
-        const socket = socketService.getSocket()
-        socket?.emit('login')
+
         const role = response.role
         addRole(role)
         router.push('/home')

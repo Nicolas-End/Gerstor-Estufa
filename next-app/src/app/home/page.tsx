@@ -47,24 +47,20 @@ export default function Home() {
   };
 
   useEffect(() => {
+    let socket:any
     const setup = async () => {
       initializeDashboard();
 
       const socket = await socketService.initSocket()
 
-      if (socket) {
-        socket.on('newconnection', () => {
-          showSucess('Novo Login')
-          
-        })
-        socket.emit('certo')
-      }
-      return () => {
 
-      };
+      
     };
 
     setup();
+    return () => {
+      
+      };
   }, []);
 
   if (isLoading) {

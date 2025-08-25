@@ -2,6 +2,7 @@ import { io, Socket } from "socket.io-client";
 import { getTokenCookie } from "../controller/cookiesController";
 import { showSucess } from "../controller/alertsController";
 
+// Crie um classe para ter o controle do Socket no sistema
 class SocketIOService {
   private static instance: SocketIOService;
   private socket: Socket | null = null;
