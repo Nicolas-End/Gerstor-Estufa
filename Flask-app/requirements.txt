@@ -7,3 +7,4 @@ pyjwt[crypto]
 cryptography
 flask_socketio
 eventlet==0.40.2
+gunicorn
