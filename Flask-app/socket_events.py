@@ -16,6 +16,7 @@ socketio = SocketIO(app)
 socketio = SocketIO(
     app,
     cors_allowed_origins=[
+        "https://gerenciador-empresarial.vercel.app"
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://192.168.1.11:3001",
