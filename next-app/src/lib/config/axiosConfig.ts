@@ -17,3 +17,16 @@ export async function createApiWithAuth():Promise<any>{
     validateStatus: () => true
   });
 }
+
+
+export async function createApiWithoutAuth():Promise<any>{
+
+  return axios.create({
+    baseURL: 'http://127.0.0.1:5000',
+    headers: {
+      'Content-Type': 'application/json',
+
+    },
+    validateStatus: () => true
+  });
+}

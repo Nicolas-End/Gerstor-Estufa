@@ -1,5 +1,5 @@
 import axios from "axios";
-import {createApiWithAuth} from "@/lib/config/axiosConfig"
+import {createApiWithAuth, createApiWithoutAuth} from "@/lib/config/axiosConfig"
 interface ApiResponse {
   status: string;
   message?: string;
@@ -51,11 +51,9 @@ export const addNewCompany = async (email:string,id:string,password:string,compa
 
 export const login = async (email:string,password:string) =>{
   try{
+      const api = await createApiWithoutAuth()
       let data = {email, password}
-      const response = await axios.post('http://127.0.0.1:5000/user-login',data ,  
-      {
-        validateStatus: () => true  
-      })
+      const response = await api.post('/user-login',data)
 
       if (response.status !== 500 && response.data){
         return response.data
