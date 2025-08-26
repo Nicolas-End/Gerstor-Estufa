@@ -19,7 +19,7 @@ class SocketIOService {
   public async initSocket(): Promise<Socket> {
     if (!this.socket) {
       const token = await getTokenCookie();
-      this.socket = io("https://gerenciador-empresarial-1cfr.vercel.app/socket/", {
+      this.socket = io("https://socket-estufa.onrender.com/", {
         autoConnect: true,
         timeout: 6000,
         transports: ["websocket"],
