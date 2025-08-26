@@ -92,6 +92,5 @@ def certo():
 def handle_error(error):
     print(f"Erro no Socket.IO: {error}") 
     return 'Error', 500
-if __name__ == '__main__':
-       socketio.run(app, debug=True)  # Use socketio.run instead of app.run
+
    
