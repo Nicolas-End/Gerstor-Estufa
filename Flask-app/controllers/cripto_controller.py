@@ -14,7 +14,7 @@ class CriptographyController:
         self.fernet_password = os.getenv("FERNET_KEY")
         self.fernet = Fernet(self.fernet_password)   
         
-    def cripto_datas(self,datas_user):
+    def CriptoDatas(self,datas_user):
         #Encripta os dados do usuario para caso for intercepitado
         #serve para fazer verificações dos usuarios
         data_encrypt = self.fernet.encrypt(json.dumps(datas_user).encode()).decode()
@@ -26,7 +26,7 @@ class CriptographyController:
         
         return token
     
-    def decripto_datas(self,token):
+    def DecriptoDatas(self,token):
         
         array_token = jwt.decode(token,self.jwt_password,algorithms=['HS256'])
         decoded_json_token = self.fernet.decrypt(token=array_token['data'].encode()).decode()

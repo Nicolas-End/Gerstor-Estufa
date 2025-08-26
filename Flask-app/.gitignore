@@ -2,6 +2,10 @@
 teste.py
 *.pyc
 __pycache__/
+<<<<<<< HEAD
 uuid.py
 .venv
 
+=======
+.venv
+>>>>>>> feat

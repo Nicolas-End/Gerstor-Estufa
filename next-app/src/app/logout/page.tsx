@@ -3,11 +3,14 @@
 import { useRouter } from "next/navigation"
 import { deleteCookies } from "@/lib/controller/cookiesController";
 import { useEffect } from "react";
+import { socketService } from "@/lib/config/sockteioConfig";
+
 export default function Logout(){
     const router = useRouter();
     useEffect(() => {
       // Este código só roda no browser
       deleteCookies()
+      socketService.closeSocket()
       router.push('./login');
     }, []);
 

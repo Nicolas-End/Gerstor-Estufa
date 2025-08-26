@@ -5,7 +5,7 @@
 O Gestor-Estufa é uma plataforma para gerenciamento de estufas, entregas, funcionários e clientes. O sistema é composto por um back-end em Flask (Python) e um front-end em Next.js (TypeScript), oferecendo uma solução moderna e eficiente para empresas do setor agrícola.
 
 ## Tecnologias Utilizadas
-- **Back-end:** Python, Flask, Flask-CORS, cryptography, python-dotenv
+- **Back-end:** Python, Flask, Flask-CORS,Mongodb
 - **Front-end:** Next.js, React, TypeScript, Tailwind CSS
 
 ## Estrutura do Projeto

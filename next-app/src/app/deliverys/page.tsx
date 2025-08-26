@@ -11,15 +11,19 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { cookies } from "next/headers";
-import { showError } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+
+import { Socket } from "socket.io-client";
+import { socketService } from "@/lib/config/sockteioConfig";
 
 
 export default function PedidosPage() {
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-  
+
   const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos')
 
 
@@ -31,8 +35,8 @@ export default function PedidosPage() {
           <button
             onClick={() => {
               toast.dismiss(toastId);
-              toast.success("Excluido com sucesso");
-              deleteDelivery(id)
+
+              showDeleteDeliveryBox(id)
 
             }}
             className="bg-green-600 text-white px-3 py-1 rounded mr-2"
@@ -53,32 +57,26 @@ export default function PedidosPage() {
       }
     )
   }
-  function ShowAlert(text: string) {
-    toast.error(text, {
-      style: {
-        backgroundColor: "#fff",
-        color: "#2b192e",
-        fontFamily: "Arial, sans-serif",
-      },
-    });
-  }
 
-  async function deleteDelivery(delivery_id: string) {
+
+  async function showDeleteDeliveryBox(delivery_id: string) {
     const data = await DeleteEspecificDelivery(delivery_id)
     if (data === true) {
       router.refresh()
+      showSucess("Excluido com sucesso")
+
     } else if (data === "Credencial Invalida") {
-      ShowAlert("Credencial invalida")
+      showAlert("Credencial invalida")
       router.push('/logout')
     } else {
-      ShowAlert('Houve um erro interno Tente apagae denovo mais tarde')
+      showAlert('Houve um erro interno Tente apagar denovo mais tarde')
     }
 
     if (data) {
       initializeDeliverys()
       return;
     }
-    ShowAlert('Houve algum erro no processo !!')
+    showAlert('Houve algum erro no processo !!')
 
 
   }
@@ -90,12 +88,12 @@ export default function PedidosPage() {
       if (typeof deliverys == "string") {
         switch (deliverys) {
           case "Credencial Invalida":
-            ShowAlert("Credencias Invalidas")
+            showAlert("Credencias Invalidas")
 
             router.push("/logout")
             return;
           default:
-            ShowAlert("Houver um erro Interno Tente novamente mais tarde ")
+            showAlert("Houver um erro Interno Tente novamente mais tarde ")
             setIsLoading(false)
             return;
         }
@@ -106,7 +104,7 @@ export default function PedidosPage() {
         setIsLoading(false);
         return;
       }
-      
+
       setDeliverysToDo(deliverys);
       setIsLoading(false);
     } catch (error) {
@@ -114,16 +112,41 @@ export default function PedidosPage() {
       setIsLoading(false)
     }
   };
-
+  function esperar(): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 5000);
+    });
+  }
   useEffect(() => {
-    initializeDeliverys();
+    let socket: any
+
+    async function setup() {
+
+
+      initializeDeliverys();
+
+      const socket = await socketService.initSocket()
+
+      socket?.on('add_delivery', () => {
+        showSucess('Nova entrega cadastrada, Atualize a pagina')        
+      })
+
+    }
+
+    setup();
+
+    return () => {
+      socket?.off('add_delivery')
+    };
   }, []);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
         <div className="flex items-center space-x-2">
-          <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-4 border-[#005E40] border-t-transparent rounded-full animate-spin" />
           <span className="text-xl font-medium">Carregando...</span>
         </div>
       </div>
@@ -158,42 +181,43 @@ export default function PedidosPage() {
           </select>
           <div className={styles.ordersList}>
 
-            {deliverysToDo.filter(order => {if (searchStatus === 'Todos') return true;
+            {deliverysToDo.filter(order => {
+              if (searchStatus === 'Todos') return true;
               return order.status === searchStatus
             })
-            .map((order, index) => (
-              <div
-                key={index}
-                className={styles.card}
-              >
+              .map((order, index) => (
                 <div
-                  onDoubleClick={() => router.push(`delivery/${order.id}`)}
-                  onClick={() => setSelectedOrder(order)}
-                  className={styles.orderItem}
+                  key={index}
+                  className={styles.card}
                 >
-                  <p className={styles.orderName}>{order.Produto}</p>
-                  <div className={styles.orderQuantity}>
-                    <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
-                    <span className={styles.orderUnit}>Caixas</span>
+                  <div
+                    onDoubleClick={() => router.push(`delivery/${order.id}`)}
+                    onClick={() => setSelectedOrder(order)}
+                    className={styles.orderItem}
+                  >
+                    <p className={styles.orderName}>{order.Produto}</p>
+                    <div className={styles.orderQuantity}>
+                      <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
+                      <span className={styles.orderUnit}>Caixas</span>
+                    </div>
+                    <div className="gap-6 flex flex-row-reverse">
+                      <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                      <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                      <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
+                    </div>
                   </div>
-                  <div className="gap-6 flex flex-row-reverse">
-                    <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
-                    <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
-                    <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
-                  </div>
+                  {selectedOrder?.id === order.id && (
+                    <div className={styles.details}>
+                      <p className="text-black">
+                        <strong>Local de Entrega:</strong> {order.LocalEntrega}
+                      </p>
+                      <p className="text-black">
+                        <strong>Data de Entrega:</strong> {order.DataEntrega}
+                      </p>
+                    </div>
+                  )}
                 </div>
-                {selectedOrder?.id === order.id && (
-                  <div className={styles.details}>
-                    <p className="text-black">
-                      <strong>Local de Entrega:</strong> {order.LocalEntrega}
-                    </p>
-                    <p className="text-black">
-                      <strong>Data de Entrega:</strong> {order.DataEntrega}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <ToastContainer

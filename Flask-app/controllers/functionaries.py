@@ -15,7 +15,7 @@ class FunctionariesController():
         self.db = DataBase().database
         self.coll = self.db[self.collection_name]
     
-    def get_functionaries(self,company_email):
+    def GetFunctionaries(self,company_email):
         try:
             has_functionaries = list(self.coll.find({"company_email": company_email}))
             if has_functionaries:
@@ -34,7 +34,7 @@ class FunctionariesController():
             print('Error : ',e)
             return 'Error',False
     
-    def get_functionaries_quantity(self,company_email):
+    def GetFunctionaryQuantidy(self,company_email):
         try:
             has_functionaries = list(self.coll.find({"company_email": company_email}))
             if has_functionaries:
@@ -45,7 +45,7 @@ class FunctionariesController():
             print('Error : ',e)
             return 'Error',False
     
-    def add_new_functionary(self,company_email,company_name,name,password,email,role):
+    def AddNewFunctionary(self,company_email,company_name,name,password,email,role):
         try:
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             functionary_datas = {'company_email':company_email,
@@ -67,3 +67,34 @@ class FunctionariesController():
         except Exception as e:
             print('Error: ',e)
             return 'Error',False
+    def GetEspecificFunctionary(self,company_email,email):
+        try:
+            
+            find_funcitonary = self.coll.find_one({'company_email':company_email,"email":email})
+            
+            if find_funcitonary :
+                functionary_data = {
+                
+                    "email":find_funcitonary['email'],
+                    "role":find_funcitonary['role'],
+                    "name":find_funcitonary['name']
+                }
+                
+                return functionary_data
+            return None
+        except Exception as e:
+            print('Error: ',e)
+            return e
+    def DeleteFunctionary(self,functionary_data):
+        try:
+
+            deleted_functionary = self.coll.delete_one({"email":functionary_data['email']})
+            
+            if deleted_functionary:
+                return True
+            else:
+                return False
+            
+        except Exception as e:
+            print("Error: ",e)
+            return e

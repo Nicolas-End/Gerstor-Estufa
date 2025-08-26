@@ -4,9 +4,9 @@ import Sidebar from "@/Components/sidebar";
 import styles from "../functionaries/page.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
-import { faSearch, faTruck } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTruck, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { GetTrucks,ValidateHomeAcess } from "@/lib/ts/api"; 
+import { GetTrucks, ValidateHomeAcess } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { showError } from "@/lib/controller/alertsController";
 
@@ -21,34 +21,35 @@ export default function CaminhoesPage() {
     }, []);
 
     const initializeTrucks = async () => {
-            try {
-                const can_access_home = await ValidateHomeAcess(router);
-                if (!can_access_home) {
-                    router.push("/logout");
-                    return;
-                }
-                const data: any = await GetTrucks();
-                if (typeof data === 'string') {
-                    switch (data){
-                        case 'Login':
-                            showError('Por favor refaça o Login')
-                            router.push('/logout')
-                        default :
-                            showError ('Ops houve um erro interno')
-                            showError('Tente novamente mais tarde pfv')
-                            return;
-                    }
-                
-                }
-                setTrucks(data)
-                setIsLoading(false)
+        try {
+            const can_access_home = await ValidateHomeAcess(router);
+            if (!can_access_home) {
+                router.push("/logout");
                 return;
-
-            } catch (error) {
-                console.error("Erro ao verificar acesso do cliente:", error);
-                router.push("/login");
             }
-        };
+            const data: any = await GetTrucks();
+            if (typeof data === 'string') {
+                switch (data) {
+                    case 'Login':
+                        showError('Por favor refaça o Login')
+                        router.push('/logout')
+                        break;
+                    default:
+                        showError('Ops houve um erro interno')
+                        showError('Tente novamente mais tarde pfv')
+                        return;
+                }
+
+            }
+            setTrucks(data)
+            setIsLoading(false)
+            return;
+
+        } catch (error) {
+            console.error("Erro ao verificar acesso do cliente:", error);
+            router.push("/login");
+        }
+    };
     const resultados = trucks.filter((t) =>
         t.placa.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -56,12 +57,12 @@ export default function CaminhoesPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-screen bg-white text-gray-800">
-        <div className="flex items-center space-x-2">
-          <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xl font-medium">Carregando...</span>
-        </div>
-        <ToastContainer position="top-right" autoClose={4000} />    
-      </div>
+                <div className="flex items-center space-x-2">
+                    <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xl font-medium">Carregando...</span>
+                </div>
+                <ToastContainer position="top-right" autoClose={4000} />
+            </div>
         );
     }
 
@@ -93,21 +94,43 @@ export default function CaminhoesPage() {
                 </div>
 
                 <div className={styles.ordersList}>
-                    {(searchTerm ? resultados : trucks).length === 0 ? (
-                        <div className="text-center text-gray-500 text-lg py-8">
-                            Nenhum caminhão {searchTerm ? "encontrado" : "cadastrado"}.
-                        </div>
-                    ) : (
-                        (searchTerm ? resultados : trucks).map((truck, index) => (
-                            <div key={index} className={styles.functionaryCard}>
+                    {(searchTerm ? resultados : trucks).map((truck, index) => (
+                        <div
+                            key={index}
+                            className={`${styles.functionaryCard} flex items-center justify-between`}
+                            onDoubleClick={() => {
+                                router.push(`caminhao/${truck.placa}`);
+                            }}
+                        >
+                            {/* Ícone e informações */}
+                            <div className="flex items-center gap-4">
                                 <FontAwesomeIcon icon={faTruck} className={styles.functionaryIcon} />
                                 <div>
                                     <p className={styles.functionaryName}>Placa: {truck.placa}</p>
                                     <p>Modelo: {truck.modelo}</p>
                                 </div>
                             </div>
-                        ))
-                    )}
+
+                            {/* Ações (icones do lado direito) */}
+                            <div className="flex items-center gap-4">
+                                <button>
+                                    <FontAwesomeIcon
+                                        icon={faTrash}
+                                        className="text-white hover:text-red-600 transition-colors duration-200"
+                                    />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => router.push(`caminhoes/${truck.placa}`)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faPenToSquare}
+                                        className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
             <ToastContainer position="top-right" autoClose={4000} />

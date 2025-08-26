@@ -10,17 +10,25 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/Components/sidebar";
+import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { socketService } from '@/lib/config/sockteioConfig'
+import { showSucess } from "@/lib/controller/alertsController";
+import { AsyncCallbackSet } from "next/dist/server/lib/async-callback-set";
+import { Socket } from "socket.io-client";
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliveryQuantidy, setDeliveryQuantidy] = useState(-1);
   const [functionariesQuantidy, setFunctionariesQuantidy] = useState(0);
+  const [role, setRole] = useState("")
+  let socket: Socket | null
   const initializeDashboard = async () => {
     try {
+      setRole(await getRoleCookie())
       const can_access_home = await ValidateHomeAcess(router);
       if (!can_access_home) {
-        router.push("/login");
+        router.push("/logout");
         return;
       }
       setIsLoading(false);
@@ -35,12 +43,26 @@ export default function Home() {
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
       router.push("/login");
-    }
+    } socketService
   };
 
   useEffect(() => {
-    initializeDashboard();
+    let socket:any
+    const setup = async () => {
+      initializeDashboard();
+
+      const socket = await socketService.initSocket()
+
+
+      
+    };
+
+    setup();
+    return () => {
+      
+      };
   }, []);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white text-gray-800">
@@ -56,16 +78,16 @@ export default function Home() {
         <Sidebar />
 
         <main className="flex-1 overflow-auto bg-gray-50 p-8">
-          <h1 className="text-3xl font-bold text-[#0a3b2c] mb-8">Dashboard</h1>
+          <h1 className="text-4xl font-bold text-[#0a3b2c] mb-8">Página Inicial</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Link
               href="/deliverys"
-              className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
+              className="bg-[#005E40] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
             >
               <h2 className="text-xl font-semibold mb-2">Pedidos</h2>
               <p className="text-4xl font-bold">
-                {deliveryQuantidy !== -1? deliveryQuantidy: (
+                {deliveryQuantidy !== -1 ? deliveryQuantidy : (
                   <svg
                     aria-hidden="true"
                     className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -85,9 +107,9 @@ export default function Home() {
                 )}
               </p>
             </Link>
-            <Link
+            {role === "ADM" || role === "Secretaria" ? <Link
               href="/functionaries"
-              className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
+              className="bg-[#005E40] text-white p-6 rounded-xl shadow hover:bg-[#0d4b38] transition duration-300"
             >
               <h2 className="text-xl font-semibold mb-2">Funcionários</h2>
               <p className="text-4xl font-bold">
@@ -110,8 +132,10 @@ export default function Home() {
                   </svg>
                 )}
               </p>
-            </Link>
-            <div className="bg-[#0a3b2c] text-white p-6 rounded-xl shadow">
+            </Link> : null}
+
+
+            <div className="bg-[#005E40] text-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-2">Notificações</h2>
               <p className="text-4xl font-bold">3</p>
             </div>

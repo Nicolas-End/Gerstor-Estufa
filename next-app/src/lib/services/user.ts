@@ -28,10 +28,12 @@ export const validateUserAcess = async() =>{
 }
 // server para adicionar uma nova empresa ao banco de dados
 // utilizado no register page
-export const addNewCompany = async (email:string,id:string,password:string,companyEmail:string) =>{
+export const addNewCompany = async (email:string,id:string,password:string,companyName:string) =>{
   try{
-    let datas = {email,id,password,companyEmail}
+
+    let datas = {email,id,password,companyName}
     const response = await axios.post('https://gerenciador-empresarial-1cfr.vercel.app/add-new-company',datas,{
+
       validateStatus: () => true
     })
 

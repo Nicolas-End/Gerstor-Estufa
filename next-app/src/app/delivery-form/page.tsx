@@ -2,10 +2,16 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { AddNewDelivery, ValidateHomeAcess } from "@/lib/ts/api";
+import { AddNewDelivery, ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { ClientPageRoot } from "next/dist/client/components/client-page";
+
+import { Socket } from "socket.io-client";
+import { SchoolIcon } from "lucide-react";
+import { socketService } from "@/lib/config/sockteioConfig";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -17,7 +23,7 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
-  
+
   function ShowAlert(text: string) {
     toast(text, {
       style: {
@@ -28,12 +34,16 @@ export default function DeliveryFormPage() {
     });
   }
 
+
   // Estados dos campos principais
   const [customerName, setCustomerName] = useState("");
   const [address, setAddress] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [clientInfo, setClientInfo] = useState<any>({});
+  const [clients, setClients] = useState<any[]>([]);
+
 
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
@@ -62,11 +72,29 @@ export default function DeliveryFormPage() {
     try {
       const can_access_home = await ValidateHomeAcess(router);
 
+
       if (!can_access_home) {
-        router.push("/login");
+        router.push("/logout");
+
         return;
       }
       setPageIsLoading(false);
+      const clients = await GetAllClients()
+      if (typeof clients === "string") {
+        switch (clients) {
+          case "Credencial Invalida":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+
+            break;
+          default:
+            showError("não possivel mostar os cliente tente novamte mais tarde")
+
+            return;
+        }
+      }
+      setClients(clients)
+
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
       router.push("/login");
@@ -80,41 +108,62 @@ export default function DeliveryFormPage() {
 
   // Envia o formulário ao back-end
   const handleSubmit = async (e: React.FormEvent) => {
+    const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
+    const typeClientId = clientInfo.cpf ? 'cpf' : clientInfo.cnpj ? 'cnpj' : 'id'
     e.preventDefault();
     const formData = {
       name: customerName,
       address,
       deliveryDate,
       items,
+      clientId,
+      typeClientId
     };
 
     try {
       setIsLoading(true);
       const data = await AddNewDelivery(formData);
+      const socket = await socketService.initSocket()
       if (data === true) {
-        ShowAlert("Entrega Adicionada com Sucesso");
+        showSucess("Entrega Adicionada com Sucesso");
+        // enviando para o sistema que tem uma nova entrega disponivel
+        socket?.emit('new_delivery')
+
         setAddress("");
         setCustomerName("");
         setDeliveryDate("");
         setItems([]);
+        setClientInfo("")
         setIsLoading(false);
+<<<<<<< HEAD
         
       } else if(data === "Erro Interno"){
         ShowAlert("Opss.. Houve um erro");
         ShowAlert("Tente novamente mais tarde");
+=======
+
+      } else if (data === "Erro Interno") {
+        showAlert("Opss.. Houve um erro");
+        showAlert("Tente novamente mais tarde");
+>>>>>>> feat
         setIsLoading(false);
-      }else{
+
+      } else {
+
         router.push('/logout')
       }
     } catch (error) {
-      ShowAlert("Opss.. Houve um erro");
-      ShowAlert("Tente novamente mais tarde");
+      showAlert("Opss.. Houve um erro");
+      showAlert("Tente novamente mais tarde");
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    initializeDeliverForm();
+
+  initializeDeliverForm();
+
+
   }, []);
 
   if (pageIsLoading) {
@@ -129,7 +178,7 @@ export default function DeliveryFormPage() {
   } else {
     return (
       <>
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex h-auto min-h-screen bg-gray-100">
           <Sidebar /> {/* Barra lateral */}
           <div className="flex-1 p-8 flex flex-col min-h-screen">
             {/* Cabeçalho */}
@@ -146,7 +195,7 @@ export default function DeliveryFormPage() {
             {/* Formulário de pedido */}
             <form
               onSubmit={handleSubmit}
-              className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col mb-6"
+              className="bg-white p-6 rounded-lg shadow overflow-auto flex flex-col mb-6 min-h-fit"
             >
               {/* Campos Nome, Endereço e Data de Entrega */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -181,7 +230,10 @@ export default function DeliveryFormPage() {
                     id="address"
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => {
+                      setClientInfo("")
+                      setAddress(e.target.value)
+                    }}
                     className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
                     placeholder="Digite o endereço"
                     required
@@ -204,7 +256,40 @@ export default function DeliveryFormPage() {
                     required
                   />
                 </div>
+                <div>
+                  <label
+                    htmlFor="deliveryDate"
+                    className="block text-green-900 text-[18px] mb-2"
+                  >Cliente
+                  </label>
+                  <select
+                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    onChange={(e) => {
+
+                      const selectedClient = clients.find(
+                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
+                      );
+                      if (selectedClient) {
+                        setClientInfo(selectedClient);
+
+                        setAddress(selectedClient.address);
+                      } else {
+                        setClientInfo("")
+                        setAddress("")
+                      }
+                    }}
+                    className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                  >
+                    <option value="">Escolha um cliente (Opcional)</option>
+                    {clients.map((client: any, index: number) => (
+                      <option key={index} value={client.cpf || client.cnpj}>
+                        {client.name} - {client.cpf || client.cnpj}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
               {/* Seção Dinâmica */}
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-2">
@@ -284,6 +369,7 @@ export default function DeliveryFormPage() {
                       </div>
                     </div>
                   ))}
+                  <br />
                 </div>
               </div>
               {/* Botão Enviar Pedido */}

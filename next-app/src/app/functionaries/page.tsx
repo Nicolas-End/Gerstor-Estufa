@@ -1,56 +1,126 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser, faSearch, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { GetFunctionaries, ValidateHomeAcess } from "@/lib/ts/api";
-import { ToastContainer } from "react-toastify";
-
+import { DeleteEspecificFunctionary, GetFunctionaries, ValidateHomeAcess } from "@/lib/ts/api";
+import { toast, ToastContainer } from "react-toastify";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { PassThrough } from "stream";
 
 export default function FuncionarioPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [functionariesDatas, setFunctionariesDatas] = useState<any>([]);
-    
+    const [functionariesDatas, setFunctionariesDatas] = useState<any[]>([]);
     const [functionaryCount, setFunctionaryCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState("");
+    const params = useParams();
+    const id: any = params?.id ?? null;
 
-    const resultados = functionariesDatas.filter((item:any) =>
+    const resultados = (Array.isArray(functionariesDatas) ? functionariesDatas : []).filter((item: any) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    const initializeFunctionary = async () => {
-        try {
-            const can_access_home = await ValidateHomeAcess(router);
-            if (!can_access_home) {
-                router.push("/login");
-                return;
+    );
+
+    function confirmToastToDeleteFunctionary(id: string) {
+        const toastId = toast.info(
+            <div>
+                <p>Tem certeza que deseja excluir essa entrega?</p>
+                <div className="flex justify-end mt-2">
+                    <button
+                        onClick={() => {
+                            toast.dismiss(toastId);
+
+                            showDeleteFunctionaryBox(id)
+
+                        }}
+                        className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+                    >
+                        Sim
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(toastId)}
+                        className="bg-red-600 text-white px-3 py-1 rounded"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>,
+            {
+                closeOnClick: false,
+                closeButton: false,
             }
-            const functionaries = await GetFunctionaries();
-            if (typeof functionaries === "string"){
-                switch(functionaries){
-                    case "Credencial Invalida":
-                        showAlert("Suas Credenciais são invalidas")
-                        router.push("/logout")
-                    case "Erro Interno":
-                        showAlert("Houve um erro interno tente novamente mais tarde")
-                }
-            }
-            setFunctionariesDatas(functionaries);
-            const quantidy: number|undefined = functionaries?.length
-            setFunctionaryCount(quantidy || 0);
-            setIsLoading(false);
-        } catch (error) {
-            showError("Houve um error tente novamente mais tarde")
-            setIsLoading(false)
+        )
+    }
+
+
+    async function showDeleteFunctionaryBox(functionary_email: string) {
+        const data = await DeleteEspecificFunctionary(functionary_email)
+        
+        if (data === "Funcionario Deletado") {
+            router.refresh()
+            showSucess("Excluido com sucesso")
+
+        } else if (data === "Credenciais Invalidas") {
+            showAlert("Credencial invalida")
+            router.push('/logout')
+        } else {
+            showAlert('Houve um erro interno Tente apagar denovo mais tarde')
+        }
+
+        if (data) {
+            initializeFunctionary()
             return;
         }
-    };
+        showAlert('Houve algum erro no processo !!')
 
+
+    }
+
+
+    const VerifyRole = async () => {
+        const role = await getRoleCookie()
+        switch (role) {
+            case "ADM":
+                break;
+            case "Secretaria":
+                break
+            default:
+                router.push('/not-found')
+                return;
+        }
+    }
+    const initializeFunctionary = async () => {
+        try {
+            await VerifyRole()
+            const functionaries = await GetFunctionaries();
+
+            if (!Array.isArray(functionaries)) {
+                switch (functionaries) {
+                    case "Credencial Invalida":
+                        showAlert("Suas Credenciais são inválidas");
+                        router.push("/logout");
+                        return; // impede continuar
+                    case "Erro Interno":
+                        showAlert("Houve um erro interno, tente novamente mais tarde");
+                        return;
+                }
+            }
+
+            setFunctionariesDatas(functionaries);
+            setFunctionaryCount(functionaries.length);
+            setIsLoading(false);
+        } catch (error) {
+            showError("Houve um erro, tente novamente mais tarde");
+            setIsLoading(false);
+        }
+    };
     useEffect(() => {
+
         initializeFunctionary();
     }, []);
 
@@ -91,30 +161,54 @@ export default function FuncionarioPage() {
                     </div>
                     <div className={styles.ordersList}>
                         {searchTerm ?
-                        resultados.map((functionary:any,index:any)=>(
-                            <div className={styles.functionaryCard} key={index}>
-                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                <p className={styles.functionaryName}>{functionary.name}</p>
-                            </div>
-                        )): 
-                        functionariesDatas.map((functionary:any,index:any) => (
-                            <div className={styles.functionaryCard} key={index}>
-                                <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
-                                <p className={styles.functionaryName}>{functionary.name}</p>
-                            </div>
-                        ))}
+                            resultados.map((functionary: any, index: any) => (
+                                <div className={styles.functionaryCard} key={index} onDoubleClick={() => router.push(`functionary/${functionary.email}`)}>
+                                    <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                    <p className={styles.functionaryName}>{functionary.name}</p>
+                                    <div className="gap-6 flex flex-row-reverse">
+                                        <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                        <button
+                                            type="button"
+                                            onClick={() => router.push(`/functionaries/${functionary.email}`)}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faPenToSquare}
+                                                className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                            />
+                                        </button>
+                                    </div>
+                                </div>
+                            )) :
+                            functionariesDatas.map((functionary: any, index: any) => (
+                                <div className={styles.functionaryCard} key={index} onDoubleClick={() => router.push(`functionary/${functionary.email}`)}>
+                                    <FontAwesomeIcon icon={faCircleUser} className={styles.functionaryIcon} />
+                                    <p className={styles.functionaryName}>{functionary.name}</p>
+                                    <div className="gap-6 flex flex-row-reverse">
+                                        <div><button onClick={() => {confirmToastToDeleteFunctionary(functionary.email)}}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                        <button
+                                            type="button"
+                                            onClick={() => router.push(`/functionaries/${functionary.email}`)}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faPenToSquare}
+                                                className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                            />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
                     </div>
                 </div>
-                  <ToastContainer
-                position="top-right"
-                autoClose={4000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-            />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                />
             </div>
         );
     }

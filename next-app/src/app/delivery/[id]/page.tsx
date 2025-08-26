@@ -6,12 +6,15 @@ import { GetEspecificDelivery } from "@/lib/ts/api";
 import Sidebar from "@/Components/sidebar";
 import { showAlert } from "@/lib/controller/alertsController";
 import { ToastContainer, toast } from "react-toastify";
+  
 
 export default function ProdutoPage() {
+  
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysDatas, setDeliveryDatas] = useState<any>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+  const [clientInfo, setClientInfo] = useState<any>({})
   const router = useRouter();
   const params = useParams();
   const id: any = params?.id ? params.id : null;
@@ -28,15 +31,22 @@ export default function ProdutoPage() {
         switch (delivery) {
           case "Credencial Invalida":
             router.push('/logout')
+            break;
           case "Entrega inexistente":
             showAlert('Entrega não Existente')
             router.push('/deliverys')
+            break;
           default:
             showAlert('Entrega Interno tente novamente mais tarde')
             router.push('/deliverys')
+            break;
         }
       }
+      const clienttypeId = delivery.deliveryDatas.cpf?'cpf':delivery.deliveryDatas.cnpj?'cnpj':''
+      const clientId  = delivery.deliveryDatas.cpf || delivery.deliveryDatas.cnpj || ''
+      
       setDeliveryDatas(delivery.deliveryDatas);
+      setClientInfo({clientId:clientId,typeId:clienttypeId})
       setProducts(delivery.products);
       setIsLoading(false);
     } catch (error) {
@@ -47,6 +57,7 @@ export default function ProdutoPage() {
   useEffect(() => {
     if (id !== null) {
       initializeDeliverys();
+      // serve para salvar as produtos ja preparados
       const savedChecks = localStorage.getItem(localStorageKey);
       if (savedChecks) {
         setCheckedItems(JSON.parse(savedChecks));
@@ -90,6 +101,13 @@ export default function ProdutoPage() {
           >
             Voltar
           </button>
+          {clientInfo.clientId?<button
+            type="button"
+            onClick={() => router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)}
+            className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
+          >
+            Acessar Cliente
+          </button>:null}
         </div>
 
         <div className="bg-[#0a2c26] text-white rounded-xl p-6 shadow-md flex items-center justify-between mb-6">

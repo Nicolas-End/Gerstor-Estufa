@@ -17,7 +17,7 @@ class ControllerToken:
     """
         Cria um novo token para o usuario mudar a senha
     """
-    def new_recuperation_token(self,token,user_email,newpassword):
+    def NewRecuperationToken(self,token,user_email,newpassword):
         try:
             
             if not self.collection_name:
@@ -55,7 +55,7 @@ class ControllerToken:
         Aqui verifica se o token enviado pelo usuario e valido,
         se for valido deleta o token e retorna a nova senha
     """
-    def token_verify(self,token,user_email):
+    def TokenVerify(self,token,user_email):
         try:
             if not self.collection_name:
                 raise ValueError("TOKEN_COLLECTION não está configurado no arquivo .env.")

@@ -13,7 +13,7 @@ class TruckController:
         self.db = DataBase().database
         self.coll = self.db[self.client_collection]
 
-    def get_trucks(self,company_email):
+    def GetTrucks(self,company_email):
         try:
             has_truck = list(self.coll.find({'company_email': company_email}))
 
@@ -35,10 +35,10 @@ class TruckController:
             print('Error:',e)
             return False , e
     
-    def add_new_truck(self,company_email,chassi,placa,cor,modelo,eixos,mercosul=False):
+    def AddNewTruck(self,company_email,chassi,placa,cor,modelo,eixos,mercosul=False):
         try:
             truck_exist = self.coll.find_one({'company_email':company_email,'placa':placa})
-            print(truck_exist)
+           
             if truck_exist:
                 return False
             truck_datas = {'company_email':company_email,'chassi':chassi,'placa':placa,'cor':cor,'modelo':modelo,'eixos':eixos,'mercosul':mercosul}
@@ -47,4 +47,20 @@ class TruckController:
             return True
         except Exception as e:
             print("Error: ",e)
+            return e
+    def GetEspecificTruck(self,company_email,placa):
+        try:
+            truck_exist = self.coll.find_one({'company_email':company_email,'placa':placa})
+            if truck_exist:
+                truck_datas = {
+                    'placa':truck_exist['placa'],
+                    'chassi':truck_exist['chassi'],
+                    'cor':truck_exist['cor'],
+                    'modelo':truck_exist['modelo'],
+                    'eixos':truck_exist['eixos'],
+                    'mercosul':truck_exist['mercosul']
+                }
+                return truck_datas
+            return False
+        except Exception as e:
             return e

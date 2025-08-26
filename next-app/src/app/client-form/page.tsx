@@ -29,7 +29,7 @@ export default function RegisterClientPage() {
     try {
       const canAccess = await ValidateHomeAcess(router);
       if (!canAccess) {
-        router.push("/login");
+        router.push("/logout");
         return;
       }
       setPageIsLoading(false);
@@ -68,6 +68,7 @@ export default function RegisterClientPage() {
         case "Credencial Invalida":
           showAlert("Suas credenciais são invalidas")
           router.push('/logout')
+          
           return;
         case "Cliente ja Existe":
           showAlert("Cliente ja Constatado no sistema")
@@ -75,6 +76,10 @@ export default function RegisterClientPage() {
         default:
           showError("Houver um error interno tente novamente mais tarde")
           break;
+<<<<<<< HEAD
+=======
+
+>>>>>>> feat
       }
 
 
@@ -106,7 +111,8 @@ export default function RegisterClientPage() {
   }
 
   // Determinar comprimento máximo de dígitos
-  const maxLength = idType === 'cpf' ? 11 : 14;
+  const minLengt = idType === 'cpf' ? 11 : 14;
+  const maxLengt = idType === 'cpf' ? 11 : 14;
 
   return (
     <>
@@ -179,9 +185,12 @@ export default function RegisterClientPage() {
                   type="text"
                   value={idValue}
                   onChange={e => setIdValue(e.target.value.replace(/\D/g, ''))}
-                  maxLength={maxLength}
+                  minLength={minLengt}
+                  maxLength={maxLengt}
                   className="w-full border border-gray-300 rounded-lg p-2 text-black"
                   placeholder={idType === 'cpf' ? 'Só dígitos, ex: 00000000000' : 'Só dígitos, ex: 00000000000000'}
+                  
+                  
                   required
                 />
               </div>

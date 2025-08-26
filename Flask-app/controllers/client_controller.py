@@ -11,7 +11,7 @@ class ClientController:
         self.client_collection = os.getenv('CLIENT_COLLECTION')
         self.db = DataBase().database
         self.coll = self.db[self.client_collection]
-    def get_clients(self,company_email):
+    def GetClients(self,company_email):
         try:
             has_clients = list(self.coll.find({'company_email': company_email}))
             if has_clients:
@@ -33,7 +33,7 @@ class ClientController:
             print('Error:',e)
             return False , 0
         
-    def add_new_client(self,company_email,name,address,document):
+    def AddNewClient(self,company_email,name,address,document):
         try:
             client_adress = "Rua {}, Bairro {}, {}".format(address['street'],address['neighborhood'],address['number'])
             clients_datas = {"company_email":company_email,
@@ -59,4 +59,21 @@ class ClientController:
             return True
         except Exception as e:
             print ('Error: ',e)
+            return False
+    def GetEspecicDataFromClient(self,company_email,id,tipo):
+        try:
+            
+            client_exist = self.coll.find_one({'company_email':company_email,tipo:id})
+            if client_exist:
+                datas_clients = {
+                    'name':client_exist['name'],
+                    'address':client_exist['address'],
+                    'refe':client_exist['referencia'],
+                    tipo:client_exist[tipo]
+                }
+                return datas_clients
+            
+            return None
+        except Exception as e:
+            print('Error: ',e)
             return False

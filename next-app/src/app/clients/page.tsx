@@ -1,6 +1,6 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser, faSearch, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/Components/order-items";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
@@ -10,40 +10,50 @@ import { ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { showAlert, showError } from "@/lib/controller/alertsController";
+import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { verify } from "crypto";
 
 export default function ClientsPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [clientsDatas, setClientsDatas] = useState<any>([]);
+    const [clientsDatas, setClientsDatas] = useState<any[]>([]);
     const [clientCount, setClientCount] = useState<number>(0);
     const [hasClient, setHasclient] = useState(Boolean)
     const [searchTerm, setSearchTerm] = useState("");
-
+    const VerifyRole = async () => {
+        const role = await getRoleCookie()
+        switch (role) {
+            case "ADM":
+                break;
+            case "Secretaria":
+                break
+            default:
+                router.push('/home')
+        }
+    }
     const initializeClients = async () => {
         try {
-            const can_access_home = await ValidateHomeAcess(router);
-            if (!can_access_home) {
-                router.push("/home");
-                return;
-            }
-            setIsLoading(false);
+
+
             const clients: any = await GetAllClients();
-            if (typeof clients === "string"){
-                switch (clients){
+            if (typeof clients === "string") {
+                switch (clients) {
                     case "Credencial Invalida":
                         showAlert("Suas credenciais sõa invalidas")
                         router.push('/logout')
                         break;
                     default:
+                        setIsLoading(false)
                         showError("Houve um erro interno tente novamente mais tarde")
                         return;
                 }
             }
-
+            setIsLoading(false);
             setHasclient(true)
             setClientsDatas(clients);
-            const quantidy: number|undefined = clients?.length
+            const quantidy: number | undefined = clients?.length
             setClientCount(quantidy || 0);
+
 
         } catch (error) {
             showError("Houve um erro tente novamente mais tarde")
@@ -53,6 +63,7 @@ export default function ClientsPage() {
     };
 
     useEffect(() => {
+        VerifyRole()
         initializeClients();
     }, []);
 
@@ -91,26 +102,36 @@ export default function ClientsPage() {
                         </div>
                     </div>
                     <div className={styles.ordersList}>
-                        {hasClient? clientsDatas.map((client:any,index:any) => (
-                            <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf || client.cnpj}`)}>
+                        {hasClient ? clientsDatas.map((client: any, index: any) => (
+                            <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
                                 <p className={styles.clientName}>{client.name}</p>
+                                <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                <button
+                                    type="button"
+                                    onClick={() => router.push(`clients/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faPenToSquare}
+                                        className="text-white hover:text-yellow-400 transition-colors duration-200"
+                                    />
+                                </button>
                             </div>
-                        )): <div className="text-center text-gray-500 text-lg py-8">
+                        )) : <div className="text-center text-gray-500 text-lg py-8">
                             Nenhum cliente {searchTerm ? "encontrado" : "cadastrado"}
                         </div>}
                     </div>
                 </div>
-                  <ToastContainer
-                position="top-right"
-                autoClose={4000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-            />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                />
             </div>
         );
     }
