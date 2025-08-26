@@ -36,7 +36,7 @@ export default function PedidosPage() {
             onClick={() => {
               toast.dismiss(toastId);
 
-              deleteDelivery(id)
+              showDeleteDeliveryBox(id)
 
             }}
             className="bg-green-600 text-white px-3 py-1 rounded mr-2"
@@ -59,7 +59,7 @@ export default function PedidosPage() {
   }
 
 
-  async function deleteDelivery(delivery_id: string) {
+  async function showDeleteDeliveryBox(delivery_id: string) {
     const data = await DeleteEspecificDelivery(delivery_id)
     if (data === true) {
       router.refresh()
@@ -130,7 +130,7 @@ export default function PedidosPage() {
       const socket = await socketService.initSocket()
 
       socket?.on('add_delivery', () => {
-        showSucess('Nova entrega cadastrada, Atualize a pagina')
+        showSucess('Nova entrega cadastrada, Atualize a pagina')        
       })
 
     }

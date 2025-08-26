@@ -83,12 +83,31 @@ export const getEspecificFunctionary = async(id:string) => {
         return response.data.functionary
       case 409:
         return "Funcionario Não Cadastrado"
-      case 400:
+      case 401:
         return "Credenciais Invalidas"
       default:
         return "Erro Interno"
     }
   }catch(error){
     throw (error)
+  }
+}
+
+export const deleteFunctionary = async(functionary_email:string) => {
+  try{
+    const api = await createApiWithAuth()
+    const data = {'email':functionary_email}
+
+    const response = await api.post('/delete-functionary',data)
+    switch(response.status){
+      case 204:
+        return "Funcionario Deletado"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw error
   }
 }

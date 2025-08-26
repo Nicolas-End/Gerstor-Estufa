@@ -61,7 +61,6 @@ def connection():
         return
 
     join_room(descripto['company_email'])
-    print('')
     print(descripto['email'])
     print(rooms())
     print(' ')

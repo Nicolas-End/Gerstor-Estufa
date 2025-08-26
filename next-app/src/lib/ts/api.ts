@@ -5,7 +5,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
-import { addNewFunctionary, functionariesQuantity, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
+import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
@@ -180,6 +180,18 @@ export async function GetEspecificFunctionary(email: string): Promise<any> {
   } catch (error) {
     console.log("Erro Especific Functionary: ", error)
     throw (error)
+  }
+}
+
+export async function DeleteEspecificFunctionary(email:string) {
+  try{
+    const response = await deleteFunctionary(email)
+
+    return response
+    
+  }catch(error){
+    console.log("Error: ",error)
+    throw(error)
   }
 }
 //========= ENTREGAS =========

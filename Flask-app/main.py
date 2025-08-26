@@ -19,6 +19,20 @@ CORS(app, origins="*")
 secret_key = os.getenv('SUPER_KEY')
 fernet = Fernet(os.getenv('FERNET_KEY'))
 
+
+def DescriptoToken(token):
+    try:
+        if not token:
+            return False
+        
+        datas = CriptographyController().DecriptoDatas(token)
+        if not datas:
+            return False
+    
+        return datas
+    except Exception as e:
+        return False
+
 @app.route('/')
 def home():
     return "BEM-VINDO A MINHA API"
@@ -155,12 +169,9 @@ def ChangePassword() :
 def CountDeliverys():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
 
         count, ok = DeliveryController().QuantidyDelivery(datas['company_email'])
@@ -183,12 +194,9 @@ def GetDeliverys():
     try:
         
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
 
         deliverys, ok = DeliveryController().GetDeliverys(datas['company_email'])
         if not ok:
@@ -209,14 +217,11 @@ def GetDeliverys():
 def GetEspecificDelivery():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-            
-        request_id = request.get_json()['id']
-    
-        datas = CriptographyController().DecriptoDatas(token)
+        datas = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas",401
+        
+        request_id = request.get_json()['id']
         
         delivery ,ok = DeliveryController().GetEspecificDelivery(datas['company_email'],request_id)
         
@@ -237,12 +242,9 @@ def GetEspecificDelivery():
 def AddNewDelivery():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400 #dados do usuario sendo descriptografado
+            return "Credenciais Invalidas", 401 #dados do usuario sendo descriptografado
         
         formsData = request.get_json()['FormsData']
         itens = formsData['items']
@@ -267,12 +269,9 @@ def AddNewDelivery():
 def EditDelivery():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
         formsData = request.get_json()['FormsData']
         delivery_id = formsData['id']
@@ -299,12 +298,9 @@ def EditDelivery():
 def DeleteDelivery():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
         delivery_id= request.get_json()['delivery_id']
         delivery_was_deleted = DeliveryController().DeleteDelivery(datas['company_email'],delivery_id)
@@ -329,12 +325,9 @@ def DeleteDelivery():
 def GetFunctionaries():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
         functionaries, ok = FunctionariesController().GetFunctionaries(datas['company_email'])
         if ok:
@@ -353,12 +346,9 @@ def GetFunctionaries():
 def AddNewFunctionary():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 401
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),401
+            return "Credenciais Invalidas",401
         
 
         functionary_datas = request.get_json() 
@@ -386,12 +376,9 @@ def AddNewFunctionary():
 def GetFunctionariesQuantidy():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
     
         functionaries_quantity, ok = FunctionariesController().GetFunctionaryQuantidy(datas['company_email'])
         if ok:
@@ -409,12 +396,9 @@ def GetFunctionariesQuantidy():
 def GetEspecificFunctionary():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
 
         email = request.get_json()['email']
         find_functionary = FunctionariesController().GetEspecificFunctionary(datas['company_email'],email)
@@ -432,7 +416,27 @@ def GetEspecificFunctionary():
         print('Error:', e)
         return "Erro Interno", 500  
     
+@app.route('/delete-functionary', methods=['POST'])
+def DeleteEspecificFunctionary():
+    try:
+        token = request.headers.get('Authorization')
+ 
+        datas  = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas", 401
+        email = request.get_json()
+        deleted_functionary = FunctionariesController().DeleteFunctionary(email)
 
+        if deleted_functionary:
+            return jsonify({}), 204
+        else:
+            return jsonify({}), 400 
+        
+    except InvalidSignatureError as i:
+        return "Credencial Invalida", 400    
+    except Exception as e:
+        print('Error: ',e)
+        return "Error Interno",500
 
 
 #========== CLIENTES =========    
@@ -440,12 +444,9 @@ def GetEspecificFunctionary():
 def GetClients():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
         status, clients = ClientController().GetClients(datas['company_email'])
         if status:
@@ -464,12 +465,9 @@ def GetClients():
 def AddClient():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
 
         clients_datas = request.get_json()  
@@ -492,12 +490,9 @@ def AddClient():
 def GetEspecifcClient():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'invalid'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas  = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error'}),400
+            return "Credenciais Invalidas", 401
         
         clients_datas = request.get_json()['id']
         tipo, client_id = clients_datas.split('&')
@@ -518,12 +513,9 @@ def GetTrucks():
     try:
 
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'error','message':'Authorization?'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error','message':'Authorization?'}),400
+            return "Credenciais Invalidas", 401
         status, trucks= TruckController().GetTrucks(datas['company_email'])
         if status:
             
@@ -541,12 +533,9 @@ def GetTrucks():
 def AddNewTruck():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'error','message':'Authorization?'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error','message':'Authorization?'}),400
+            return "Credenciais Invalidas", 401
 
         forms_data = request.get_json()['FormsData']
 
@@ -568,12 +557,9 @@ def AddNewTruck():
 def EspecificTruck():
     try:
         token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'status': 'error','message':'Authorization?'}), 400
-        
-        datas = CriptographyController().DecriptoDatas(token)
+        datas = DescriptoToken(token)
         if not datas:
-            return jsonify({'status':'error','message':'Authorization?'}),400
+            return "Credenciais Invalidas", 401
 
         placa = request.get_json()['placa']
         truck_datas = TruckController().GetEspecificTruck(datas['company_email'],placa)

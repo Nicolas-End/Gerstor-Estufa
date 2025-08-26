@@ -85,3 +85,16 @@ class FunctionariesController():
         except Exception as e:
             print('Error: ',e)
             return e
+    def DeleteFunctionary(self,functionary_data):
+        try:
+
+            deleted_functionary = self.coll.delete_one({"email":functionary_data['email']})
+            
+            if deleted_functionary:
+                return True
+            else:
+                return False
+            
+        except Exception as e:
+            print("Error: ",e)
+            return e
