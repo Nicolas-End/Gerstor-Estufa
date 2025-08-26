@@ -577,5 +577,5 @@ def EspecificTruck():
         return "Error Interno",500
 
 
-
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
