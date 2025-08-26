@@ -1,11 +1,11 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "main.py", "use": "@vercel/python" },
-      {"src": "socket_events.py", "use":"@vercel/python"}
-    ],
-    "routes": [
-      { "src": "/api/(.*)", "dest": "/main.py" },
-      { "src":"/socket/(.*)", "dest":"/socket_events.py"}
-    ]
-  }
+  "version": 2,
+  "builds": [
+    { "src": "main.py", "use": "@vercel/python" },
+    { "src": "socket_events.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "main.py" },
+    { "src": "/socket/(.*)", "dest": "socket_events.py" }
+  ]
+}
