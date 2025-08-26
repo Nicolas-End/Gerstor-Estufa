@@ -135,17 +135,12 @@ export default function DeliveryFormPage() {
         setItems([]);
         setClientInfo("")
         setIsLoading(false);
-<<<<<<< HEAD
-        
-      } else if(data === "Erro Interno"){
-        ShowAlert("Opss.. Houve um erro");
-        ShowAlert("Tente novamente mais tarde");
-=======
+
 
       } else if (data === "Erro Interno") {
         showAlert("Opss.. Houve um erro");
         showAlert("Tente novamente mais tarde");
->>>>>>> feat
+
         setIsLoading(false);
 
       } else {

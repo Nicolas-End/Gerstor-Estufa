@@ -76,10 +76,7 @@ export default function RegisterClientPage() {
         default:
           showError("Houver um error interno tente novamente mais tarde")
           break;
-<<<<<<< HEAD
-=======
 
->>>>>>> feat
       }
 
 
