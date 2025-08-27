@@ -29,7 +29,7 @@ export default function FuncionarioPage() {
     function confirmToastToDeleteFunctionary(id: string) {
         const toastId = toast.info(
             <div>
-                <p>Tem certeza que deseja excluir essa entrega?</p>
+                <p>Tem certeza que deseja excluir esse funcionario?</p>
                 <div className="flex justify-end mt-2">
                     <button
                         onClick={() => {
