@@ -2,7 +2,7 @@
 
 .container {
   display: flex;
-  min-height: 100vh;
+  min-height: 100vh; 
   background-color: #f9f9f9; /* Fundo suave */
   color: #ffffff; /* Cor de texto padrão */
   font-family: 'Ubuntu', sans-serif;

@@ -12,7 +12,9 @@
   justify-content: flex-start;
   margin-bottom: 7vh;
   min-height: calc(100vh - 6rem); 
-  margin-left: 3rem;
+  margin-left: 0;         
+  max-width: 100%;        
+  box-sizing: border-box;
 }
 
 .header {
