@@ -92,7 +92,7 @@ def UserLogin():
         worker_password = response['password']
 
         responseApi, returnApi = UserController().ValidateUser( worker_email, worker_password)
-
+        print(responseApi)
         if returnApi:
 
             compnay_email, company_name,role = UserController().GetCompanyEmail(worker_email)

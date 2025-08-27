@@ -1,5 +1,5 @@
 import axios from "axios";
-import {createApiWithAuth} from "@/lib/config/axiosConfig"
+import {createApiWithAuth, createApiWithoutAuth} from "@/lib/config/axiosConfig"
 interface ApiResponse {
   status: string;
   message?: string;
@@ -30,12 +30,9 @@ export const validateUserAcess = async() =>{
 // utilizado no register page
 export const addNewCompany = async (email:string,id:string,password:string,companyName:string) =>{
   try{
-
+    const api = await createApiWithoutAuth()
     let datas = {email,id,password,companyName}
-    const response = await axios.post('https://gerenciador-empresarial-1cfr.vercel.app/add-new-company',datas,{
-
-      validateStatus: () => true
-    })
+    const response = await api.post('/add-new-company',datas)
 
     if (response.status === 200 && response.data){
       return "created"
@@ -53,11 +50,11 @@ export const addNewCompany = async (email:string,id:string,password:string,compa
 
 export const login = async (email:string,password:string) =>{
   try{
+      const api = await createApiWithoutAuth()
       let data = {email, password}
-      const response = await axios.post('https://gerenciador-empresarial-1cfr.vercel.app/user-login',data ,  
-      {
-        validateStatus: () => true  
-      })
+
+      const response = await api.post('/user-login',data)
+
 
       if (response.status !== 500 && response.data){
         return response.data

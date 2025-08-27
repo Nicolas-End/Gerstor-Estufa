@@ -273,7 +273,7 @@ export default function DeliveryFormPage() {
                         setAddress("")
                       }
                     }}
-                    className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
                   >
                     <option value="">Escolha um cliente (Opcional)</option>
                     {clients.map((client: any, index: number) => (

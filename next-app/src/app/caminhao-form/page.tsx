@@ -106,7 +106,7 @@ export default function CaminhaoForm() {
 
                     <form
                         onSubmit={handleSubmit}
-                        className="bg-white p-6 rounded-lg shadow space-y-6"
+                        className="bg-white p-6 rounded-lg shadow space-y-6 pb-24"
                     >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -184,7 +184,7 @@ export default function CaminhaoForm() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="bg-green-900 text-white py-2 px-4 rounded-lg"
+                            className="bg-green-900 text-white py-2 px-4 rounded-lg mb-20"
                         >
                             {isLoading ? "Cadastrando..." : "Cadastrar Caminhão"}
                         </button>
