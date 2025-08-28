@@ -22,7 +22,6 @@ export default function RegisterEmployeePage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("");
 
-
     const initializePage = async () => {
         try {
             const canAccess = await ValidateHomeAcess(router);
@@ -45,7 +44,6 @@ export default function RegisterEmployeePage() {
             return;
         }   
 
-
         const formData = {
             name,
             email,
@@ -54,11 +52,8 @@ export default function RegisterEmployeePage() {
         };
 
         try {
-
             setIsLoading(true);
 
-            // Aqui você faria a chamada real à API, como:
-            // await registerEmployee(formData);
             const response = await AddNewFunctionary(name,email,password,role)
             switch(response){
                 case true:
@@ -72,14 +67,11 @@ export default function RegisterEmployeePage() {
                     showError('Houve um erro no sistema tente novamente mais tarde')
                     setIsLoading(false)
                     break;
-
                 case 'Já Existe':
                     showAlert("Funcionario Já Existente")
                     router.push('/functionaries')
                     break;
             }
-
-            
 
             // Resetar os campos
             setName("");
@@ -127,7 +119,7 @@ export default function RegisterEmployeePage() {
 
                     <form
                         onSubmit={handleSubmit}
-                        className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col gap-6"
+                        className="bg-white p-6 rounded-lg shadow flex-1 overflow-auto flex flex-col space-y-6 mb-10"
                     >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -219,13 +211,12 @@ export default function RegisterEmployeePage() {
                                     <option value="Secretaria">Secretaria</option>
                                 </select>
                             </div>
-
                         </div>
 
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed mt-4 md:mt-0"
                         >
                             {isLoading ? "Cadastrando Funcionário..." : "Cadastrar"}
                         </button>
