@@ -22,7 +22,7 @@ export async function createApiWithAuth():Promise<any>{
 export async function createApiWithoutAuth():Promise<any>{
 
   return axios.create({
-    baseURL: 'http://127.0.0.1:5000',
+    baseURL: 'https://gerenciador-empresarial-1cfr.vercel.app',
     headers: {
       'Content-Type': 'application/json',
 
