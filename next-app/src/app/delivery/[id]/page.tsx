@@ -104,15 +104,15 @@ export default function ProdutoPage() {
               Voltar
             </button>
 
-            {products.map((order) => (
-              <button key={order.id}
+
+              <button 
                 type="button"
-                onClick={() => router.push(`delivery-form/${order.id}`)}
+                onClick={() => router.push(`/delivery-form/${id}`)}
                 className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
               >
                 Editar
               </button>
-            ))}
+            
           </div>
         </header>
 
