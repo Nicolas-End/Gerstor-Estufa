@@ -110,7 +110,7 @@ export default function Sidebar() {
               <div className={`${styles.accountMenu} ${styles.mobileDropdown}`}>
                 {(role === "ADM" || role === "Secretaria") && (
                   <Link href="/functionaries" className={styles.menuItem}>
-                    <HardHat size={16} /> <span>Funcionários</span>
+                    <UserPlus size={16} /> <span>Funcionários</span>
                   </Link>
                 )}
                 {(role === "ADM" || role === "Secretaria" || role === "Caminhoneiro") && (
