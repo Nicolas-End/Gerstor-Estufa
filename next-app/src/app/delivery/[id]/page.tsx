@@ -107,10 +107,10 @@ export default function ProdutoPage() {
 
               <button 
                 type="button"
-                onClick={() => router.push(`/delivery-form/${id}`)}
+                onClick={() => router.push(`/ delivery-form/${id}`)}
                 className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
               >
-                Editar
+                Editargi
               </button>
             
           </div>
