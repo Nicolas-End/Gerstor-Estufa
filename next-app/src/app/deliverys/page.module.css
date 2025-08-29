@@ -1,7 +1,6 @@
 .container {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
   background-color: #f9f9f9;
 }
 
@@ -130,6 +129,10 @@
 }
 
 @media (max-width: 768px) {
+  .container{
+    min-height: 100vh !important;
+  }
+  
   .ordersList {
     grid-template-columns: 1fr;
   }

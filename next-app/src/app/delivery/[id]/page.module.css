@@ -1,81 +1,174 @@
-/* page.module.css */
+/* page.module.css (sem :root, usando #0a2c26 diretamente) */
 
+/* Layout básico */
 .container {
   display: flex;
-  min-height: 100vh; 
-  background-color: #f9f9f9; /* Fundo suave */
-  color: #ffffff; /* Cor de texto padrão */
+  min-height: 100vh;
+  background: #f5f7f6;
   font-family: 'Ubuntu', sans-serif;
 }
 
-.orderBox{
-  background-color: #0a3b2c;
-  border: 2px solid #0a2c26;
-  border-radius: 1rem;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  width: 100%; /* Adicione isso para a caixa ocupar a largura certa */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
+/* Conteúdo principal (área branca central) */
 .content {
   flex: 1;
-  padding: 2rem;
-  background-color: #ffffff; /* Área de conteúdo branca */
-  border-radius: 1rem;
-  margin: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 26px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(6, 22, 17, 0.06);
 }
 
-.h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #000000;
+/* Loader */
+.loaderWrap {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background: #fff;
 }
-.orderHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #0a3b2c;
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 0.75rem;
+.loaderBox { display:flex; align-items:center; gap:14px; }
+.spinner {
+  width:28px;
+  height:28px;
+  border:4px solid #0a2c26;
+  border-top-color: transparent;
+  border-radius:50%;
+  animation: spin 1s linear infinite;
 }
-
-.produto {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.totalQuantity {
-  text-align: right;
-}
-
-.totalQuantity span:first-child {
-  font-size: 1.5rem;
-  font-weight: bold;
-  display: block;
+.loaderText {
+  font-weight:700;
+  color:#0b0b0b;
+  font-size:16px;
 }
 
-.totalQuantity span:last-child {
-  font-size: 0.875rem;
+/* Top header */
+.topHeader {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
 }
-
-
-.details {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #e6f2ef; /* Verde bem clarinho */
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.details p {
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
-}
-
-.details strong {
+.title {
   color: #0a2c26;
+  font-size:28px;
+  font-weight:750;
+  margin:0;
+  letter-spacing:0.2px;
 }
+
+.backBtn {
+  background: #0a2c26;
+  color: #ffffff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.06) inset;
+}
+
+/* Banner do cliente */
+.banner {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: linear-gradient(180deg, #07221b 0%, #0a2c26 100%);
+  color: #ffffff;
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 18px rgba(6,22,17,0.08);
+}
+
+.quantityBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;       
+  border-radius: 50%;
+  background: #ffffff;   
+  color: #0a2c26;         
+  font-family: inherit;   
+  font-size: 16px;        
+  font-weight: 700;       
+  box-shadow: 0 2px 6px rgba(6,22,17,0.08);
+  border: 1px solid rgba(10,44,38,0.05);
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.bannerTitle {
+  font-size:18px;
+  font-weight:800;
+  color: #ffffff;
+}
+.bannerSub {
+  margin-top:6px;
+  font-size:13px;
+  color: rgba(255,255,255,0.92);
+}
+.bannerRight {
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Caixa com dados do functionary: contraste alto e fontes maiores */
+.functionaryBox {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid rgba(10,44,38,0.06);
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(6,22,17,0.03);
+}
+
+/* Linha do dado (label + value) */
+.functionaryRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f6f5;
+}
+.functionaryRow:last-child { border-bottom: none; }
+
+/* Label (esquerda) */
+.functionaryLabel {
+  color: #0a2c26;
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:0.6px;
+}
+
+/* Value (direita) — maior e legível */
+.functionaryValue {
+  color: #0a2c26;
+  font-weight:550;
+  font-size:16px;
+  text-align:right;
+  word-break:break-word;
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+  .functionaryRow { grid-template-columns: 1fr; }
+  .functionaryValue { text-align:left; margin-top:6px; }
+  .functionaryLabel { font-size:13px; }
+  .banner { padding: 14px; }
+  .title { font-size:22px; }
+
+  .quantityBadge {
+    min-width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+}
+
+/* Animation */
+@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }

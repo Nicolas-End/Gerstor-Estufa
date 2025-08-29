@@ -10,12 +10,12 @@ import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecif
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
 // processos relacioandos ao cliente
-import { addClient, getClients, getEspecificClient } from "@/lib/services/clients";
+import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
-import { addNewTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
+import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
 import { AArrowUp } from "lucide-react";
 import { RedirectType } from "next/navigation";
@@ -273,11 +273,22 @@ export async function AddNewTruck(data: {
   mercosul?: boolean;
 }) {
   try {
-    const resposne = addNewTruck(data)
+    const resposne = await addNewTruck(data)
 
     return resposne
   } catch (error) {
     console.log("Erro Adicionar Caminhão: ", error)
+    throw error
+  }
+}
+
+export async function DeleteTruck(placa:string) {
+  try{
+    const response = await deleteTruck(placa)
+
+    return response
+  }catch(error){
+    console.log('Erro ao apagar caminhão')
     throw error
   }
 }
@@ -316,6 +327,16 @@ export async function GetEspecificClient(id: string) {
     throw error
   }
 
+}
+
+export async function DeleteClient(id:string,type:string) {
+  try{
+    const response = await deleteClient(id,type)
+    return response
+  }catch(error){
+    console.log("Erro Excluir Cliente: ",error)
+    throw error
+  }
 }
 //====== CAMINHÕES ======
 export async function GetTrucks() {

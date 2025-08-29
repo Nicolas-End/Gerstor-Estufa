@@ -8,6 +8,14 @@ import {
 import "./globals.css";
 import Head from "next/head";
 
+export const metadata = {
+  title: "Controle Verde",
+  description: "",
+  icons: {
+    icon: "/favicon.png"
+  },
+};
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

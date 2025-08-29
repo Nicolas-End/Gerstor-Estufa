@@ -3,17 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
-import OrderItem from "@/Components/order-items";
+
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { DeleteEspecificDelivery, GetDeliverys } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { cookies } from "next/headers";
+
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
-import { Socket } from "socket.io-client";
+
 import { socketService } from "@/lib/config/sockteioConfig";
 
 

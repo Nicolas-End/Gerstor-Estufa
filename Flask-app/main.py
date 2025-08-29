@@ -507,7 +507,29 @@ def GetEspecifcClient():
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':'error'}),500
-#====CAMINHÕES=====
+    
+@app.route('/delete-client',methods=["POST"])
+def DeleteClient():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas" , 401
+        
+        client_id = request.get_json()['id']
+        client_type = request.get_json()['type']    
+
+        client_deleted = ClientController().DeleteClient(datas['company_email'],client_id,client_type)
+
+        if client_deleted:
+            return 'Cliente Excluido', 200
+        else:
+            return 'Erro Desconhecido',404
+        
+    except Exception as e:
+        print('Error: ',e)
+        return 'Erro Interno',500
+#====CMINHÕES=====
 @app.route('/get-trucks', methods=['POST'])
 def GetTrucks():   
     try:
@@ -576,6 +598,25 @@ def EspecificTruck():
         print("Error: ",e)
         return "Error Interno",500
 
+@app.route('/delete_truck', methods=['POST'])
+def DeleteTruck():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+        
+        placa = request.get_json()['placa']
+        truck_delete = TruckController().DeleteTruck(datas['company_email'],placa)
+
+        if truck_delete:
+            return 'Caminhão Deletado',200
+        else:
+            return "Houve algum erro", 404
+        
+    except Exception as e:
+        print("Error: ",e)
+        return "Error Interno",500
 
 if __name__ == '__main__':
     app.run(debug=True)

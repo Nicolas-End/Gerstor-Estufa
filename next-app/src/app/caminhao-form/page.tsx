@@ -8,6 +8,26 @@ import "react-toastify/dist/ReactToastify.css";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import { validators } from "tailwind-merge";
 
+    function validarPlaca(placa: string){
+        placa = placa.toUpperCase().trim();
+
+        const antiga = /^[A-Z]{3}-d{4}$/;
+        const mercosul = /^[A-Z]{3}[0-9][A-Z0-9]\d{2}$/;
+
+        if(antiga.test(placa)){
+            return { valido: true, tipo: "Antiga"};
+        }
+        if(mercosul.test(placa)){
+            return { valido: true, tipo: "Mercosul"};
+        }
+        return { valido: false, tipo: "Null" };
+    }
+
+    function validarChassi(chassi: string){
+        const regex = /^[A-HJ-NPR-Z0-9]{17}$/;
+        return regex.test(chassi.toUpperCase().trim());
+    }
+
 export default function CaminhaoForm() {
     const router = useRouter();
     const [modelo, setModelo] = useState("");
@@ -23,6 +43,25 @@ export default function CaminhaoForm() {
         try {
             e.preventDefault();
             setIsLoading(true);
+            
+            const resultadoPlaca = validarPlaca(placa);
+            if(!resultadoPlaca.valido){
+                showAlert("Placa inválida! Use o formato Mercosul ou a Placa antiga")
+                setIsLoading(false);
+                return;
+            }
+
+            if(chassi && !validarChassi(chassi)){
+                showAlert("Número de chassi inválido! Coloque 17 caracteres válido")
+                setIsLoading(false);
+                return;
+            }
+
+            const verificarDuplicado = async () => {
+                const res = await fetch(`/api/verificar-caminhao?placa=${placa}&chassi=${chassi}`);
+                const data = await res.json();
+                return data.existe;
+            }
 
             const response = await AddNewTruck({
                 modelo,
@@ -30,7 +69,7 @@ export default function CaminhaoForm() {
                 chassi,
                 cor,
                 eixos,
-                mercosul,
+                mercosul: resultadoPlaca.tipo === "Mercosul",
             });
 
             switch (response) {
@@ -163,22 +202,11 @@ export default function CaminhaoForm() {
                                     value={placa}
                                     onChange={(e) => setPlaca(e.target.value)}
                                     className="w-full border border-gray-300 rounded-lg p-2"
-                                    placeholder="Ex: ABC-1234"
+                                    placeholder="Ex: ABC1234"
                                     required
                                 />
                             </div>
 
-                            <div className="flex items-center mt-6">
-                                <input
-                                    type="checkbox"
-                                    checked={mercosul}
-                                    onChange={(e) => setMercosul(e.target.checked)}
-                                    className="mr-2"
-                                />
-                                <label className="text-black text-[18px]">
-                                    Placa é Mercosul
-                                </label>
-                            </div>
                         </div>
 
                         <button

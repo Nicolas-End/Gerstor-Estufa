@@ -73,3 +73,25 @@ export const getEspecificClient = async(id:string) =>{
     throw error
   }
 }
+
+export const deleteClient = async(id:string,type:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'id':id,'type':type}
+
+    const response = await api.post('/delete-client',data)
+
+    switch(response.status){
+      case 200:
+        return "Cliente Excluido"
+      case 401:
+        return "Credenciais Invalidas"
+      case 404:
+        return "Erro Desconhecido"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw error
+  }
+}
