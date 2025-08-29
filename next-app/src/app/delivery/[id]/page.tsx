@@ -105,7 +105,7 @@ export default function ProdutoPage() {
             </button>
 
             {products.map((order) => (
-              <button
+              <button key={order.id}
                 type="button"
                 onClick={() => router.push(`delivery-form/${order.id}`)}
                 className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
@@ -129,7 +129,7 @@ export default function ProdutoPage() {
         </section>
 
         {products.map((product) => (
-          <section className={styles.functionaryBox}>
+          <section key={product.id} className={styles.functionaryBox}>
             <div className={styles.functionaryRow}>
               <div className={styles.functionaryLabel}>Nome:</div>
               <div className={styles.functionaryValue}>{product.name}</div>
