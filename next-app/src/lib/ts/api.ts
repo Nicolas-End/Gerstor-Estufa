@@ -15,7 +15,7 @@ import { addClient, getClients, getEspecificClient } from "@/lib/services/client
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
-import { addNewTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
+import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
 import { AArrowUp } from "lucide-react";
 import { RedirectType } from "next/navigation";
@@ -273,11 +273,22 @@ export async function AddNewTruck(data: {
   mercosul?: boolean;
 }) {
   try {
-    const resposne = addNewTruck(data)
+    const resposne = await addNewTruck(data)
 
     return resposne
   } catch (error) {
     console.log("Erro Adicionar Caminhão: ", error)
+    throw error
+  }
+}
+
+export async function DeleteTruck(placa:string) {
+  try{
+    const response = await deleteTruck(placa)
+
+    return response
+  }catch(error){
+    console.log('Erro ao apagar caminhão')
     throw error
   }
 }
