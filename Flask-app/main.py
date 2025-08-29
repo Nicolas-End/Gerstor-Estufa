@@ -507,7 +507,29 @@ def GetEspecifcClient():
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status':'error'}),500
-#====CAMINHÕES=====
+    
+@app.route('/delete-client',methods=["POST"])
+def DeleteClient():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas" , 401
+        
+        client_id = request.get_json()['id']
+        client_type = request.get_json()['type']    
+
+        client_deleted = ClientController().DeleteClient(datas['company_email'],client_id,client_type)
+
+        if client_deleted:
+            return 'Cliente Excluido', 200
+        else:
+            return 'Erro Desconhecido',404
+        
+    except Exception as e:
+        print('Error: ',e)
+        return 'Erro Interno',500
+#====CMINHÕES=====
 @app.route('/get-trucks', methods=['POST'])
 def GetTrucks():   
     try:

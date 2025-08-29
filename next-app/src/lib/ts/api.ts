@@ -10,7 +10,7 @@ import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecif
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
 // processos relacioandos ao cliente
-import { addClient, getClients, getEspecificClient } from "@/lib/services/clients";
+import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
 // Faz os preocessos de login, cadastro , acesso do usuario
 import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
@@ -327,6 +327,16 @@ export async function GetEspecificClient(id: string) {
     throw error
   }
 
+}
+
+export async function DeleteClient(id:string,type:string) {
+  try{
+    const response = await deleteClient(id,type)
+    return response
+  }catch(error){
+    console.log("Erro Excluir Cliente: ",error)
+    throw error
+  }
 }
 //====== CAMINHÕES ======
 export async function GetTrucks() {

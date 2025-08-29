@@ -1,15 +1,15 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser, faSearch, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import OrderItem from "@/Components/order-items";
+
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { ToastContainer } from "react-toastify";
-import { ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
+import { toast, ToastContainer } from "react-toastify";
+import { ValidateHomeAcess, GetAllClients, DeleteClient } from "@/lib/ts/api";
 ;
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import { getRoleCookie } from "@/lib/controller/cookiesController";
 import { verify } from "crypto";
 
@@ -20,6 +20,61 @@ export default function ClientsPage() {
     const [clientCount, setClientCount] = useState<number>(0);
     const [hasClient, setHasclient] = useState(Boolean)
     const [searchTerm, setSearchTerm] = useState("");
+
+    function confirmToast(id: string,type:string) {
+        const toastId = toast.info(
+          <div>
+            <p>Tem certeza que deseja excluir essa entrega?</p>
+            <div className="flex justify-end mt-2">
+              <button
+                onClick={() => {
+                  toast.dismiss(toastId);
+    
+                  showDeleteDeliveryBox(id,type)
+    
+                }}
+                className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+              >
+                Sim
+              </button>
+              <button
+                onClick={() => toast.dismiss(toastId)}
+                className="bg-red-600 text-white px-3 py-1 rounded"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>,
+          {
+            closeOnClick: false,
+            closeButton: false,
+          }
+        )
+      }
+    
+    
+      async function showDeleteDeliveryBox(delivery_id: string,type:string) {
+        const data = await DeleteClient(delivery_id,type)
+        if (data === "Cliente Excluido") {
+          router.refresh()
+          showSucess("Excluido com sucesso")
+    
+        } else if (data === "Credenciais Invalidas"){
+          showAlert("Credencial invalida")
+          router.push('/logout')
+
+        } else {
+          showAlert('Houve um erro interno Tente apagar denovo mais tarde')
+        }
+    
+        if (data) {
+          initializeClients()
+          return;
+        }
+        showAlert('Houve algum erro no processo !!')
+    
+    
+      }
     const VerifyRole = async () => {
         const role = await getRoleCookie()
         switch (role) {
@@ -106,7 +161,7 @@ export default function ClientsPage() {
                             <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
                                 <p className={styles.clientName}>{client.name}</p>
-                                <div><button><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
+                                <div><button><FontAwesomeIcon icon={faTrash} onClick={() => {client.cpf? confirmToast(client.cpf,'cpf'): confirmToast(client.cnpj,'cnpj')}}className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
                                 <button
                                     type="button"
                                     onClick={() => router.push(`clients/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}

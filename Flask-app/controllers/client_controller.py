@@ -77,3 +77,14 @@ class ClientController:
         except Exception as e:
             print('Error: ',e)
             return False
+    
+    def DeleteClient(self,company_email,id,tipo):
+        try:
+            client_delete = self.coll.delete_one({'company_email':company_email,tipo:id})
+            if client_delete:
+                return True
+            else:
+                return False    
+        except Exception as e:
+            print('Error: ',e)
+            return False
