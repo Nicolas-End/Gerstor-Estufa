@@ -64,3 +64,13 @@ class TruckController:
             return False
         except Exception as e:
             return e
+    def DeleteTruck(self,company_email,placa):
+        try:
+            truck_deleted = self.coll.delete_one({'company_email':company_email,'placa':placa})
+
+            if truck_deleted:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return e

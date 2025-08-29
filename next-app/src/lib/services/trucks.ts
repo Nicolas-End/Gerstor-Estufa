@@ -18,7 +18,6 @@ interface ApiResponse {
   'truck'?: TruckData;
 }
 
-const baseUrl = "http://127.0.0.1:5000";
 
 export const getAllTrucks = async (): Promise<TruckData[] | string> => {
   try {
@@ -81,26 +80,24 @@ export const getEspecificTruck = async (placa:string) =>{
   }
 }
 
+export const deleteTruck = async (placa:string) => {
+  try{
+    const api = await createApiWithAuth()
+    const datas = {'placa':placa}
+    const response = await api.post('/delete_truck',datas)
+    switch(response.status){
+      case 200:
+        return 'Caminhão Deletado'
+      case 401:
+        return "Credenciais invalidas"
+      case 404:
+        return "Caminhão não encontrado"
+      default:
+        return "Erro Interno"
 
-export function DeleteTruck(id: string): Promise<ApiResponse> {
-  return new Promise<ApiResponse>((resolve) => {
-    const token = localStorage.getItem("token_from_user");
-
-    axios
-      .post<ApiResponse>(
-        `${baseUrl}/delete-truck`,
-        { id },
-        {
-          headers: {
-            Authorization: token || "",
-          },
-        }
-      )
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch(() => {
-        resolve({ status: "error" });
-      });
-  });
+    }
+  }catch(error){
+    throw error;
+  }
 }
+

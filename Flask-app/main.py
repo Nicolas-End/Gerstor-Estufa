@@ -576,6 +576,25 @@ def EspecificTruck():
         print("Error: ",e)
         return "Error Interno",500
 
+@app.route('/delete_truck', methods=['POST'])
+def DeleteTruck():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+        
+        placa = request.get_json()['placa']
+        truck_delete = TruckController().DeleteTruck(datas['company_email'],placa)
+
+        if truck_delete:
+            return 'Caminhão Deletado',200
+        else:
+            return "Houve algum erro", 404
+        
+    except Exception as e:
+        print("Error: ",e)
+        return "Error Interno",500
 
 if __name__ == '__main__':
     app.run(debug=True)

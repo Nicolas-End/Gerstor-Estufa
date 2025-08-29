@@ -6,15 +6,70 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
 import { faSearch, faTruck, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { GetTrucks, ValidateHomeAcess } from "@/lib/ts/api";
+import { DeleteTruck, GetTrucks, ValidateHomeAcess } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
-import { showError } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 export default function CaminhoesPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [trucks, setTrucks] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+
+
+
+    function confirmToast(placa: string) {
+        const toastId = toast.info(
+          <div>
+            <p>Tem certeza que deseja excluir esse caminhão?</p>
+            <div className="flex justify-end mt-2">
+              <button
+                onClick={() => {
+                  toast.dismiss(toastId);
+    
+                  showDeleteTruckBox(placa)
+    
+                }}
+                className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+              >
+                Sim
+              </button>
+              <button
+                onClick={() => toast.dismiss(toastId)}
+                className="bg-red-600 text-white px-3 py-1 rounded"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>,
+          {
+            closeOnClick: false,
+            closeButton: false,
+          }
+        )
+      }
+
+      async function showDeleteTruckBox(delivery_id: string) {
+          const data = await DeleteTruck(delivery_id)
+          if (data === "Caminhão Deletado") {
+            router.refresh()
+            showSucess("Excluido com sucesso")
+      
+          } else if (data === "Credenciais invalidas") {
+            showAlert("Credencial invalida")
+            router.push('/logout')
+          } else {
+            showAlert('Houve um erro interno Tente apagar denovo mais tarde')
+          }
+      
+          if (data) {
+            initializeTrucks()
+            return;
+          }
+          showAlert('Houve algum erro no processo !!')
+      
+      
+        }
 
     useEffect(() => {
         initializeTrucks();
@@ -117,6 +172,7 @@ export default function CaminhoesPage() {
                                     <FontAwesomeIcon
                                         icon={faTrash}
                                         className="text-white hover:text-red-600 transition-colors duration-200"
+                                        onClick={() => confirmToast(truck.placa)}
                                     />
                                 </button>
                                 <button
