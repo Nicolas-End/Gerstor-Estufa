@@ -57,6 +57,12 @@ export default function CaminhaoForm() {
                 return;
             }
 
+            const verificarDuplicado = async () => {
+                const res = await fetch(`/api/verificar-caminhao?placa=${placa}&chassi=${chassi}`);
+                const data = await res.json();
+                return data.existe;
+            }
+
             const response = await AddNewTruck({
                 modelo,
                 placa,
@@ -196,7 +202,7 @@ export default function CaminhaoForm() {
                                     value={placa}
                                     onChange={(e) => setPlaca(e.target.value)}
                                     className="w-full border border-gray-300 rounded-lg p-2"
-                                    placeholder="Ex: ABC-1234"
+                                    placeholder="Ex: ABC1234"
                                     required
                                 />
                             </div>
