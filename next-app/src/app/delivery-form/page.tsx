@@ -13,6 +13,9 @@ import { Socket } from "socket.io-client";
 import { SchoolIcon } from "lucide-react";
 import { socketService } from "@/lib/config/sockteioConfig";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 // Define formato de cada item
 interface ItemEntry {
   id: number;
@@ -23,6 +26,9 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
+  const minDate = new Date();
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 2);
 
   function ShowAlert(text: string) {
     toast(text, {
@@ -38,11 +44,11 @@ export default function DeliveryFormPage() {
   // Estados dos campos principais
   const [customerName, setCustomerName] = useState("");
   const [address, setAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("");
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [clientInfo, setClientInfo] = useState<any>({});
   const [clients, setClients] = useState<any[]>([]);
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
 
 
   const unitOptions = ["Caixas", "Vasos", "Solto"];
@@ -131,7 +137,6 @@ export default function DeliveryFormPage() {
 
         setAddress("");
         setCustomerName("");
-        setDeliveryDate("");
         setItems([]);
         setClientInfo("")
         setIsLoading(false);
@@ -154,7 +159,7 @@ export default function DeliveryFormPage() {
 
   useEffect(() => {
 
-  initializeDeliverForm();
+    initializeDeliverForm();
 
 
   }, []);
@@ -205,7 +210,7 @@ export default function DeliveryFormPage() {
                     type="text"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    className="text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
+                    className="text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
                     placeholder="Digite o nome da entrega"
                     required
                   />
@@ -226,7 +231,7 @@ export default function DeliveryFormPage() {
                       setClientInfo("")
                       setAddress(e.target.value)
                     }}
-                    className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
+                    className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
                     placeholder="Digite o endereço"
                     required
                   />
@@ -239,13 +244,20 @@ export default function DeliveryFormPage() {
                   >
                     Data de Entrega
                   </label>
-                  <input
+                  <DatePicker
                     id="deliveryDate"
-                    type="date"
-                    value={deliveryDate}
-                    onChange={(e) => setDeliveryDate(e.target.value)}
-                    className=" text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    selected={deliveryDate} // Use 'selected' para passar a data
+                    onChange={(date: Date | null) => setDeliveryDate(date)} 
+                    className="text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholderText="dd/mm/aaaa"
                     required
+                    minDate={new Date()} // Limita a data mínima para o dia atual(Para que não haja datas anteriores ao dia de hoje)
+                    maxDate={(() => {
+                      const max = new Date();
+                      max.setMonth(max.getMonth() + 2);
+                      return max;
+                    })()} // Limita a data máxima para 2 meses no futuro
+                    dateFormat="dd/MM/yyyy" // Formato que será exibido a data 
                   />
                 </div>
                 <div>

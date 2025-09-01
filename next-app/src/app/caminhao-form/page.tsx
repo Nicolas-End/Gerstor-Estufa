@@ -37,7 +37,8 @@ export default function CaminhaoForm() {
     const [eixos, setEixos] = useState("");
     const [mercosul, setMercosul] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [pageIsLoading, setPageIsLoading] = useState(true)
+    const [pageIsLoading, setPageIsLoading] = useState(true);
+    const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
 
     const handleSubmit = async (e: any) => {
         try {
