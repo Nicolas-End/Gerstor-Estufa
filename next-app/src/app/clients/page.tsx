@@ -24,7 +24,7 @@ export default function ClientsPage() {
     function confirmToast(id: string,type:string) {
         const toastId = toast.info(
           <div>
-            <p>Tem certeza que deseja excluir essa entrega?</p>
+            <p>Tem certeza que deseja excluir esse Cliente?</p>
             <div className="flex justify-end mt-2">
               <button
                 onClick={() => {
