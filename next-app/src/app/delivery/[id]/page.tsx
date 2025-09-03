@@ -7,6 +7,7 @@ import Sidebar from "@/Components/sidebar";
 import { showAlert } from "@/lib/controller/alertsController";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "lucide-react";
 
 export default function ProdutoPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -185,6 +186,9 @@ export default function ProdutoPage() {
           ))}
         </div>
       </div>
+
+
+
 
       <ToastContainer
         position="top-right"

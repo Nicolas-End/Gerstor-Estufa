@@ -133,8 +133,8 @@ class DeliveryController:
     
     def EditDelivery(self,company_email,delivery_id,itens,address,date,name,clientId,typeId):
         try:   
-            self.delete_delivery(company_email,delivery_id)
-            self.delete_product(company_email,delivery_id)
+            self.DeleteDelivery(company_email,delivery_id)
+            self.DeleteProduct(company_email,delivery_id)
             
             id_unico = delivery_id
             
