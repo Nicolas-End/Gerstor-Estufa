@@ -99,7 +99,7 @@ export const getDeliverysToDo = async () =>{
     switch (response.status){
       case 200:
         return response.data.deliverys
-      case 400:
+      case 401:
         return "Credencial Invalida"
       case 500:
         return "Erro Interno"

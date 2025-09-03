@@ -15,6 +15,7 @@ import { showAlert, showError, showSucess } from "@/lib/controller/alertsControl
 
 
 import { socketService } from "@/lib/config/sockteioConfig";
+import { Socket } from "socket.io-client";
 
 
 export default function PedidosPage() {
@@ -112,33 +113,31 @@ export default function PedidosPage() {
       setIsLoading(false)
     }
   };
-  function esperar(): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 5000);
-    });
-  }
+
   useEffect(() => {
-    let socket: any
+    let socket: null | Socket = null;
 
     async function setup() {
-
-
+      // Inicializando as deliverys
       initializeDeliverys();
 
-      const socket = await socketService.initSocket()
+      // Inicializando o socket apenas uma vez
+      socket = await socketService.initSocket();
 
+      // Adicionando o listener apenas uma vez
       socket?.on('add_delivery', () => {
-        showSucess('Nova entrega cadastrada, Atualize a pagina')        
-      })
-
+        showSucess('Nova entrega cadastrada, Atualize a pagina');
+      });
     }
 
+    // Chama a função de setup
     setup();
 
+    // Limpeza dos listeners e do socket ao desmontar
     return () => {
-      socket?.off('add_delivery')
+      if (socket) {
+        socket.off('add_delivery'); // Remove o listener
+      }
     };
   }, []);
 
