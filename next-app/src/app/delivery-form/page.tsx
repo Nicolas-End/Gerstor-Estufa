@@ -7,10 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-import { ClientPageRoot } from "next/dist/client/components/client-page";
 
-import { Socket } from "socket.io-client";
-import { SchoolIcon } from "lucide-react";
 import { socketService } from "@/lib/config/sockteioConfig";
 
 import DatePicker from "react-datepicker";

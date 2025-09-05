@@ -21,23 +21,16 @@ export default function ProductsPage() {
     );
     const initializeProducts = async () => {
         try {
+            const response = await GetStocksProducts()
             setIsLoading(false);
         } catch (error) {
             showError("Houve um erro, tente novamente mais tarde");
             setIsLoading(false);
-            const initializeProducts = async () => {
-                try {
-                    const products = await GetStocksProducts()
-                    setIsLoading(false);
-                } catch (error) {
-                    showError("Houve um erro, tente novamente mais tarde");
-                    setIsLoading(false);
-                }
-            };
+        }
 
-            useEffect(() => {
-                initializeProducts();
-            }, []);
+    useEffect(() => {
+        initializeProducts();
+    }, []);
 
             if (isLoading) {
                 return (
@@ -224,4 +217,4 @@ export default function ProductsPage() {
             );
         }
     }
-}
+
