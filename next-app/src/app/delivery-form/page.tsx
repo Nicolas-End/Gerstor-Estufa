@@ -292,6 +292,41 @@ export default function DeliveryFormPage() {
                     ))}
                   </select>
                 </div>
+
+                {/*Caminhoneiro*/}
+                <div>
+                  <label
+                    htmlFor="deliveryDate"
+                    className="block text-green-900 text-[18px] mb-2"
+                  >Caminhoneiro
+                  </label>
+                  <select
+                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    required
+                    onChange={(e) => {
+
+                      const selectedClient = clients.find(
+                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
+                      );
+                      if (selectedClient) {
+                        setClientInfo(selectedClient);
+
+                        setAddress(selectedClient.address);
+                      } else {
+                        setClientInfo("")
+                        setAddress("")
+                      }
+                    }}
+                    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
+                  >
+                    <option value="">Escolha um Caminhoneiro</option>
+                    {clients.map((client: any, index: number) => (
+                      <option key={index} value={client.cpf || client.cnpj}>
+                        {client.name} - {client.cpf || client.cnpj}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Seção Dinâmica */}
