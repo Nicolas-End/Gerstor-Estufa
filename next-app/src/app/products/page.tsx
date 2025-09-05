@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faSearch, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import {ValidateHomeAcess } from "@/lib/ts/api";
+import {GetStocksProducts, ValidateHomeAcess } from "@/lib/ts/api";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,6 +23,7 @@ export default function ProductsPage() {
 
     const initializeProducts = async () => {
         try {
+            const products = await GetStocksProducts()
             
             
 

@@ -12,6 +12,7 @@ from controllers.token_controller import ControllerToken
 from controllers.functionaries import FunctionariesController
 from controllers.client_controller import ClientController
 from controllers.truck_controller import TruckController
+from controllers.products_controller import ProductController
 load_dotenv()
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -618,5 +619,23 @@ def DeleteTruck():
         print("Error: ",e)
         return "Error Interno",500
 
+#======= PRODUTOS EM ESTOQUE ===============
+app.route('get-stocks-products', methods=['POST'])
+def GetProducts():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+        
+        products_dict = ProductController().GetProducts(datas['company_email'])
+
+        if products_dict:
+            return products_dict,200
+        else:
+            return "Pedido não encontrado",204
+    except Exception as e:
+        print('Error: ',e)
+        return "Erro Interno",500
 if __name__ == '__main__':
     app.run(debug=True)

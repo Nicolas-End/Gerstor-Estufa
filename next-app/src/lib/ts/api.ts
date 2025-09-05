@@ -9,6 +9,7 @@ import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecif
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
+import{getStockProducts} from "@/lib/services/product_stock"
 // processos relacioandos ao cliente
 import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
@@ -17,11 +18,7 @@ import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
-import { AArrowUp } from "lucide-react";
-import { RedirectType } from "next/navigation";
-import { addRole } from "../controller/localStorageController";
 
-import { Socket } from "socket.io-client";
 
 
 export async function ValidateLogin(email: string, password: string) {
@@ -372,4 +369,16 @@ export async function GetEspecificTruck(placa: string): Promise<any> {
     throw error
   }
 
+}
+
+//====== PRODUTO ESTOQUE =======
+export async function GetStocksProducts() {
+  try{
+    const response = await getStockProducts()
+
+    return response
+  }catch(error){
+    console.log('Error: ',error)
+    throw error
+  }
 }
