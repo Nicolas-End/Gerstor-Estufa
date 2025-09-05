@@ -46,13 +46,12 @@ export default function DeliveryFormPage() {
   const [address, setAddress] = useState("");
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [clientInfo, setClientInfo] = useState<any>({});
   const [clients, setClients] = useState<any[]>([]);
   const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
-
-
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
+  const [ clientInfo, setClientInfo] = useState<any>(null);
+  const [driverInfo, setDriverInfo] = useState<any>(null);
 
   // Adiciona nova linha de item
   const addItem = () => {
@@ -122,8 +121,10 @@ export default function DeliveryFormPage() {
       address,
       deliveryDate,
       items,
-      clientId,
-      typeClientId
+      clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
+      typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
+      driverId: driverInfo?.cpf || clientInfo?.cnpj || 'idDriver',
+      typeDriverId: driverInfo?.cpf ? 'cpf' : driverInfo?.cnpj ? 'cnpj' : 'id'
     };
 
     try {
@@ -195,25 +196,31 @@ export default function DeliveryFormPage() {
               onSubmit={handleSubmit}
               className="bg-white p-6 rounded-lg shadow overflow-auto flex flex-col mb-6 min-h-fit"
             >
-              {/* Campos Nome, Endereço e Data de Entrega */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                {/* Nome do cliente */}
-                <div>
-                  <label
-                    htmlFor="customerName"
-                    className="block text-green-900 text-[18px] mb-2"
-                  >
-                    Nome
+             
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {/* Seleção do Cliente */}
+                <div className="mb-4">
+                  <label htmlFor="clientSelect" className="block text-green-900 text-[18px] mb-2">
+                    Cliente
                   </label>
-                  <input
-                    id="customerName"
-                    type="text"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
-                    placeholder="Digite o nome da entrega"
-                    required
-                  />
+                  <select
+                    id="clientSelect"
+                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    onChange={(e) => {
+                      const selectedClient = clients.find(
+                        (c) => (c.cpf === e.target.value || c.cnpj === e.target.value)
+                      );
+                      setClientInfo(selectedClient || null);
+                    }}
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                  >
+                    <option value="">Escolha um cliente (Opcional)</option>
+                    {clients.map((client, index) => (
+                      <option key={index} value={client.cpf || client.cnpj}>
+                        {client.name} - {client.cpf || client.cnpj}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 {/* Endereço */}
                 <div>
@@ -260,38 +267,7 @@ export default function DeliveryFormPage() {
                     dateFormat="dd/MM/yyyy" // Formato que será exibido a data 
                   />
                 </div>
-                <div>
-                  <label
-                    htmlFor="deliveryDate"
-                    className="block text-green-900 text-[18px] mb-2"
-                  >Cliente
-                  </label>
-                  <select
-                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
-                    onChange={(e) => {
-
-                      const selectedClient = clients.find(
-                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
-                      );
-                      if (selectedClient) {
-                        setClientInfo(selectedClient);
-
-                        setAddress(selectedClient.address);
-                      } else {
-                        setClientInfo("")
-                        setAddress("")
-                      }
-                    }}
-                    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
-                  >
-                    <option value="">Escolha um cliente (Opcional)</option>
-                    {clients.map((client: any, index: number) => (
-                      <option key={index} value={client.cpf || client.cnpj}>
-                        {client.name} - {client.cpf || client.cnpj}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                
 
                 {/*Caminhoneiro*/}
                 <div>
@@ -301,21 +277,13 @@ export default function DeliveryFormPage() {
                   >Caminhoneiro
                   </label>
                   <select
-                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    value={driverInfo?.cpf || driverInfo?.cnpj || ""}
                     required
                     onChange={(e) => {
-
-                      const selectedClient = clients.find(
+                      const selectedDriver = clients.find(
                         (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
                       );
-                      if (selectedClient) {
-                        setClientInfo(selectedClient);
-
-                        setAddress(selectedClient.address);
-                      } else {
-                        setClientInfo("")
-                        setAddress("")
-                      }
+                      setDriverInfo(selectedDriver || null);
                     }}
                     className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
                   >
