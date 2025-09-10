@@ -112,12 +112,14 @@ export default function DeliveryFormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
     const typeClientId = clientInfo.cpf ? 'cpf' : clientInfo.cnpj ? 'cnpj' : 'id'
+    const clientName = clientInfo.name
     e.preventDefault();
     const formData = {
       name: customerName,
       address,
       deliveryDate,
       items,
+      clientName,
       clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
       typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
       driverId: driverInfo?.cpf || clientInfo?.cnpj || 'idDriver',
@@ -208,10 +210,14 @@ export default function DeliveryFormPage() {
                         (c) => (c.cpf === e.target.value || c.cnpj === e.target.value)
                       );
                       setClientInfo(selectedClient || null);
+                      if (selectedClient)
+                        setAddress(selectedClient.address)
+                      else
+                        setAddress('')
                     }}
                     className="w-full px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                   >
-                    <option value="">Escolha um cliente (Opcional)</option>
+                    <option value="">Escolha um cliente </option>
                     {clients.map((client, index) => (
                       <option key={index} value={client.cpf || client.cnpj}>
                         {client.name} - {client.cpf || client.cnpj}

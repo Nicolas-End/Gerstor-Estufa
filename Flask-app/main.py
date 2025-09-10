@@ -251,7 +251,7 @@ def AddNewDelivery():
         itens = formsData['items']
         address = formsData['address']
         date = formsData['deliveryDate']
-        name = formsData['name']
+        name = formsData['clientName']
         clientId = formsData['clientId']
         idType = formsData['typeClientId'] #Pegando os dados do ususario
         
