@@ -21,6 +21,7 @@ secret_key = os.getenv('SUPER_KEY')
 fernet = Fernet(os.getenv('FERNET_KEY'))
 
 
+
 def DescriptoToken(token):
     try:
         if not token:
@@ -637,5 +638,7 @@ def GetProducts():
     except Exception as e:
         print('Error: ',e)
         return "Erro Interno",500
+    
+
 if __name__ == '__main__':
     app.run(debug=True)

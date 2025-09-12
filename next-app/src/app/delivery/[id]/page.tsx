@@ -133,7 +133,10 @@ export default function ProdutoPage() {
 
         {/* Banner do cliente */}
         <div className={styles.banner}>
-          <h2 className={styles.bannerTitle}>{deliverysDatas.produto}</h2>
+          <h2 className={styles.bannerTitle}
+           onClick={() =>
+                  router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)
+                }>{deliverysDatas.produto}</h2>
           <div className={styles.bannerRight}>
             <span className={styles.quantityBadge}>{deliverysDatas.quantidade}</span>
             <span className={styles.bannerSub}>Caixas</span>

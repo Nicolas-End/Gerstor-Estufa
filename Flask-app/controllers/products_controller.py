@@ -17,7 +17,7 @@ class ProductController:
 
     def GetProducts(self,company_email):
         try:
-            has_products = list(self.coll.find({"EmailEntrega": company_email}))
+            has_products = list(self.coll.find({"company_email": company_email}))
     
             if has_products:
                 dict_products = []
@@ -36,6 +36,16 @@ class ProductController:
         except Exception as e:
             print('Error: ', e)
             return 'Error', False
+
+    def AddNewStockProduct(self,company_email,products_data):
+        try:    
+            product_exist = self.coll.find({"company_email":company_email, "id":products_data['id']})
+            if product_exist :
+                return False
+            product_infos = {'company_email':company_email,'id':products_data['id'],'quantidade':products_data['quantidy'],'tipos_embalo':products_data['lumping_type']}
+
+            self.coll.insert_one(product_infos)
+            return True
         except Exception as e:
             print('Error: ',e)
             return e
