@@ -90,7 +90,7 @@ export default function ProductForm({ isOpen, onClose, onSubmit }: ProductFormPr
           {/* Unidades */}
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2">
-              <p className="text-green-900 text-[18px]">Unidades</p>
+              <p className="text-green-900 text-[18px] font-bold">Embalagens</p>
               <button
                 type="button"
                 onClick={addItem}
@@ -100,7 +100,7 @@ export default function ProductForm({ isOpen, onClose, onSubmit }: ProductFormPr
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-56 overflow-y-auto pr-2">
               {items.length === 0 && (
                 <p className="text-gray-600 text-center py-4">
                   Nenhuma unidade adicionada.
