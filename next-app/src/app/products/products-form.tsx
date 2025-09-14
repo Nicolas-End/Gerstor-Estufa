@@ -1,6 +1,7 @@
 "use client";
+import { showSucess } from "@/lib/controller/alertsController";
 import React from "react";
-
+import { ToastContainer } from "react-toastify";
 interface ItemEntry {
   id: number;
   name: string;
@@ -54,7 +55,7 @@ export default function ProductForm({ isOpen, onClose, onSubmit }: ProductFormPr
       quantity: Number(productQuantity),
       items,
     });
-
+    showSucess('Ta enviando')
     setProductName("");
     setProductQuantity("");
     setItems([]);
@@ -166,6 +167,8 @@ export default function ProductForm({ isOpen, onClose, onSubmit }: ProductFormPr
           </div>
         </form>
       </div>
+      
+            <ToastContainer position="top-right" autoClose={4000} />
     </div>
   );
 }

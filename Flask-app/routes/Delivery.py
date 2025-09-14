@@ -156,7 +156,7 @@ def EditDeviveryDatas():
         print('Error:', e)
         return jsonify({'status': 'error', 'message': str(e)}), 200
     
-@delivery_bp.route('/delete',methods=["POS"])
+@delivery_bp.route('/delete',methods=["POST"])
 def DeleteDelivery():
     try:
         token = request.headers.get('Authorization')
