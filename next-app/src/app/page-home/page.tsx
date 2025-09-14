@@ -1,7 +1,10 @@
 "use client";
-import React, { useState } from 'react';
-import Head from 'next/head';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState, useEffect } from "react";
+import Head from "next/head";
+import AOS from "aos";
+import './style.css';
+import "aos/dist/aos.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,51 +13,48 @@ const Navbar = () => {
     <>
       <Head>
         <title>Home - Today</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-        />
+        <link rel="stylesheet" href="style.css" />
       </Head>
 
-      {/* Navbar fixa no topo */}
-      <nav className="bg-[#fff] p-4 fixed top-0 left-0 w-full z-50 shadow-md">
+      <nav className="bg-[#0a2c26] p-4 fixed top-0 left-0 w-full z-50 shadow-md">
         <div className="container mx-auto flex items-center justify-between">
-          {/* Logo alinhada à esquerda */}
           <div className="flex-shrink-0">
-            <a href="#">
-              <img src="Logo com titulo.png" alt="Logo menu" className="h-12" />
+            <a href="#" className="flex items-center gap-3">
+              <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-md">
+                <img src="Logo.png" alt="Logo menu" className="h-12 w-12 object-contain" />
+              </div>
+              <span className="text-white font-extrabold text-xl">
+                Controle <span className="text-green-400">Verde</span>
+              </span>
             </a>
           </div>
 
-          {/* Links de Navegação para Desktop alinhados à direita */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-[#2b192e] hover:text-[#9c47a6] fontPop">Home</a>
-            <a href="/about" className="text-[#2b192e] hover:text-[#9c47a6] fontPop">Sobre</a>
+            <a href="#" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
+            <a href="/about" className="text-[#fff] font-bold hover:text-[#115a4d]">Sobre</a>
             <div className="flex space-x-4">
-              <a href="./register" className="bg-[#9c47a6] text-[#fff] px-4 py-2 rounded-lg hover:bg-[#56235f] transition">Registre-se</a>
-              <a href="./home" className="bg-[#56235f] text-[#fff] px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Entrar</a>
+              <a href="./register" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Registre-se</a>
+              <a href="./home" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Entrar</a>
             </div>
           </div>
 
-          {/* Botão do Menu Responsivo */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-[#2b192e] text-2xl focus:outline-none">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-[#fff] text-2xl focus:outline-none">
               {isOpen ? (
-                <i className="fas fa-x"></i> // Ícone de fechar (fa-x)
+                <i className="fas fa-x"></i>
               ) : (
-                <i className="fas fa-bars"></i> // Ícone de abrir (fa-bars)
+                <i className="fas fa-bars"></i>
               )}
             </button>
           </div>
         </div>
 
-        {/* Menu Dropdown Responsivo */}
         {isOpen && (
-          <div className="md:hidden mt-4 space-y-4 text-[#2b192e] bg-[#fff] p-4 rounded-lg shadow-lg">
-            <a href="#" className="block hover:text-[#2b192e]">Home</a>
-            <a href="/about" className="block hover:text-[#2b192e]">Sobre</a>
-            <a href="/services" className="block bg-[#9c47a6] text-white px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Registre-se</a>
-            <a href="./home" className="block bg-[#56235f] text-white px-4 py-2 rounded-lg hover:bg-[#2b192e] transition">Entrar</a>
+          <div className="md:hidden mt-4 space-y-4 text-[#0a2c26] font-bold bg-[#fff] p-4 rounded-lg shadow-lg">
+            <a href="#" className="block hover:text-[#115a4d]">Home</a>
+            <a href="/about" className="block hover:text-[#115a4d]">Sobre</a>
+            <a href="/services" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Registre-se</a>
+            <a href="./home" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Entrar</a>
           </div>
         )}
       </nav>
@@ -64,41 +64,82 @@ const Navbar = () => {
 
 const Home = () => {
   return (
-    <section className="flex flex-col md:flex-row-reverse items-center justify-center px-8 py-12 mt-16 min-h-screen"> {/* Centralizado e com altura mínima da tela */}
-      {/* Imagem do lado direito (oculta em celulares) */}
-      <div className="hidden md:flex md:w-1/2 justify-center"> {/* Ocultar em celulares e exibir em telas maiores */}
-        <img src="Celular - home.png" alt="Imagem ilustrativa" className="max-w-full h-auto" />
+    <section
+      className="relative flex flex-col md:flex-row-reverse items-center justify-center px-8 py-12 mt-16 min-h-screen"
+    >
+      {/* Fundo com a imagem Onda Verde */}
+      <img
+        src="Onda Verde.png"
+        alt="Onda Verde"
+        className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+      />
+
+      {/* Imagem (direita em desktop) */}
+      <div className="hidden md:flex md:w-1/2 justify-center" data-aos="fade-up">
+        <img src="Logo.png" alt="Imagem ilustrativa" className="max-w-full h-auto animate-float" />
       </div>
 
-      {/* Texto centralizado */}
-      <div className="md:w-1/2 text-center md:pr-12"> {/* Texto centralizado */}
-        <h2 className="text-5xl font-bold text-gray-900">Gestão Inteligente para Resultados de Verdade</h2> {/* Fonte aumentada */}
-        <p className="mt-6 text-gray-700 text-xl"> {/* Fonte aumentada */}
-          Na ToDay, transformamos a complexidade da gestão empresarial em soluções simples e eficazes. Com tecnologia, estratégia e foco no crescimento, ajudamos sua empresa a prosperar todos os dias.
-        </p>
-        <div className="mt-8">
-          <a href="./home" className="bg-[#56235f] text-[#fff] px-6 py-3 rounded-lg hover:bg-[#2b192e] transition text-lg">Entrar</a> {/* Botão com fonte aumentada */}
+      {/* Card verde (esquerda em desktop) */}
+      <div className="md:w-1/2 flex justify-center md:justify-start relative">
+        {/* Logo cinza atrás */}
+        <img
+          src="Logo.png"
+          alt="Logo cinza atrás"
+          className="absolute -top-10 -left-10 w-64 h-64 opacity-20 z-0"
+        />
+
+        <div
+          role="region"
+          aria-label="Apresentação Controle Verde"
+          data-aos="fade-right"
+          className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-9 max-w-[520px] w-full shadow-lg flex flex-col justify-center items-start text-[#04291f] md:items-start md:text-left text-center mx-auto relative z-10"
+          style={{ backdropFilter: "blur(2px)" }}
+        >
+          <h2 className="text-5xl font-bold leading-tight">
+            Gestão Inteligente para Resultados de Verdade
+          </h2>
+
+          <p className="mt-6 text-xl text-[#0f2e24]">
+            No Controle Verde, simplificamos a logística de estufas, gerenciando entregas de flores, hortaliças e alimentos com tecnologia e precisão.
+          </p>
+
+          <div className="mt-8 flex justify-center w-full">
+            <a
+              href="./home"
+              className="inline-block bg-[#0a2c26] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#115a4d] transition transform hover:-translate-y-1"
+            >
+              Entrar
+            </a>
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
+
+
 const About = () => {
   return (
-    <section className="bg-[#56235f] py-16 px-8"> {/* Fundo da mesma cor do botão "Entrar" */}
-      <div className="container mx-auto text-center text-white"> {/* Centraliza o conteúdo e define texto branco */}
+    <section className="bg-[#56235f] py-16 px-8">
+      <div className="container mx-auto text-center text-white">
         <h2 className="text-4xl font-bold">Sobre Nós</h2>
-        <p className="mt-6 text-xl max-w-2xl mx-auto"> {/* Limita a largura do texto para melhor leitura */}
-          Na ToDay, estamos comprometidos em oferecer soluções inovadoras que ajudam empresas a alcançar seus objetivos de forma eficiente e eficaz. Nossa equipe de especialistas está sempre pronta para ajudar você a transformar desafios em oportunidades.
+        <p className="mt-6 text-xl max-w-2xl mx-auto">
+          Na ToDay, estamos comprometidos em oferecer soluções inovadoras que ajudam empresas a alcançar seus objetivos.
         </p>
       </div>
     </section>
   );
 };
 
-// Criando um componente único que junta Navbar, Home e About
 const App = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
   return (
     <div>
       <Navbar />
