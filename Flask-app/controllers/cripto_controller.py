@@ -31,5 +31,4 @@ class CriptographyController:
         array_token = jwt.decode(token,self.jwt_password,algorithms=['HS256'])
         decoded_json_token = self.fernet.decrypt(token=array_token['data'].encode()).decode()
         datas_from_user = json.loads(decoded_json_token)
-        
         return datas_from_user
