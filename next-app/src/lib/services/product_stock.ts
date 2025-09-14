@@ -3,7 +3,7 @@ import { createApiWithAuth } from '@/lib/config/axiosConfig'
 export const getStockProducts = async ()=>{
     try{
         const api = await createApiWithAuth()
-        const response = await api.post('/products/get-stocks-products')
+        const response = await api.post('/products/get-all')
 
         switch (response.status){
             case 200:
