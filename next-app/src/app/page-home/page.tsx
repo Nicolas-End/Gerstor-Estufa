@@ -80,19 +80,12 @@ const Home = () => {
       </div>
 
       {/* Card verde (esquerda em desktop) */}
-      <div className="md:w-1/2 flex justify-center md:justify-start relative">
-        {/* Logo cinza atrás */}
-        <img
-          src="Logo.png"
-          alt="Logo cinza atrás"
-          className="absolute -top-10 -left-10 w-64 h-64 opacity-20 z-0"
-        />
-
+      <div className="md:w-1/2 flex justify-center md:justify-start">
         <div
           role="region"
           aria-label="Apresentação Controle Verde"
           data-aos="fade-right"
-          className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-9 max-w-[520px] w-full shadow-lg flex flex-col justify-center items-start text-[#04291f] md:items-start md:text-left text-center mx-auto relative z-10"
+          className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-9 max-w-[520px] w-full shadow-lg flex flex-col justify-center items-start text-[#04291f] md:items-start md:text-left text-center mx-auto"
           style={{ backdropFilter: "blur(2px)" }}
         >
           <h2 className="text-5xl font-bold leading-tight">
@@ -135,8 +128,8 @@ const About = () => {
 const App = () => {
   useEffect(() => {
     AOS.init({
-      duration: 1000,
-      once: true,
+      duration: 1000, 
+      once: true,     
     });
   }, []);
 
