@@ -112,18 +112,50 @@ const Home = () => {
 
 
 
+// substitua o componente About atual por este trecho
 const About = () => {
   return (
-    <section className="bg-[#56235f] py-16 px-8">
-      <div className="container mx-auto text-center text-white">
-        <h2 className="text-4xl font-bold">Sobre Nós</h2>
-        <p className="mt-6 text-xl max-w-2xl mx-auto">
-          Na ToDay, estamos comprometidos em oferecer soluções inovadoras que ajudam empresas a alcançar seus objetivos.
-        </p>
+    <section className="bg-[#e0edba] py-16 px-8">
+      <div className="container mx-auto">
+        {/* layout responsivo: coluna em mobile, linha em desktop */}
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          
+          {/* Imagem (lado esquerdo em desktop) */}
+          <div className="md:w-1/2 flex justify-center md:justify-start" data-aos="fade-right">
+            <img
+              src="/estufa.png"
+              alt="Estufa"
+              className="w-[800px] max-w-full h-auto rounded-2xl"
+            />
+          </div>
+
+          {/* Card (lado direito em desktop) */}
+          <div className="md:w-1/2 flex justify-center md:justify-end" data-aos="fade-left">
+            <div
+              className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-8 max-w-[560px] w-full shadow-lg text-[#04291f]"
+              style={{ backdropFilter: "blur(2px)" }}
+              role="article"
+              aria-label="Card sobre o projeto Controle Verde"
+            >
+              <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
+
+              <p className="text-base leading-relaxed mb-4 text-[22px]">
+                O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.
+              </p>
+
+              <p className="text-base leading-relaxed mb-4 text-[22px]">
+                Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.
+              </p>
+
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );
 };
+
 
 const App = () => {
   useEffect(() => {
