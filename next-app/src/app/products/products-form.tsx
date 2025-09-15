@@ -55,7 +55,6 @@ export default function ProductForm({ isOpen, onClose, onSubmit }: ProductFormPr
       quantity: Number(productQuantity),
       items,
     });
-    showSucess('Ta enviando')
     setProductName("");
     setProductQuantity("");
     setItems([]);

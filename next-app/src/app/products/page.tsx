@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faSearch, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { GetStocksProducts } from "@/lib/ts/api";
+import { AddNewProduct, GetStocksProducts } from "@/lib/ts/api";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { showError } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import ProductForm from "./products-form";
 
 interface ItemEntry {
@@ -44,7 +44,8 @@ export default function ProductsPage() {
   }, []);
 
   // Adiciona produto localmente (substituir por chamada API se quiser)
-  const handleAddProduct = (product: { name: string; quantity: number; items: ItemEntry[] }) => {
+  const handleAddProduct = async (product: { name: string; quantity: number; items: ItemEntry[] }) => {
+    try{
     if (!product.name.trim()) {
       showError("Preencha o nome do produto");
       return;
@@ -58,9 +59,27 @@ export default function ProductsPage() {
       id: Date.now(),
       ...product,
     };
-
+    const response = await AddNewProduct(product)
+    switch (response){
+      case "Credencial Invalida":
+        showError("Credenciais Invalidas")
+        router.push('/logout')
+        return;
+      case "Criado com Sucesso":
+        showSucess("Produto Adicinado com sucesso")
+        break;
+      case "Erro Interno":
+        showError("Houve um erro Interno tente novamente mais tarde")
+        return;
+      case "Produto Ja Cadastrado":
+        showAlert("Produto Ja esta cadastrado no sistema")
+        return;
+    }
     setProductsDatas((prev) => [newProduct, ...prev]);
     setIsModalOpen(false);
+  }catch(error){
+    showError("Houve um erro Interno tente novamente mais tarde")
+  }
   };
 
   // filtro de busca
