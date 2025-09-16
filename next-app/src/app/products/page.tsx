@@ -171,10 +171,8 @@ export default function ProductsPage() {
             </div>
           ))}
         </div>
+        <ToastContainer position="top-right" autoClose={4000} />
       </div>
-
-      <ToastContainer position="top-right" autoClose={4000} />
-
       {/* Modal separado */}
       <ProductForm
         isOpen={isModalOpen}

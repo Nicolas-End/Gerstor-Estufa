@@ -1,0 +1,132 @@
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7f6;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.content {
+  flex: 1;
+  margin: 20px;
+  padding: 26px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(6, 22, 17, 0.06);
+}
+
+.loaderWrap {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background: #fff;
+}
+.loaderBox { display:flex; align-items:center; gap:14px; }
+.spinner {
+  width:28px;
+  height:28px;
+  border:4px solid #0a2c26;
+  border-top-color: transparent;
+  border-radius:50%;
+  animation: spin 1s linear infinite;
+}
+.loaderText {
+  font-weight:700;
+  color:#0b0b0b;
+  font-size:16px;
+}
+
+.topHeader {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+.title {
+  color: #0a2c26;
+  font-size:28px;
+  font-weight:750;
+  margin:0;
+  letter-spacing:0.2px;
+}
+.backBtn {
+  background: #0a2c26;
+  color: #ffffff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.06) inset;
+}
+
+.banner {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: linear-gradient(180deg, #07221b 0%, #0a2c26 100%);
+  color: #ffffff;
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 18px rgba(6,22,17,0.08);
+}
+
+.bannerTitle {
+  font-size:18px;
+  font-weight:800;
+  color: #ffffff;
+}
+.bannerSub {
+  margin-top:6px;
+  font-size:13px;
+  color: rgba(255,255,255,0.92);
+}
+.bannerRight {
+  text-align:right;
+  color: rgba(255,255,255,0.95);
+}
+
+.clientBox {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid rgba(10,44,38,0.06);
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(6,22,17,0.03);
+}
+
+.clientRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f6f5;
+}
+.clientRow:last-child { border-bottom: none; }
+
+.clientLabel {
+  color: #0a2c26;
+  font-weight:700;
+  font-size:18px;
+}
+
+.clientValue {
+  color: #0a2c26;
+  font-weight:550;
+  font-size:16px;
+  text-align:right;
+  word-break:break-word;
+}
+
+@media (max-width: 700px) {
+  .clientRow { grid-template-columns: 1fr; }
+  .clientValue { text-align:left; margin-top:6px; }
+  .clientLabel { font-size:13px; }
+  .banner { padding: 14px; }
+  .title { font-size:22px; }
+}
+
+/* Animation */
+@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
