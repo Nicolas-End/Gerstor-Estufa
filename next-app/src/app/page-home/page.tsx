@@ -32,6 +32,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
             <a href="/about" className="text-[#fff] font-bold hover:text-[#115a4d]">Sobre</a>
+            <a href="/creators" className="text-[#fff] font-bold hover:text-[#115a4d]">Criadores</a>
             <div className="flex space-x-4">
               <a href="./register" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Registre-se</a>
               <a href="./home" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Entrar</a>
@@ -52,7 +53,8 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4 text-[#0a2c26] font-bold bg-[#fff] p-4 rounded-lg shadow-lg">
             <a href="#" className="block hover:text-[#115a4d]">Home</a>
-            <a href="/about" className="block hover:text-[#115a4d]">Sobre</a>
+            <a href="/about" className="block hover:text-[#115a4d]">Empresa</a>
+            <a href="/creators" className="block hover:text-[#115a4d]">Criadores</a>
             <a href="/services" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Registre-se</a>
             <a href="./home" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Entrar</a>
           </div>
@@ -139,11 +141,11 @@ const About = () => {
             >
               <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
 
-              <p className="text-base leading-relaxed mb-4 text-[22px]">
+              <p className="text-base leading-relaxed mb-4 text-[24px]">
                 O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.
               </p>
 
-              <p className="text-base leading-relaxed mb-4 text-[22px]">
+              <p className="text-base leading-relaxed mb-4 text-[24px]">
                 Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.
               </p>
 

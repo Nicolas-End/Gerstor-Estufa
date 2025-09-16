@@ -3,15 +3,15 @@
 
 import React, { use, useState } from "react";
 import styles from "./page.module.css";
-
 import Sidebar from "@/Components/sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ValidateHomeAcess} from "@/lib/ts/api";
+import { showAlert, showError } from "@/lib/controller/alertsController";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -27,9 +27,11 @@ export default function DeliveryFormPage() {
   // Estados dos campos principais
 
   const [items, setItems] = useState<ItemEntry[]>([]);
+  const [itemsInfo, setItemsInfo] = useState<any>({})
   const [pageIsLoading, setPageIsLoading] = useState(true)
   const params = useParams();
   const id: any = params?.id ? params.id : null;
+
 
   if (pageIsLoading) {
     return (
@@ -43,11 +45,10 @@ export default function DeliveryFormPage() {
     );
     } else {
         return (
-          <>
-            <div className="flex flex-row min-h-screen bg-gray-100 overflow-y-auto">
-              <Sidebar /> {/* Barra lateral */}
-            </div>
-            </>
+          <div className={styles.container}>
+          <Sidebar />
+          
+        </div>
         )
 }
 }
