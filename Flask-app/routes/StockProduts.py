@@ -33,9 +33,8 @@ def GetProducts():
         products_dict = ProductController().GetProducts(datas['company_email'])
 
         if products_dict:
-            return jsonify({'Produtos':products_dict}),200
-        else:
-            return "Pedido não encontrado",204
+            return jsonify({'products':products_dict}),200
+
     except Exception as e:
         print('Error: ',e)
         return "Erro Interno",500

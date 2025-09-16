@@ -7,7 +7,7 @@ export const getStockProducts = async ()=>{
 
         switch (response.status){
             case 200:
-              return response.data.products_dict
+              return response.data.products
             case 401:
               return "Credencial Invalida"
             case 204:

@@ -29,12 +29,12 @@ class ProductController:
                      }
                     dict_products.append(products_stocked.copy())
 
-                return dict_products, True
+                return dict_products
             else:
-                return 0, True
+                return []
         except Exception as e:
             print('Error: ', e)
-            return 'Error', False
+            return e
 
     def AddNewStockProduct(self, company_email, products_data):
         try:

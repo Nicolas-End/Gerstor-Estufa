@@ -32,6 +32,7 @@ export default function ProductsPage() {
     try {
       const response = await GetStocksProducts();
       setProductsDatas(Array.isArray(response) ? response : []);
+      
       setIsLoading(false);
     } catch (error) {
       showError("Houve um erro, tente novamente mais tarde");
@@ -41,6 +42,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     initializeProducts();
+    
   }, []);
 
   // Adiciona produto localmente (substituir por chamada API se quiser)
@@ -59,6 +61,7 @@ export default function ProductsPage() {
       id: Date.now(),
       ...product,
     };
+    setIsModalOpen(false);
     const response = await AddNewProduct(product)
     switch (response){
       case "Credencial Invalida":
@@ -76,7 +79,7 @@ export default function ProductsPage() {
         return;
     }
     setProductsDatas((prev) => [newProduct, ...prev]);
-    setIsModalOpen(false);
+    
   }catch(error){
     showError("Houve um erro Interno tente novamente mais tarde")
   }
@@ -129,28 +132,19 @@ export default function ProductsPage() {
           {(searchTerm ? resultados : productsDatas).map((product: any, index: any) => (
             <div
               className={styles.productCard}
-              key={product.id ?? index}
+              key={index}
               onDoubleClick={() => router.push(`product/${product.id}`)}
             >
               <FontAwesomeIcon icon={faBox} className={styles.productIcon} />
               <div>
+                
                 <p className={styles.productName}>{product.name}</p>
                 {product.quantity !== undefined && (
                   <p className="text-sm opacity-80">
                     {product.quantity} {product.unit ?? ""}
                   </p>
                 )}
-                {/* mostra itens internos (se existirem) */}
-                {Array.isArray(product.items) && product.items.length > 0 && (
-                  <div className="mt-2">
-                    {product.items.map((it: ItemEntry) => (
-                      <div key={it.id} className="text-xs opacity-75">
-                        • {it.unit || "(sem unidade)"} — {it.quantity}{" "}
-                        {it.capacity ? `(suporta: ${it.capacity})` : ""}
-                      </div>
-                    ))}
-                  </div>
-                )}
+
               </div>
 
               <div className="gap-6 flex flex-row-reverse">
