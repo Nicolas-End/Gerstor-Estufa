@@ -24,8 +24,7 @@ class ProductController:
                 for i in has_products:
                     products_stocked = {
                         'name': i['name'],
-                        'company_email':i['company_email'],
-                        'quantidy': i['quantidy'],
+                        'quantity': i['quantidade'],
                         'id': i['id']
                      }
                     dict_products.append(products_stocked.copy())
