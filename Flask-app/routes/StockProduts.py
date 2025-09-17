@@ -57,3 +57,16 @@ def AddNewProduct():
     except Exception as e:
         print('Error: ',e)
         return "Erro Interno",500
+    
+@stock_products_bp.route('/delete',methods=['POST'])
+def DeleteProduct():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+
+        product_id = request.get_json()['id']
+    except Exception as e:
+        print('Error: ',e)
+        return "Error Interno",500
