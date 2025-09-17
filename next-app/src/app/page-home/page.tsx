@@ -32,7 +32,7 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
-            <a href="/about" className="text-[#fff] font-bold hover:text-[#115a4d]">Sobre</a>
+            <a href="/about" className="text-[#fff] font-bold hover:text-[#115a4d]">Projeto</a>
             <a href="/creators" className="text-[#fff] font-bold hover:text-[#115a4d]">Criadores</a>
             <div className="flex space-x-4">
               <a href="./register" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Registre-se</a>
@@ -54,7 +54,7 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4 text-[#0a2c26] font-bold bg-[#fff] p-4 rounded-lg shadow-lg">
             <a href="#" className="block hover:text-[#115a4d]">Home</a>
-            <a href="/about" className="block hover:text-[#115a4d]">Empresa</a>
+            <a href="/about" className="block hover:text-[#115a4d]">Projeto</a>
             <a href="/creators" className="block hover:text-[#115a4d]">Criadores</a>
             <a href="/services" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Registre-se</a>
             <a href="./home" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Entrar</a>
@@ -115,108 +115,84 @@ const Home = () => {
 
 const About: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [showEstufa, setShowEstufa] = useState(false);
-  const [showCard, setShowCard] = useState(false);
-  const estufaRef = useRef<HTMLImageElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     AOS.init({ duration: AOS_DURATION, once: true, easing: "ease-in-out" });
+
     const onResize = () => {
       const mobile = window.matchMedia("(max-width: 767px)").matches;
       setIsMobile(mobile);
-      setShowEstufa(mobile);
-      if (!mobile) {
-        setShowCard(true);
-      } else {
-        setShowCard(false);
-      }
     };
-    onResize();
+
+    onResize(); // checa na primeira renderização
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const triggerAosOn = (el: Element | null, animation: string) => {
-    if (!el) return;
-    el.classList.remove("aos-animate", "aos-init");
-    el.setAttribute("data-aos", animation);
-    el.classList.add("aos-init");
-    requestAnimationFrame(() => {
-      el.classList.add("aos-animate");
-      AOS.refresh();
-    });
-  };
-
-  const handleEstufaClick = () => {
-    const img = estufaRef.current;
-    const card = cardRef.current;
-    triggerAosOn(img, "zoom-out");
-    setTimeout(() => {
-      setShowEstufa(false);
-      setTimeout(() => {
-        setShowCard(true);
-        requestAnimationFrame(() => {
-          triggerAosOn(card, "fade-up");
-        });
-      }, 40);
-    }, AOS_DURATION);
-  };
-
-  const onKeyDownEstufa = (e: React.KeyboardEvent<HTMLImageElement>) => {
-    if (e.key === "Enter" || e.key === " " || e.code === "Space") {
-      e.preventDefault();
-      handleEstufaClick();
-    }
-  };
-
-  if (!isMobile) {
-    return (
-      <section className="bg-[#e0edba] py-16 px-8">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2 flex justify-center md:justify-start" data-aos="fade-right">
-              <img src="/estufa.png" alt="Estufa" className="w-[800px] max-w-full h-auto rounded-2xl" />
-            </div>
-            <div className="md:w-1/2 flex justify-center md:justify-end" data-aos="fade-left">
-              <div className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-8 max-w-[560px] w-full shadow-lg text-[#04291f]" style={{ backdropFilter: "blur(2px)" }} role="article" aria-label="Card sobre o projeto Controle Verde">
-                <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
-                <p className="text-base leading-relaxed mb-4 text-[24px]">O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.</p>
-                <p className="text-base leading-relaxed mb-4 text-[24px]">Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="about-section-mobile bg-[#e0edba] py-16 px-6 relative" style={{ minHeight: "75vh", overflow: "hidden" }}>
-      <div className="container mx-auto h-full flex items-center justify-center">
-        {!showCard && showEstufa && (
-          <div className="estufa-overlay" aria-hidden={!showEstufa}>
-            <img
-              ref={estufaRef}
-              src="/estufa.png"
-              alt="Estufa — toque para continuar"
-              className="estufa-image"
-              role="button"
-              tabIndex={0}
-              onClick={handleEstufaClick}
-              onKeyDown={onKeyDownEstufa}
-            />
-          </div>
-        )}
-
-        <div ref={cardRef} className="card-target-wrapper w-full max-w-[720px] mx-auto" style={{ pointerEvents: showCard ? "auto" : "none", opacity: showCard ? 1 : 0 }}>
-          {showCard && (
-            <div className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-6 w-full shadow-lg text-[#04291f] mx-auto" style={{ backdropFilter: "blur(2px)" }} role="article" aria-label="Card sobre o projeto Controle Verde (mobile)">
-              <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
-              <p className="text-base leading-relaxed mb-4 text-[20px]">O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.</p>
-              <p className="text-base leading-relaxed mb-4 text-[20px]">Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.</p>
+    <section className="bg-[#e0edba] py-16 px-8">
+      <div className="container mx-auto">
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          {/* Imagem só no desktop */}
+          {!isMobile && (
+            <div
+              className="md:w-1/2 flex justify-center md:justify-start"
+              data-aos="fade-right"
+            >
+              <img
+                src="/estufa.png"
+                alt="Estufa"
+                className="w-[800px] max-w-full h-auto rounded-2xl"
+              />
             </div>
           )}
+
+          {/* Conteúdo principal */}
+          <div
+            className="w-full md:w-1/2 flex flex-col justify-center md:justify-end gap-6"
+            data-aos="fade-left"
+          >
+            {/* Título "Empresa" só no mobile */}
+            {isMobile && (
+              <div
+                className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-4 w-full shadow-md text-[#04291f] text-center font-bold text-2xl"
+                style={{ backdropFilter: "blur(2px)" }}
+              >
+                <h3 className="text-2xl font-bold text-[28px] text-center">
+                  Visão geral do projeto
+                </h3>
+              </div>
+            )}
+
+            {/* Card */}
+            <div
+              className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-8 max-w-[560px] w-full shadow-lg text-[#04291f]"
+              style={{ backdropFilter: "blur(2px)" }}
+              role="article"
+              aria-label="Card sobre o projeto Controle Verde"
+            >
+              <div className=" hidden md:block">
+                <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">
+                  Visão geral do projeto
+                </h3>
+              </div>
+              <p className="text-base leading-relaxed mb-4 text-[20px] md:text-[24px]">
+                O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves,
+                como parte do Trabalho de Conclusão de Curso (TCC), com o
+                propósito de desenvolver uma solução prática e inovadora para
+                atender às necessidades das estufas de pequeno e médio porte da
+                região de Holambra.
+              </p>
+              <p className="text-base leading-relaxed mb-4 text-[20px] md:text-[24px]">
+                Identificamos que muitos produtores enfrentam desafios no
+                gerenciamento de pedidos e entregas, o que impacta diretamente
+                na organização, no tempo e na produtividade. Pensando nisso,
+                criamos um sistema digital simples, eficiente e acessível, capaz
+                de automatizar processos, reduzir erros e oferecer maior
+                controle das operações do dia a dia.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -224,11 +200,12 @@ const About: React.FC = () => {
 };
 
 
+
 const App = () => {
   useEffect(() => {
     AOS.init({
-      duration: 1000, 
-      once: true,     
+      duration: 1000,
+      once: true,
     });
   }, []);
 
