@@ -66,7 +66,7 @@
   align-items:center;
   background: linear-gradient(180deg, #07221b 0%, #0a2c26 100%);
   color: #ffffff;
-  padding: 18px 20px;
+  padding: 5px 20px;
   border-radius: 12px;
   margin-bottom: 18px;
   box-shadow: 0 6px 18px rgba(6,22,17,0.08);
@@ -119,13 +119,166 @@
   word-break:break-word;
 }
 
-@media (max-width: 700px) {
+.refTableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.refTable {
+  position: relative;
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid rgba(10,44,38,0.06);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(6,22,17,0.03);
+  overflow: visible;
+  margin: 0;
+  border-spacing: 0;
+}
+
+.refTable::after {
+  content: "";
+  position: absolute;
+  left: 50%;                  
+  transform: translateX(-50%);
+  top: 6px;                  
+  bottom: 6px;               
+  width: 3px;                 
+  background: rgba(10,44,38,0.18); 
+  border-radius: 2px;
+  pointer-events: none;       
+  z-index: 2;                 
+}
+
+.refTable thead th {
+  text-align: center;
+  padding: 12px 16px;
+  font-weight: 800;
+  font-size: 14px;
+  background: linear-gradient(180deg, #07221b 0%, #0a2c26 100%);
+  color: #ffffff;
+}
+
+.refTable th,
+.refTable td {
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #0a2c26;
+  text-align: center;     
+  vertical-align: middle;
+}
+
+.refTable tbody tr td {
+  border-bottom: 1px solid #f1f6f5;
+}
+
+.refTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.refTable thead th + th,
+.refTable tbody td + td {
+  border-left: none !important; 
+}
+
+@media (max-width: 900px) {
   .productRow { grid-template-columns: 1fr; }
   .productValue { text-align:left; margin-top:6px; }
   .productLabel { font-size:13px; }
   .banner { padding: 14px; }
   .title { font-size:22px; }
+  .refTable { min-width: 520px; } 
+  .refTable thead th, .refTable th, .refTable td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
 }
+
+@media (max-width: 700px) {
+  
+  .container { min-height: 100vh; }
+  .content {
+    margin: 8px;
+    padding: 12px;
+  }
+
+  .title { font-size: 20px; }
+  .banner { padding: 10px; }
+  .bannerTitle { font-size: 16px; }
+
+  .productBox {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .productItem { padding: 8px 4px; }
+  .productLabel { font-size: 14px; }
+  .productValueCentered { font-size: 15px; }
+
+  .refTableWrapper {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .refTable {
+    position: relative;
+    width: 100%;
+    min-width: 0 !important;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(6,22,17,0.03);
+    border: 1px solid rgba(10,44,38,0.08);
+    overflow: hidden;
+  }
+
+  .refTable thead { display: none; }
+
+  .refTable tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    align-items: center;
+    padding: 8px 6px;
+    border-bottom: 1px solid #f1f6f5;
+  }
+
+  .refTable tbody tr:last-child { border-bottom: none; }
+
+  .refTable tbody td {
+    padding: 6px 8px;
+    font-size: 14px;
+    color: #0a2c26;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  .refTable tbody td:first-child {
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .refTable tbody td:nth-child(2) {
+    text-align: right;
+    font-weight: 600;
+  }
+
+  .refTable::after { display: none; }
+
+  .tableArea { margin-top: 8px; }
+
+  .refTable thead th, .refTable th, .refTable td {
+    padding: 6px 8px;
+  }
+}
+
 
 /* Animation */
 @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
