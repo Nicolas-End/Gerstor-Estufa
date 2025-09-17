@@ -197,85 +197,35 @@
 }
 
 @media (max-width: 700px) {
-  
-  .container { min-height: 100vh; }
-  .content {
-    margin: 8px;
-    padding: 12px;
-  }
-
-  .title { font-size: 20px; }
-  .banner { padding: 10px; }
-  .bannerTitle { font-size: 16px; }
-
-  .productBox {
-    padding: 12px;
-    border-radius: 8px;
-  }
-
-  .infoGrid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .productItem { padding: 8px 4px; }
-  .productLabel { font-size: 14px; }
-  .productValueCentered { font-size: 15px; }
-
-  .refTableWrapper {
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  .refTable {
-    position: relative;
-    width: 100%;
-    min-width: 0 !important;
-    table-layout: fixed;
-    border-collapse: collapse;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(6,22,17,0.03);
-    border: 1px solid rgba(10,44,38,0.08);
-    overflow: hidden;
-  }
-
   .refTable thead { display: none; }
 
   .refTable tbody tr {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    align-items: center;
-    padding: 8px 6px;
+    display: block;
+    padding: 12px 8px;
     border-bottom: 1px solid #f1f6f5;
+    text-align: center;
   }
 
   .refTable tbody tr:last-child { border-bottom: none; }
 
   .refTable tbody td {
-    padding: 6px 8px;
+    display: inline-block;
+    padding: 4px 6px;
     font-size: 14px;
     color: #0a2c26;
     word-break: break-word;
     white-space: normal;
+    text-align: center;
   }
 
-  .refTable tbody td:first-child {
+  /* Junta os dois valores em uma linha */
+  .refTable tbody tr::before {
+    content: attr(data-label);
+    display: block;
     font-weight: 700;
-    text-align: left;
-  }
-
-  .refTable tbody td:nth-child(2) {
-    text-align: right;
-    font-weight: 600;
-  }
-
-  .refTable::after { display: none; }
-
-  .tableArea { margin-top: 8px; }
-
-  .refTable thead th, .refTable th, .refTable td {
-    padding: 6px 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #0a2c26;
   }
 }
 

@@ -118,21 +118,21 @@ export default function DeliveryFormPage() {
 
             <div className={styles.tableArea}>
               <div className={styles.refTableWrapper}>
-                <table className={styles.refTable} role="table" aria-label="Tabela de tipos de embalagem e capacidades">
+                <table className={styles.refTable}>
                   <thead>
                     <tr>
-                      <th>Tipos de embalagem</th>
-                      <th>Capacidade máxima (p/Und)</th>
+                      <th>Tipo de Embalagem</th>
+                      <th>Quantidade Máxima</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Saco</td>
-                      <td>10 Und</td>
-                    </tr>
-                    <tr>
+                    <tr data-label="Tipo de Embalagem: Caixa | Quantidade Máxima: 10">
                       <td>Caixa</td>
-                      <td>25 Und</td>
+                      <td>10</td>
+                    </tr>
+                    <tr data-label="Tipo de Embalagem: Pacote | Quantidade Máxima: 5">
+                      <td>Pacote</td>
+                      <td>5</td>
                     </tr>
                   </tbody>
                 </table>
