@@ -9,7 +9,7 @@ import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecif
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
-import{addNewProduct, getStockProducts} from "@/lib/services/productStocks"
+import{addNewProduct, deleteProduct, getStockProducts} from "@/lib/services/productStocks"
 // processos relacioandos ao cliente
 import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
@@ -389,6 +389,16 @@ export async function AddNewProduct(formsDatas:{ name: string; quantity: number;
     return response
   }catch(error){
     console.log("Error: ",error)
+    throw error
+  }
+}
+
+export async function DeleteProduct(id:string) {
+  try{
+    const response = await deleteProduct(id)
+    return response
+  }catch(error){
+    console.log('Error: ',error)
     throw error
   }
 }

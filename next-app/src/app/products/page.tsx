@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faSearch, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { AddNewProduct, GetStocksProducts } from "@/lib/ts/api";
+import { AddNewProduct, DeleteProduct, GetStocksProducts } from "@/lib/ts/api";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
@@ -26,7 +26,29 @@ export default function ProductsPage() {
 
   // modal control
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const deleteProduct = async (id:string) =>{
+      try{
+        const response = await DeleteProduct(id)
+        switch(response){
+          case "Credenciais Invalidas":
+            showAlert("Suas Credenciais são invalidas")
+            router.push('/logout')
+            return
+          case "Erro Interno":
+            showError("Houve um erro Interno tente novamente mais tarde")
+            return
+          case "Produto Apagado":
+            showSucess("Produto apagado com sucesso")
+            break
+          case "Produto Não Cadastrado":
+            showAlert("Produto Não Existe")
+            break
+        }
+        initializeProducts()
+      }catch(error){
+        showError("Houve um erro Interno tente novamente mais tarde")
+      }
+    }
   // Carrega produtos do backend
   const initializeProducts = async () => {
     try {
@@ -151,13 +173,12 @@ export default function ProductsPage() {
                 <div>
                   <button
                     type="button"
-                    onClick={() =>
-                      setProductsDatas((prev) => prev.filter((p) => p.id !== product.id))
-                    }
+                    onClick={() => deleteProduct(product.id)}
                   >
                     <FontAwesomeIcon
                       icon={faTrash}
                       className="text-white hover:text-red-600 transition-colors duration-200 "
+                      
                     />
                   </button>
                 </div>

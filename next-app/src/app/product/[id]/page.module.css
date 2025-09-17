@@ -15,84 +15,126 @@
 }
 
 .loaderWrap {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   background: #fff;
 }
-.loaderBox { display:flex; align-items:center; gap:14px; }
+
+.loaderBox {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .spinner {
-  width:28px;
-  height:28px;
-  border:4px solid #0a2c26;
+  width: 28px;
+  height: 28px;
+  border: 4px solid #0a2c26;
   border-top-color: transparent;
-  border-radius:50%;
+  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
 .loaderText {
-  font-weight:700;
-  color:#0b0b0b;
-  font-size:16px;
+  font-weight: 700;
+  color: #0b0b0b;
+  font-size: 16px;
 }
 
 .topHeader {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
+
 .title {
   color: #0a2c26;
-  font-size:28px;
-  font-weight:750;
-  margin:0;
-  letter-spacing:0.2px;
+  font-size: 28px;
+  font-weight: 750;
+  margin: 0;
+  letter-spacing: 0.2px;
+  flex: 1;
+  min-width: 200px;
 }
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .backBtn {
-  background: #0a2c26;
+  background: #0a3b2c;
   color: #ffffff;
   border: none;
-  padding: 10px 14px;
+  padding: 8px 16px;
   border-radius: 8px;
-  font-weight:700;
-  cursor:pointer;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.06) inset;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+}
+
+.backBtn:hover {
+  background: #117255;
+}
+
+.editBtn {
+  background: #d97706;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+}
+
+.editBtn:hover {
+  background: #b45309;
 }
 
 .banner {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: linear-gradient(180deg, #07221b 0%, #0a2c26 100%);
   color: #ffffff;
-  padding: 5px 20px;
+  padding: 20px;
   border-radius: 12px;
   margin-bottom: 18px;
-  box-shadow: 0 6px 18px rgba(6,22,17,0.08);
+  box-shadow: 0 6px 18px rgba(6, 22, 17, 0.08);
 }
 
 .bannerTitle {
-  font-size:18px;
-  font-weight:800;
+  font-size: 18px;
+  font-weight: 800;
   color: #ffffff;
 }
+
 .bannerSub {
-  margin-top:6px;
-  font-size:13px;
-  color: rgba(255,255,255,0.92);
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.92);
 }
+
 .bannerRight {
-  text-align:right;
-  color: rgba(255,255,255,0.95);
+  text-align: right;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .productBox {
   background: #ffffff;
   border-radius: 10px;
-  border: 1px solid rgba(10,44,38,0.06);
+  border: 1px solid rgba(10, 44, 38, 0.06);
   padding: 14px;
-  box-shadow: 0 2px 8px rgba(6,22,17,0.03);
+  box-shadow: 0 2px 8px rgba(6, 22, 17, 0.03);
 }
 
 .productRow {
@@ -103,20 +145,27 @@
   padding: 12px 0;
   border-bottom: 1px solid #f1f6f5;
 }
-.productRow:last-child { border-bottom: none; }
+
+.productRow:last-child {
+  border-bottom: none;
+}
 
 .productLabel {
   color: #0a2c26;
-  font-weight:700;
-  font-size:18px;
+  font-weight: 700;
+  font-size: 18px;
 }
 
 .productValue {
   color: #0a2c26;
-  font-weight:550;
-  font-size:16px;
-  text-align:right;
-  word-break:break-word;
+  font-weight: 550;
+  font-size: 16px;
+  text-align: right;
+  word-break: break-word;
+}
+
+.tableArea {
+  width: 100%;
 }
 
 .refTableWrapper {
@@ -130,26 +179,12 @@
   min-width: 700px;
   border-collapse: collapse;
   background: #ffffff;
-  border: 1px solid rgba(10,44,38,0.06);
+  border: 1px solid rgba(10, 44, 38, 0.06);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(6,22,17,0.03);
+  box-shadow: 0 2px 8px rgba(6, 22, 17, 0.03);
   overflow: visible;
   margin: 0;
   border-spacing: 0;
-}
-
-.refTable::after {
-  content: "";
-  position: absolute;
-  left: 50%;                  
-  transform: translateX(-50%);
-  top: 6px;                  
-  bottom: 6px;               
-  width: 3px;                 
-  background: rgba(10,44,38,0.18); 
-  border-radius: 2px;
-  pointer-events: none;       
-  z-index: 2;                 
 }
 
 .refTable thead th {
@@ -159,6 +194,11 @@
   font-size: 14px;
   background: linear-gradient(180deg, #07221b 0%, #0a2c26 100%);
   color: #ffffff;
+  border: none;
+}
+
+.refTable thead th+th {
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .refTable th,
@@ -166,7 +206,7 @@
   padding: 12px 16px;
   font-size: 15px;
   color: #0a2c26;
-  text-align: center;     
+  text-align: center;
   vertical-align: middle;
 }
 
@@ -178,57 +218,118 @@
   border-bottom: none;
 }
 
-.refTable thead th + th,
-.refTable tbody td + td {
-  border-left: none !important; 
+.refTable tbody td+td {
+  border-left: 1px solid #f1f6f5;
+}
+
+/* Cards para Mobile */
+.mobileCards {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileCard {
+  background: #f8fffe;
+  border: 1px solid rgba(10, 44, 38, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.cardTitle {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0a2c26;
+  margin-bottom: 8px;
+}
+
+.cardSubtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.cardValue {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0a2c26;
+}
+
+/* Responsive Design */
+/* Ocultar apenas o texto "Embalagens:" no desktop, mantendo a tabela */
+@media (min-width: 701px) {
+  .productRow:last-child .productLabel {
+    display: none;
+  }
+
+  .productRow:last-child {
+    grid-template-columns: 1fr;
+  }
+
+  .productRow:last-child .productValue {
+    text-align: left;
+  }
 }
 
 @media (max-width: 900px) {
-  .productRow { grid-template-columns: 1fr; }
-  .productValue { text-align:left; margin-top:6px; }
-  .productLabel { font-size:13px; }
-  .banner { padding: 14px; }
-  .title { font-size:22px; }
-  .refTable { min-width: 520px; } 
-  .refTable thead th, .refTable th, .refTable td {
-    padding: 10px 12px;
-    font-size: 14px;
+  .productRow {
+    grid-template-columns: 1fr;
   }
+
+  .productValue {
+    text-align: left;
+    margin-top: 6px;
+  }
+
+  .productLabel {
+    font-size: 16px;
+  }
+
+  .banner {
+    padding: 14px;
+  }
+
 }
 
-@media (max-width: 700px) {
-  .refTable thead { display: none; }
-
-  .refTable tbody tr {
-    display: block;
-    padding: 12px 8px;
-    border-bottom: 1px solid #f1f6f5;
-    text-align: center;
+@media(max-width: 700px) {
+  .content {
+    margin: 10px;
+    padding: 16px;
   }
 
-  .refTable tbody tr:last-child { border-bottom: none; }
-
-  .refTable tbody td {
-    display: inline-block;
-    padding: 4px 6px;
-    font-size: 14px;
-    color: #0a2c26;
-    word-break: break-word;
-    white-space: normal;
-    text-align: center;
+  .topHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
 
-  /* Junta os dois valores em uma linha */
-  .refTable tbody tr::before {
-    content: attr(data-label);
-    display: block;
-    font-weight: 700;
-    margin-bottom: 6px;
-    font-size: 13px;
-    color: #0a2c26;
+  .title {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .buttonGroup {
+    justify-content: center;
+  }
+
+  /* Esconder tabela e mostrar cards no mobile */
+  .refTable {
+    display: none;
+  }
+
+  .mobileCards {
+    display: flex;
   }
 }
-
 
 /* Animation */
-@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

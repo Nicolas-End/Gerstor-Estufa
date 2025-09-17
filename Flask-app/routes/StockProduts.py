@@ -67,6 +67,12 @@ def DeleteProduct():
             return "Credenciais Invalidas",401
 
         product_id = request.get_json()['id']
+
+        deleted = ProductController().DeleteProduct(datas['company_email'],product_id)
+
+        if deleted:
+            return "Deleteado",204
+        return "Produto Não Cadastrado",404
     except Exception as e:
         print('Error: ',e)
         return "Error Interno",500

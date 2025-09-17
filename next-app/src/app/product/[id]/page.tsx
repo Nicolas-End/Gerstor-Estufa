@@ -1,11 +1,12 @@
 "use client";
 
-import React, { use, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
+
 import { ValidateHomeAcess } from "@/lib/ts/api";
 import { showError } from "@/lib/controller/alertsController";
 
@@ -26,7 +27,7 @@ export default function DeliveryFormPage() {
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const params = useParams();
   const id: any = params?.id ? params.id : null;
-
+ 
   const initializePage = async () => {
     try {
       const canAccess = await ValidateHomeAcess(router);
@@ -49,10 +50,10 @@ export default function DeliveryFormPage() {
 
   if (pageIsLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white text-gray-800">
-        <div className="flex items-center space-x-2">
-          <div className="w-5 h-5 border-4 border-[#0a2c26] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xl font-medium">Carregando...</span>
+      <div className={styles.loaderWrap}>
+        <div className={styles.loaderBox}>
+          <div className={styles.spinner} />
+          <span className={styles.loaderText}>Carregando...</span>
         </div>
       </div>
     );
@@ -62,19 +63,16 @@ export default function DeliveryFormPage() {
       <div className={styles.container}>
         <Sidebar />
         <main className={styles.content}>
-          <header
-            className={styles.topHeader}
-            style={{ display: "flex", alignItems: "center", gap: 8 }}
-          >
-            <h1 className={styles.title} style={{ flex: 1 }}>
+          <header className={styles.topHeader}>
+            <h1 className={styles.title}>
               Consultar Produto
             </h1>
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className={styles.buttonGroup}>
               <button
                 type="button"
                 onClick={() => router.push("/products")}
-                className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
+                className={styles.backBtn}
               >
                 Voltar
               </button>
@@ -86,7 +84,7 @@ export default function DeliveryFormPage() {
                   onClick={() =>
                     router.push(`../products/${decodeURIComponent(id)}`)
                   }
-                  className="bg-yellow-600 text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-yellow-700 transition"
+                  className={styles.editBtn}
                 >
                   Editar
                 </button>
@@ -99,7 +97,6 @@ export default function DeliveryFormPage() {
               <div className={styles.bannerTitle}>
               </div>
             </div>
-
             <div className={styles.bannerRight}></div>
           </section>
 
@@ -116,26 +113,47 @@ export default function DeliveryFormPage() {
               </div>
             </div>
 
-            <div className={styles.tableArea}>
-              <div className={styles.refTableWrapper}>
-                <table className={styles.refTable}>
-                  <thead>
-                    <tr>
-                      <th>Tipo de Embalagem</th>
-                      <th>Quantidade Máxima</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr data-label="Tipo de Embalagem: Caixa | Quantidade Máxima: 10">
-                      <td>Caixa</td>
-                      <td>10</td>
-                    </tr>
-                    <tr data-label="Tipo de Embalagem: Pacote | Quantidade Máxima: 5">
-                      <td>Pacote</td>
-                      <td>5</td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div className={styles.productRow}>
+              <div className={styles.productLabel}>Embalagens:</div>
+              <div className={styles.productValue}>
+                <div className={styles.tableArea}>
+                  <div className={styles.refTableWrapper}>
+                    {/* Layout Desktop/Tablet - Tabela tradicional */}
+                    <table className={styles.refTable}>
+                      <thead>
+                        <tr>
+                          <th>Tipo de Embalagem</th>
+                          <th>Capacidade Máxima</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Caixa</td>
+                          <td>10</td>
+                        </tr>
+                        <tr>
+                          <td>Pacote</td>
+                          <td>5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    {/* Layout Mobile - Cards */}
+                    <div className={styles.mobileCards}>
+                      <div className={styles.mobileCard}>
+                        <div className={styles.cardTitle}>Caixa</div>
+                        <div className={styles.cardSubtitle}>Quantidade Máxima</div>
+                        <div className={styles.cardValue}>10</div>
+                      </div>
+                      
+                      <div className={styles.mobileCard}>
+                        <div className={styles.cardTitle}>Pacote</div>
+                        <div className={styles.cardSubtitle}>Capacidade Máxima</div>
+                        <div className={styles.cardValue}>5</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
