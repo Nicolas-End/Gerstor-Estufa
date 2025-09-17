@@ -1,10 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import AOS from "aos";
 import './style.css';
 import "aos/dist/aos.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+
+const AOS_DURATION = 700;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +14,6 @@ const Navbar = () => {
   return (
     <>
       <Head>
-        <title>Home - Today</title>
         <link rel="stylesheet" href="style.css" />
       </Head>
 
@@ -76,12 +77,12 @@ const Home = () => {
         className="absolute top-0 left-0 w-full h-full object-cover -z-10"
       />
 
-      {/* Imagem (direita em desktop) */}
+      {/* Imagem*/}
       <div className="hidden md:flex md:w-1/2 justify-center" data-aos="fade-up">
         <img src="Logo.png" alt="Imagem ilustrativa" className="max-w-full h-auto animate-float" />
       </div>
 
-      {/* Card verde (esquerda em desktop) */}
+      {/* Card verde*/}
       <div className="md:w-1/2 flex justify-center md:justify-start">
         <div
           role="region"
@@ -112,46 +113,110 @@ const Home = () => {
   );
 };
 
+const About: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [showEstufa, setShowEstufa] = useState(false);
+  const [showCard, setShowCard] = useState(false);
+  const estufaRef = useRef<HTMLImageElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    AOS.init({ duration: AOS_DURATION, once: true, easing: "ease-in-out" });
+    const onResize = () => {
+      const mobile = window.matchMedia("(max-width: 767px)").matches;
+      setIsMobile(mobile);
+      setShowEstufa(mobile);
+      if (!mobile) {
+        setShowCard(true);
+      } else {
+        setShowCard(false);
+      }
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-// substitua o componente About atual por este trecho
-const About = () => {
-  return (
-    <section className="bg-[#e0edba] py-16 px-8">
-      <div className="container mx-auto">
-        {/* layout responsivo: coluna em mobile, linha em desktop */}
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          
-          {/* Imagem (lado esquerdo em desktop) */}
-          <div className="md:w-1/2 flex justify-center md:justify-start" data-aos="fade-right">
-            <img
-              src="/estufa.png"
-              alt="Estufa"
-              className="w-[800px] max-w-full h-auto rounded-2xl"
-            />
-          </div>
+  const triggerAosOn = (el: Element | null, animation: string) => {
+    if (!el) return;
+    el.classList.remove("aos-animate", "aos-init");
+    el.setAttribute("data-aos", animation);
+    el.classList.add("aos-init");
+    requestAnimationFrame(() => {
+      el.classList.add("aos-animate");
+      AOS.refresh();
+    });
+  };
 
-          {/* Card (lado direito em desktop) */}
-          <div className="md:w-1/2 flex justify-center md:justify-end" data-aos="fade-left">
-            <div
-              className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-8 max-w-[560px] w-full shadow-lg text-[#04291f]"
-              style={{ backdropFilter: "blur(2px)" }}
-              role="article"
-              aria-label="Card sobre o projeto Controle Verde"
-            >
-              <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
+  const handleEstufaClick = () => {
+    const img = estufaRef.current;
+    const card = cardRef.current;
+    triggerAosOn(img, "zoom-out");
+    setTimeout(() => {
+      setShowEstufa(false);
+      setTimeout(() => {
+        setShowCard(true);
+        requestAnimationFrame(() => {
+          triggerAosOn(card, "fade-up");
+        });
+      }, 40);
+    }, AOS_DURATION);
+  };
 
-              <p className="text-base leading-relaxed mb-4 text-[24px]">
-                O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.
-              </p>
+  const onKeyDownEstufa = (e: React.KeyboardEvent<HTMLImageElement>) => {
+    if (e.key === "Enter" || e.key === " " || e.code === "Space") {
+      e.preventDefault();
+      handleEstufaClick();
+    }
+  };
 
-              <p className="text-base leading-relaxed mb-4 text-[24px]">
-                Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.
-              </p>
-
+  if (!isMobile) {
+    return (
+      <section className="bg-[#e0edba] py-16 px-8">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="md:w-1/2 flex justify-center md:justify-start" data-aos="fade-right">
+              <img src="/estufa.png" alt="Estufa" className="w-[800px] max-w-full h-auto rounded-2xl" />
+            </div>
+            <div className="md:w-1/2 flex justify-center md:justify-end" data-aos="fade-left">
+              <div className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-8 max-w-[560px] w-full shadow-lg text-[#04291f]" style={{ backdropFilter: "blur(2px)" }} role="article" aria-label="Card sobre o projeto Controle Verde">
+                <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
+                <p className="text-base leading-relaxed mb-4 text-[24px]">O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.</p>
+                <p className="text-base leading-relaxed mb-4 text-[24px]">Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.</p>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
+    );
+  }
 
+  return (
+    <section className="about-section-mobile bg-[#e0edba] py-16 px-6 relative" style={{ minHeight: "75vh", overflow: "hidden" }}>
+      <div className="container mx-auto h-full flex items-center justify-center">
+        {!showCard && showEstufa && (
+          <div className="estufa-overlay" aria-hidden={!showEstufa}>
+            <img
+              ref={estufaRef}
+              src="/estufa.png"
+              alt="Estufa — toque para continuar"
+              className="estufa-image"
+              role="button"
+              tabIndex={0}
+              onClick={handleEstufaClick}
+              onKeyDown={onKeyDownEstufa}
+            />
+          </div>
+        )}
+
+        <div ref={cardRef} className="card-target-wrapper w-full max-w-[720px] mx-auto" style={{ pointerEvents: showCard ? "auto" : "none", opacity: showCard ? 1 : 0 }}>
+          {showCard && (
+            <div className="bg-[rgba(98,172,13,0.45)] border border-[rgba(98,172,13,0.45)] rounded-2xl p-6 w-full shadow-lg text-[#04291f] mx-auto" style={{ backdropFilter: "blur(2px)" }} role="article" aria-label="Card sobre o projeto Controle Verde (mobile)">
+              <h3 className="text-2xl font-bold mb-4 text-[28px] text-center">Visão geral do projeto</h3>
+              <p className="text-base leading-relaxed mb-4 text-[20px]">O projeto foi desenvolvido dentro da ETEC Pedro Ferreira Alves, como parte do Trabalho de Conclusão de Curso (TCC), com o propósito de desenvolver uma solução prática e inovadora para atender às necessidades das estufas de pequeno e médio porte da região de Holambra.</p>
+              <p className="text-base leading-relaxed mb-4 text-[20px]">Identificamos que muitos produtores enfrentam desafios no gerenciamento de pedidos e entregas, o que impacta diretamente na organização, no tempo e na produtividade. Pensando nisso, criamos um sistema digital simples, eficiente e acessível, capaz de automatizar processos, reduzir erros e oferecer maior controle das operações do dia a dia.</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
