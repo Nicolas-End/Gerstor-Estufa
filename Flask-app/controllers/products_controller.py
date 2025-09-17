@@ -69,3 +69,15 @@ class ProductController:
         except Exception as e:
             print("Erro em AddNewStockProduct:", e)
             return e
+
+    def DeleteProduct(self,company_email,product_id):
+        try:
+            product_filter = {'company_email':company_email,'id':product_id}
+
+            product_deleted = self.coll.delete_one(product_filter)
+            if product_deleted:
+                return True
+            return False
+        except Exception as e:
+            print('Error: ',e)
+            return e

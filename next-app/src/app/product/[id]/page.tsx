@@ -6,8 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ValidateHomeAcess} from "@/lib/ts/api";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { DeleteProduct, ValidateHomeAcess} from "@/lib/ts/api";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -26,7 +26,29 @@ export default function DeliveryFormPage() {
   const [pageIsLoading, setPageIsLoading] = useState(true)
   const params = useParams();
   const id: any = params?.id ? params.id : null;
-
+  const deleteProduct = async (id:string) =>{
+    try{
+      const response = await DeleteProduct(id)
+      switch(response){
+        case "Credenciais Invalidas":
+          showAlert("Suas Credenciais são invalidas")
+          router.push('/logout')
+          return
+        case "Erro Interno":
+          showError("Houve um erro Interno tente novamente mais tarde")
+          return
+        case "Produto Apagado":
+          showSucess("Produto apagado com sucesso")
+          break
+        case "Produto Não Cadastrado":
+          showAlert("Produto Não Existe")
+          break
+      }
+      initializePage()
+    }catch(error){
+      showError("Houve um erro Interno tente novamente mais tarde")
+    }
+  }
   const initializePage = async () => {
       try {
         const canAccess = await ValidateHomeAcess(router);

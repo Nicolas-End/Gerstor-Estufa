@@ -42,3 +42,24 @@ export const addNewProduct = async( formsDatas:{ name: string; quantity: number;
     throw error
   }
 }
+
+export const deleteProduct = async(id:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'id':id}
+    const response = await api.post('/products/delete',data)
+
+    switch(response.status){
+      case 204:
+        return "Produto Apagado"
+      case 404:
+        return "Produto Não Cadastrado"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw error
+  }
+}
