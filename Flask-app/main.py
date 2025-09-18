@@ -27,4 +27,5 @@ def CreateApp():
     return app
 
 if __name__ == '__main__':
-    CreateApp().run()
+    app = CreateApp()
+    app.run()
