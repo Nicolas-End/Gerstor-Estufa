@@ -21,7 +21,7 @@ import {
   HardHat
 } from "lucide-react";
 import styles from "./sidebar.module.css";
-import { getRoleCookie } from "@/lib/controller/cookiesController";
+
 import { getRole } from "@/lib/controller/localStorageController";
 
 export default function Sidebar() {

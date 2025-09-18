@@ -10,6 +10,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 // Define formato de cada item
 interface ItemEntry {
   id: number;
@@ -25,7 +28,7 @@ export default function DeliveryFormPage() {
   const [customerName, setCustomerName] = useState("");
 
   const [address, setAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
   const [pageIsLoading, setPageIsLoading] = useState(true)
   const [clientInfo, setClientInfo] = useState<any>({})
   const [clients, setClients] = useState<any[]>([])
@@ -146,7 +149,7 @@ export default function DeliveryFormPage() {
       switch (data) {
         case true:
           showSucess('Entrega Editada com Sucesso')
-          
+
           esperar()
           break;
         case "Credencial Invalida":
@@ -232,9 +235,10 @@ export default function DeliveryFormPage() {
                     id="address"
                     type="text"
                     value={address}
-                    onChange={(e) =>{ 
+                    onChange={(e) => {
                       setClientInfo("")
-                      setAddress(e.target.value)}}
+                      setAddress(e.target.value)
+                    }}
                     className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
                     placeholder="Digite o endereço"
                     required
@@ -247,149 +251,155 @@ export default function DeliveryFormPage() {
                     className="block text-green-900 text-[18px] mb-2"
                   >
                     Data de Entrega
-                  </label>
-                  <input
+                  </label><DatePicker
                     id="deliveryDate"
-                    type="date"
-                    value={deliveryDate}
-                    onChange={(e) => setDeliveryDate(e.target.value)}
-                    className=" text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    selected={deliveryDate} 
+                    onChange={(date: Date | null) => setDeliveryDate(date)}
+                    className="text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholderText="dd/mm/aaaa"
                     required
+                    minDate={new Date()} // Limita a data mínima para o dia atual(Para que não haja datas anteriores ao dia de hoje)
+                    maxDate={(() => {
+                      const max = new Date();
+                      max.setMonth(max.getMonth() + 2);
+                      return max;
+                    })()} // Limita a data máxima para 2 meses no futuro
+                    dateFormat="dd/MM/yyyy" // Formato que será exibido a data 
                   />
-                </div>
-                <div>
-                  <label
-                    htmlFor="deliveryDate"
-                    className="block text-green-900 text-[18px] mb-2"
-                  >Cliente
-                  </label>
-                  <select
-                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
-                    onChange={(e) => {
+                  <div>
+                    <label
+                      htmlFor="deliveryDate"
+                      className="block text-green-900 text-[18px] mb-2"
+                    >Cliente
+                    </label>
+                    <select
+                      value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                      onChange={(e) => {
 
-                      const selectedClient = clients.find(
-                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
-                      );
-                      if (selectedClient) {
-                        setClientInfo(selectedClient);
+                        const selectedClient = clients.find(
+                          (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
+                        );
+                        if (selectedClient) {
+                          setClientInfo(selectedClient);
 
-                        setAddress(selectedClient.address);
-                      } else {
-                        setClientInfo("")
-                        setAddress("")
-                      }
-                    }}
-                    className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                  >
-                    <option value="">Escolha um cliente (Opcional)</option>
-                    {clients.map((client: any, index: number) => (
-                      <option key={index} value={client.cpf || client.cnpj}>
-                        {client.name} - {client.cpf || client.cnpj}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Seção Dinâmica */}
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <p className=" text-green-900 text-[18px]">Itens a entregar</p>
-                  <button
-                    type="button"
-                    onClick={addItem}
-                    className="bg-green-900 text-white py-1 px-3 font-bold rounded-lg shadow hover:bg-green-800 transition text-sm"
-                  >
-                    + Adicionar Item
-                  </button>
-                </div>
-
-                {/* Lista de itens */}
-                <div className="space-y-4">
-                  {items.length === 0 && (
-                    <p className="text-gray-600 text-center py-4">
-                      Nenhum item adicionado. Clique em "Adicionar Item" para começar.
-                    </p>
-                  )}
-                  {items.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex flex-col md:flex-row md:items-center md:space-x-4 bg-gray-50 p-4 rounded-lg"
-                    >
-                      {/* Nome do item */}
-                      <input
-                        type="text"
-                        placeholder="Nome do item"
-                        value={item.name}
-                        onChange={(e) =>
-                          updateItem(item.id, "name", e.target.value)
+                          setAddress(selectedClient.address);
+                        } else {
+                          setClientInfo("")
+                          setAddress("")
                         }
-                        className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-gray-600"
-                        required
-                      />
-                      <div className="flex space-x-[150px]">
-                        {/* Quantidade */}
+                      }}
+                      className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                    >
+                      <option value="">Escolha um cliente (Opcional)</option>
+                      {clients.map((client: any, index: number) => (
+                        <option key={index} value={client.cpf || client.cnpj}>
+                          {client.name} - {client.cpf || client.cnpj}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Seção Dinâmica */}
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className=" text-green-900 text-[18px]">Itens a entregar</p>
+                    <button
+                      type="button"
+                      onClick={addItem}
+                      className="bg-green-900 text-white py-1 px-3 font-bold rounded-lg shadow hover:bg-green-800 transition text-sm"
+                    >
+                      + Adicionar Item
+                    </button>
+                  </div>
+
+                  {/* Lista de itens */}
+                  <div className="space-y-4">
+                    {items.length === 0 && (
+                      <p className="text-gray-600 text-center py-4">
+                        Nenhum item adicionado. Clique em "Adicionar Item" para começar.
+                      </p>
+                    )}
+                    {items.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex flex-col md:flex-row md:items-center md:space-x-4 bg-gray-50 p-4 rounded-lg"
+                      >
+                        {/* Nome do item */}
                         <input
-                          type="number"
-                          min={0}
-                          placeholder="Quantidade"
-                          value={item.quantity}
+                          type="text"
+                          placeholder="Nome do item"
+                          value={item.name}
                           onChange={(e) =>
-                            updateItem(
-                              item.id,
-                              "quantity",
-                              parseInt(e.target.value) || 0
-                            )
+                            updateItem(item.id, "name", e.target.value)
                           }
-                          className="text-black w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                          className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-gray-600"
                           required
                         />
-                        {/* Unidade */}
-                        <select
-                          value={item.unit}
-                          onChange={(e) =>
-                            updateItem(item.id, "unit", e.target.value)
-                          }
-                          className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
-                        >
-                          {unitOptions.map((u) => (
-                            <option key={u} value={u}>
-                              {u}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="flex space-x-[150px]">
+                          {/* Quantidade */}
+                          <input
+                            type="number"
+                            min={0}
+                            placeholder="Quantidade"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              updateItem(
+                                item.id,
+                                "quantity",
+                                parseInt(e.target.value) || 0
+                              )
+                            }
+                            className="text-black w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                            required
+                          />
+                          {/* Unidade */}
+                          <select
+                            value={item.unit}
+                            onChange={(e) =>
+                              updateItem(item.id, "unit", e.target.value)
+                            }
+                            className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                          >
+                            {unitOptions.map((u) => (
+                              <option key={u} value={u}>
+                                {u}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex justify-center">
+                          {/* Botão remover */}
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item.id)}
+                            className="text-red-600 hover:text-red-800 font-medium"
+                          >
+                            Remover
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex justify-center">
-                        {/* Botão remover */}
-                        <button
-                          type="button"
-                          onClick={() => removeItem(item.id)}
-                          className="text-red-600 hover:text-red-800 font-medium"
-                        >
-                          Remover
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Botão Enviar Pedido */}
-              <button
-                type="submit"
-                disabled={items.length === 0 || isLoading}
-                className="mt-auto bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition self-end disabled:bg-gray-400 disabled:cursor-not-allowed "
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <span className="mr-2">Editando Entrega ...</span>
-                    <i className="fas fa-spinner fa-spin"></i>
+                    ))}
                   </div>
-                ) : (
-                  "Editar Pedido"
-                )}
+                </div>
 
-              </button>
+                {/* Botão Enviar Pedido */}
+                <button
+                  type="submit"
+                  disabled={items.length === 0 || isLoading}
+                  className="mt-auto bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition self-end disabled:bg-gray-400 disabled:cursor-not-allowed "
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <span className="mr-2">Editando Entrega ...</span>
+                      <i className="fas fa-spinner fa-spin"></i>
+                    </div>
+                  ) : (
+                    "Editar Pedido"
+                  )}
+
+                </button>
+                </div>
             </form>
           </div>
         </div>

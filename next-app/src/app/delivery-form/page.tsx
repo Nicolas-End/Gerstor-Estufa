@@ -7,11 +7,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-import { ClientPageRoot } from "next/dist/client/components/client-page";
 
-import { Socket } from "socket.io-client";
-import { SchoolIcon } from "lucide-react";
 import { socketService } from "@/lib/config/sockteioConfig";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -23,6 +23,9 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
+  const minDate = new Date();
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 2);
 
   function ShowAlert(text: string) {
     toast(text, {
@@ -38,15 +41,14 @@ export default function DeliveryFormPage() {
   // Estados dos campos principais
   const [customerName, setCustomerName] = useState("");
   const [address, setAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("");
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [clientInfo, setClientInfo] = useState<any>({});
   const [clients, setClients] = useState<any[]>([]);
-
-
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
+  const [ clientInfo, setClientInfo] = useState<any>(null);
+  const [driverInfo, setDriverInfo] = useState<any>(null);
 
   // Adiciona nova linha de item
   const addItem = () => {
@@ -110,14 +112,18 @@ export default function DeliveryFormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
     const typeClientId = clientInfo.cpf ? 'cpf' : clientInfo.cnpj ? 'cnpj' : 'id'
+    const clientName = clientInfo.name
     e.preventDefault();
     const formData = {
       name: customerName,
       address,
       deliveryDate,
       items,
-      clientId,
-      typeClientId
+      clientName,
+      clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
+      typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
+      driverId: driverInfo?.cpf || clientInfo?.cnpj || 'idDriver',
+      typeDriverId: driverInfo?.cpf ? 'cpf' : driverInfo?.cnpj ? 'cnpj' : 'id'
     };
 
     try {
@@ -131,7 +137,6 @@ export default function DeliveryFormPage() {
 
         setAddress("");
         setCustomerName("");
-        setDeliveryDate("");
         setItems([]);
         setClientInfo("")
         setIsLoading(false);
@@ -156,7 +161,7 @@ export default function DeliveryFormPage() {
 
   useEffect(() => {
 
-  initializeDeliverForm();
+    initializeDeliverForm();
 
 
   }, []);
@@ -192,25 +197,35 @@ export default function DeliveryFormPage() {
               onSubmit={handleSubmit}
               className="bg-white p-6 rounded-lg shadow overflow-auto flex flex-col mb-6 min-h-fit"
             >
-              {/* Campos Nome, Endereço e Data de Entrega */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                {/* Nome do cliente */}
-                <div>
-                  <label
-                    htmlFor="customerName"
-                    className="block text-green-900 text-[18px] mb-2"
-                  >
-                    Nome
+             
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {/* Seleção do Cliente */}
+                <div className="mb-4">
+                  <label htmlFor="clientSelect" className="block text-green-900 text-[18px] mb-2">
+                    Cliente
                   </label>
-                  <input
-                    id="customerName"
-                    type="text"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
-                    placeholder="Digite o nome da entrega"
-                    required
-                  />
+                  <select
+                    id="clientSelect"
+                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    onChange={(e) => {
+                      const selectedClient = clients.find(
+                        (c) => (c.cpf === e.target.value || c.cnpj === e.target.value)
+                      );
+                      setClientInfo(selectedClient || null);
+                      if (selectedClient)
+                        setAddress(selectedClient.address)
+                      else
+                        setAddress('')
+                    }}
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                  >
+                    <option value="">Escolha um cliente </option>
+                    {clients.map((client, index) => (
+                      <option key={index} value={client.cpf || client.cnpj}>
+                        {client.name} - {client.cpf || client.cnpj}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Endereço */}
@@ -229,7 +244,7 @@ export default function DeliveryFormPage() {
                       setClientInfo("")
                       setAddress(e.target.value)
                     }}
-                    className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-600"
+                    className=" text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
                     placeholder="Digite o endereço"
                     required
                   />
@@ -242,40 +257,43 @@ export default function DeliveryFormPage() {
                   >
                     Data de Entrega
                   </label>
-                  <input
+                  <DatePicker
                     id="deliveryDate"
-                    type="date"
-                    value={deliveryDate}
-                    onChange={(e) => setDeliveryDate(e.target.value)}
-                    className=" text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    selected={deliveryDate} // Use 'selected' para passar a data
+                    onChange={(date: Date | null) => setDeliveryDate(date)} 
+                    className="text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholderText="dd/mm/aaaa"
                     required
+                    minDate={new Date()} // Limita a data mínima para o dia atual(Para que não haja datas anteriores ao dia de hoje)
+                    maxDate={(() => {
+                      const max = new Date();
+                      max.setMonth(max.getMonth() + 2);
+                      return max;
+                    })()} // Limita a data máxima para 2 meses no futuro
+                    dateFormat="dd/MM/yyyy" // Formato que será exibido a data 
                   />
                 </div>
+                
+
+                {/*Caminhoneiro*/}
                 <div>
                   <label
                     htmlFor="deliveryDate"
                     className="block text-green-900 text-[18px] mb-2"
-                  >Cliente
+                  >Caminhoneiro
                   </label>
                   <select
-                    value={clientInfo?.cpf || clientInfo?.cnpj || ""}
+                    value={driverInfo?.cpf || driverInfo?.cnpj || ""}
+                    required
                     onChange={(e) => {
-
-                      const selectedClient = clients.find(
+                      const selectedDriver = clients.find(
                         (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
                       );
-                      if (selectedClient) {
-                        setClientInfo(selectedClient);
-
-                        setAddress(selectedClient.address);
-                      } else {
-                        setClientInfo("")
-                        setAddress("")
-                      }
+                      setDriverInfo(selectedDriver || null);
                     }}
                     className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
                   >
-                    <option value="">Escolha um cliente (Opcional)</option>
+                    <option value="">Escolha um Caminhoneiro</option>
                     {clients.map((client: any, index: number) => (
                       <option key={index} value={client.cpf || client.cnpj}>
                         {client.name} - {client.cpf || client.cnpj}

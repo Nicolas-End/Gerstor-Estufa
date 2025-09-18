@@ -45,7 +45,10 @@ class SocketIOService {
     }
     return this.socket;
   }
-
+  public async offSocketConnections():Promise<boolean>{
+    this.socket?.removeAllListeners()
+    return true
+  }
   public getSocket(): Socket | null {
     
     return this.socket;

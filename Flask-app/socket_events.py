@@ -16,7 +16,6 @@ socketio = SocketIO(app)
 socketio = SocketIO(
     app,
     cors_allowed_origins=[
-        "https://gerenciador-empresarial.vercel.app",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://192.168.1.11:3001",
@@ -93,5 +92,6 @@ def certo():
 def handle_error(error):
     print(f"Erro no Socket.IO: {error}") 
     return 'Error', 500
-
+if __name__ == '__main__':
+       socketio.run(app, debug=True, port=8080)  # Use socketio.run instead of app.run
    

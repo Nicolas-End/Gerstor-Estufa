@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import {createApiWithAuth, createApiWithoutAuth} from "@/lib/config/axiosConfig"
 interface ApiResponse {
   'status': string,
   'message'?: string,
@@ -9,8 +9,10 @@ interface ApiResponse {
 
 export const sendEmailRecovery = async (email: string, newPassword: string) => {
   try {
+    const api = await createApiWithoutAuth()
     const data = { 'email': email, 'newPassword': newPassword }
-    const response = await axios.post('https://gerenciador-empresarial.vercel.app/send-email-recuperation', data,{
+    const response = await api.post('/user/send-email-recuperation', data,{
+
       validateStatus: () => true
     })
 
@@ -29,8 +31,11 @@ export const sendEmailRecovery = async (email: string, newPassword: string) => {
 
 export const changePassword= async (token:string) =>{
   try{
+    const api = await createApiWithoutAuth()
     const data = {'token':token}
-    const response = await axios.post('https://gerenciador-empresarial.vercel.app/change-password',data,{
+
+    const response = await api.post('/user/change-password',data,{
+
       validateStatus: () => true
     }
     )

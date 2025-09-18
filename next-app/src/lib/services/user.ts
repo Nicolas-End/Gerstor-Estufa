@@ -12,7 +12,7 @@ interface ApiResponse {
 export const validateUserAcess = async() =>{
   try{
     let api = await createApiWithAuth()
-    const response = await api.post('/home-acess')
+    const response = await api.post('/user/home-acess')
 
     if(response.status === 200 && response.data){
       return "ok"
@@ -32,7 +32,11 @@ export const addNewCompany = async (email:string,id:string,password:string,compa
   try{
     const api = await createApiWithoutAuth()
     let datas = {email,id,password,companyName}
-    const response = await api.post('/add-new-company',datas)
+
+    const response = await api.post('/user/add-new-company',datas,{
+      validateStatus: () => true
+    })
+
 
     if (response.status === 200 && response.data){
       return "created"
@@ -53,7 +57,7 @@ export const login = async (email:string,password:string) =>{
       const api = await createApiWithoutAuth()
       let data = {email, password}
 
-      const response = await api.post('/user-login',data)
+      const response = await api.post('/user/login',data)
 
 
       if (response.status !== 500 && response.data){

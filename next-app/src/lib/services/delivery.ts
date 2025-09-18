@@ -18,7 +18,7 @@ interface ApiResponse {
 export const deliveryQuantity = async () => {
   try {
     const api = await createApiWithAuth()
-    const response = await api.post('/count-deliverys');
+    const response = await api.post('/deliverys/quantity');
     return response.data;
   } catch (error) {
     console.error(error);
@@ -31,7 +31,7 @@ export const addNewDelivery = async(FormData:any) => {
   try{
     const api = await createApiWithAuth()
     const data  = {'FormsData':FormData}
-    const response:any = await api.post('/add-new-delivery',data)
+    const response:any = await api.post('/deliverys/add-new',data)
     switch(response.status){
       case 200:
         return true
@@ -50,7 +50,7 @@ export const editDelivery = async(FormsData:any) => {
   try{
     const api = await createApiWithAuth()
     const data = {'FormsData':FormsData}
-    const response = await api.post('/edit-delivery',data)
+    const response = await api.post('/deliverys/edit',data)
     switch(response.status){
       case 200:
         return true
@@ -70,7 +70,7 @@ export const getEspecificDeliveryDatas = async(id:string) =>{
   try{
     const api = await createApiWithAuth()
     const data = {'id':id }
-    const response = await api.post('/get-especific-delivery',data)
+    const response = await api.post('/deliverys/get-especific',data)
     switch (response.status){
       case 200 :
         if (response.data.status === "ok"){
@@ -95,11 +95,11 @@ export const getEspecificDeliveryDatas = async(id:string) =>{
 export const getDeliverysToDo = async () =>{
   try{
     const api = await createApiWithAuth()
-    const response = await api.post('/get-deliverys')
+    const response = await api.post('/deliverys/get-all')
     switch (response.status){
       case 200:
         return response.data.deliverys
-      case 400:
+      case 401:
         return "Credencial Invalida"
       case 500:
         return "Erro Interno"
@@ -115,7 +115,7 @@ export const deleteEspecificDelivery = async(delivery_id:string) =>{
     const api = await createApiWithAuth()
     const data = {'delivery_id':delivery_id}
 
-    const response = await api.post('/delete-delivery',data)
+    const response = await api.post('/deliverys/delete',data)
     switch (response.status){
       case 200: 
         return true

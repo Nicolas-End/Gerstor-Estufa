@@ -22,7 +22,7 @@ interface ApiResponse {
 export const getAllTrucks = async (): Promise<TruckData[] | string> => {
   try {
     const api = await createApiWithAuth()
-    const response = await api.post('/get-trucks');
+    const response = await api.post('/trucks/get-all');
     if (response.status === 200 && response.data.trucks) {
       return response.data.trucks;
     } else {
@@ -40,7 +40,7 @@ export const addNewTruck = async (formsDatas:any) =>{
   try{
     const api = await createApiWithAuth()
     const datas = {'FormsData':formsDatas}
-    const response = await api.post('/add-new-truck',datas)
+    const response = await api.post('/trucks/add-new',datas)
 
     switch(response.status){
       case 200:
@@ -61,7 +61,7 @@ export const getEspecificTruck = async (placa:string) =>{
   try{
     const api = await createApiWithAuth()
     const datas = {'placa':placa}
-    const response = await api.post('/get-especific-truck',datas)
+    const response = await api.post('/trucks/get-especific-datas',datas)
     
     switch(response.status){
       case 200:
@@ -84,7 +84,7 @@ export const deleteTruck = async (placa:string) => {
   try{
     const api = await createApiWithAuth()
     const datas = {'placa':placa}
-    const response = await api.post('/delete_truck',datas)
+    const response = await api.post('/trucks/delete',datas)
     switch(response.status){
       case 200:
         return 'Caminhão Deletado'

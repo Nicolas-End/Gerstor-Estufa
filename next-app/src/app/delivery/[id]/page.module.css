@@ -1,6 +1,3 @@
-/* page.module.css (sem :root, usando #0a2c26 diretamente) */
-
-/* Layout básico */
 .container {
   display: flex;
   min-height: 100vh;
@@ -8,7 +5,6 @@
   font-family: 'Ubuntu', sans-serif;
 }
 
-/* Conteúdo principal (área branca central) */
 .content {
   flex: 1;
   margin: 20px;
@@ -18,7 +14,6 @@
   box-shadow: 0 10px 30px rgba(6, 22, 17, 0.06);
 }
 
-/* Loader */
 .loaderWrap {
   display:flex;
   align-items:center;
@@ -41,7 +36,6 @@
   font-size:16px;
 }
 
-/* Top header */
 .topHeader {
   display:flex;
   justify-content:space-between;
@@ -60,14 +54,36 @@
   background: #0a2c26;
   color: #ffffff;
   border: none;
-  padding: 10px 14px;
+  padding: 8px 14px;
   border-radius: 8px;
-  font-weight:700;
-  cursor:pointer;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
   box-shadow: 0 3px 0 rgba(0,0,0,0.06) inset;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
-/* Banner do cliente */
+.backBtn:hover {
+  background: #083c21;
+}
+
+.editBtn {
+  background: #d97706;
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.06) inset;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.editBtn:hover {
+  background: #b45309;
+}
+
 .banner {
   display:flex;
   justify-content:space-between;
@@ -107,8 +123,9 @@
 }
 .bannerSub {
   margin-top:6px;
-  font-size:13px;
+  font-size:16px;
   color: rgba(255,255,255,0.92);
+  font-weight: bold;
 }
 .bannerRight {
   text-align: right;
@@ -118,48 +135,8 @@
   gap: 12px;
 }
 
-/* Caixa com dados do functionary: contraste alto e fontes maiores */
-.functionaryBox {
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid rgba(10,44,38,0.06);
-  padding: 14px;
-  box-shadow: 0 2px 8px rgba(6,22,17,0.03);
-}
-
-/* Linha do dado (label + value) */
-.functionaryRow {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 12px;
-  align-items: start;
-  padding: 12px 0;
-  border-bottom: 1px solid #f1f6f5;
-}
-.functionaryRow:last-child { border-bottom: none; }
-
-/* Label (esquerda) */
-.functionaryLabel {
-  color: #0a2c26;
-  font-weight:700;
-  font-size:18px;
-  letter-spacing:0.6px;
-}
-
-/* Value (direita) — maior e legível */
-.functionaryValue {
-  color: #0a2c26;
-  font-weight:550;
-  font-size:16px;
-  text-align:right;
-  word-break:break-word;
-}
-
 /* Responsividade */
 @media (max-width: 700px) {
-  .functionaryRow { grid-template-columns: 1fr; }
-  .functionaryValue { text-align:left; margin-top:6px; }
-  .functionaryLabel { font-size:13px; }
   .banner { padding: 14px; }
   .title { font-size:22px; }
 

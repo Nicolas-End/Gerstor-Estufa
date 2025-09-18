@@ -13,7 +13,7 @@ interface ApiResponse{
 export const getFunctionaries = async() =>{
   try{
     const api = await createApiWithAuth();
-    const response = await api.post('/get-functionaries')
+    const response = await api.post('/functionary/get-all')
 
     switch (response.status){
       case 200:
@@ -31,7 +31,7 @@ export const getFunctionaries = async() =>{
   export const functionariesQuantity = async() =>{
     try{
       const api = await createApiWithAuth()
-      const response = await api.post('/get-functionaries-quantity')
+      const response = await api.post('/functionary/quantity')
 
       if (response.status > 300){
         switch (response.status){
@@ -54,7 +54,7 @@ export const addNewFunctionary = async(name:string,email:string,password:string,
     const api = await createApiWithAuth()
     const data = {"name":name,"email":email,"password":password,"role":role}
 
-    const response = await api.post('/add-new-functionary',data)
+    const response = await api.post('/functionary/add-new',data)
 
     switch(response.status){
       case 200:
@@ -75,7 +75,7 @@ export const getEspecificFunctionary = async(id:string) => {
     const api = await createApiWithAuth()
     const data = {'email':id}
 
-    const response = await api.post('/get-especific-functionary',data)  
+    const response = await api.post('/functionary/get-especific',data)  
   
 
     switch(response.status){
@@ -98,7 +98,7 @@ export const deleteFunctionary = async(functionary_email:string) => {
     const api = await createApiWithAuth()
     const data = {'email':functionary_email}
 
-    const response = await api.post('/delete-functionary',data)
+    const response = await api.post('/functionary/delete',data)
     switch(response.status){
       case 204:
         return "Funcionario Deletado"

@@ -11,7 +11,7 @@ interface ApiResponse {
 export const getClients = async() =>{
   try{
     const api = await createApiWithAuth()
-    const response = await api.post('/get-clients')
+    const response = await api.post('/clients/get-all')
 
     switch(response.status){
       case 200:
@@ -33,7 +33,7 @@ export const addClient = async (name:string,address:{[key:string]:string|number}
   try{
     const api = await createApiWithAuth()
     const data = {"name":name,"address":address,"document":document}
-    const response = await api.post('/add-new-client',data)
+    const response = await api.post('/clients/add-new',data)
     
     switch (response.status){
       case 200:
@@ -57,7 +57,7 @@ export const getEspecificClient = async(id:string) =>{
     const api = await createApiWithAuth()
     const data = {'id':id}
     
-    const response = await api.post('/get-especific-client',data)
+    const response = await api.post('/clients/get-especific-datas',data)
 
     switch(response.status){
       case 200:
@@ -79,7 +79,7 @@ export const deleteClient = async(id:string,type:string) =>{
     const api = await createApiWithAuth()
     const data = {'id':id,'type':type}
 
-    const response = await api.post('/delete-client',data)
+    const response = await api.post('/clients/delete',data)
 
     switch(response.status){
       case 200:
