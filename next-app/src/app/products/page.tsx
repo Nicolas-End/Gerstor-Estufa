@@ -163,13 +163,13 @@ export default function ProductsPage() {
                 <p className={styles.productName}>{product.name}</p>
                 {product.quantity !== undefined && (
                   <p className="text-sm opacity-80">
-                    {product.quantity} {product.unit ?? ""}
+                    Quantidade: {product.quantity} {product.unit ?? ""}
                   </p>
                 )}
 
               </div>
 
-              <div className="gap-6 flex flex-row-reverse">
+              <div className="flex items-center ml-auto gap-6">
                 <div>
                   <button
                     type="button"
