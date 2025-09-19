@@ -63,3 +63,25 @@ export const deleteProduct = async(id:string) =>{
     throw error
   }
 }
+
+export const getProductDatasByID = async (id:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'id':id}
+    const response = await api.post('/products/get-especific',data)
+
+    switch(response.status){
+      case 200:
+        return response.data.ProductInfos
+      case 409:
+        return "Produto Não Cadastrado"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+
+  }catch(error){
+    throw error
+  }
+}

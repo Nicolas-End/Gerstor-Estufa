@@ -53,6 +53,7 @@ def AddNewProduct():
         product_created = ProductController().AddNewStockProduct(datas['company_email'],product)
         if product_created:
             return "Produto Criado",204
+        
         return "Produto ja Cadastrado",409 
     except Exception as e:
         print('Error: ',e)
@@ -76,3 +77,24 @@ def DeleteProduct():
     except Exception as e:
         print('Error: ',e)
         return "Error Interno",500
+
+@stock_products_bp.route('/get-especific',methods=['POST'])
+def GetEspecificProduct():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+
+        product_id = request.get_json()['id']
+        
+        product_exist = ProductController().GetProductById(datas['company_email'],product_id)
+        
+        if product_exist:
+            return jsonify({'ProductInfos':product_exist}) ,200
+        else:
+            return "Produto não cadastrado",409
+    
+    except Exception as e:
+        print('Error: ',e)
+        return e, 500

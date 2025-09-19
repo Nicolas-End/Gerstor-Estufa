@@ -7,8 +7,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
 
-import { ValidateHomeAcess } from "@/lib/ts/api";
-import { showError } from "@/lib/controller/alertsController";
+import { GetProductByID, ValidateHomeAcess } from "@/lib/ts/api";
+import { showAlert, showError } from "@/lib/controller/alertsController";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -22,12 +22,12 @@ export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
 
   // Estados dos campos principais
-  const [items, setItems] = useState<ItemEntry[]>([]);
-  const [itemsInfo, setItemsInfo] = useState<any>({});
+  const [productDatas, setProductDatas] = useState<any>({});
+  const [lumpingsInfo, setLumpingsInfo] = useState<any>({});
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const params = useParams();
   const id: any = params?.id ? params.id : null;
- 
+
   const initializePage = async () => {
     try {
       const canAccess = await ValidateHomeAcess(router);
@@ -35,11 +35,28 @@ export default function DeliveryFormPage() {
         router.push("/logout");
         return;
       }
-      setItemsInfo(items);
+      const response = await GetProductByID(id)
+      if (typeof response === "string") {
+        switch (response) {
+          case "Produto Não Cadastrado":
+            showAlert('Produto não cadastrado no sistema')
+            router.push('/products')
+            return;
+          case "Credenciais Invalidas":
+            showError("Suas Credenciais São invalidas");
+            router.push('/logout')
+            return;
+          case "Erro Interno":
+            router.push('/products')
+            return;
+        }
+      }
+      setProductDatas(response.ProductsDatas)
+      setLumpingsInfo(response.LumpingsInfos)
       setPageIsLoading(false);
     } catch (err) {
       showError("Erro ao carregar. Redirecionando...");
-      router.push("/login");
+      router.push("/home");
     }
   };
 
@@ -103,13 +120,13 @@ export default function DeliveryFormPage() {
           <section className={styles.productBox}>
             <div className={styles.productRow}>
               <div className={styles.productLabel}>Nome do produto:</div>
-              <div className={styles.productValue}>Pimenta</div>
+              <div className={styles.productValue}>{productDatas.name}</div>
             </div>
 
             <div className={styles.productRow}>
               <div className={styles.productLabel}>Quantidade:</div>
               <div className={styles.productValue}>
-                <span>1000</span>
+                <span>{productDatas.quantity}</span>
               </div>
             </div>
 
@@ -127,14 +144,14 @@ export default function DeliveryFormPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Caixa</td>
-                          <td>10</td>
-                        </tr>
-                        <tr>
-                          <td>Pacote</td>
-                          <td>5</td>
-                        </tr>
+                        {Object.entries(lumpingsInfo).map(([key, value]:any, index) => (
+                          <tr key={index}>
+                            <td>{key}</td>
+                            <td>{value}</td>
+                          </tr>
+                        ))}
+
+                      
                       </tbody>
                     </table>
 
@@ -145,7 +162,7 @@ export default function DeliveryFormPage() {
                         <div className={styles.cardSubtitle}>Quantidade Máxima</div>
                         <div className={styles.cardValue}>10</div>
                       </div>
-                      
+
                       <div className={styles.mobileCard}>
                         <div className={styles.cardTitle}>Pacote</div>
                         <div className={styles.cardSubtitle}>Capacidade Máxima</div>

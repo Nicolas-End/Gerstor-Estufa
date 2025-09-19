@@ -33,7 +33,7 @@ class ProductController:
             else:
                 return []
         except Exception as e:
-            print('Error: ', e)
+            
             return e
 
     def AddNewStockProduct(self, company_email, products_data):
@@ -67,7 +67,7 @@ class ProductController:
             return True
 
         except Exception as e:
-            print("Erro em AddNewStockProduct:", e)
+            
             return e
 
     def DeleteProduct(self,company_email,product_id):
@@ -79,5 +79,32 @@ class ProductController:
                 return True
             return False
         except Exception as e:
-            print('Error: ',e)
+            
+            return e
+    
+    def GetProductById(self,company_email,product_id):
+        try:
+            product_filter = {'company_email':company_email,'id':product_id}
+            
+            found_product = self.coll.find_one(product_filter)
+            
+            if found_product:
+                products_datas_split = self.SplitProductDatas(found_product)
+                
+                return products_datas_split 
+            
+            else :
+                return False
+        except Exception as e :
+            return e
+    
+    def SplitProductDatas (self,product_datas):
+        try:
+            product = {"name":product_datas['name'],"quantity":product_datas["quantidade"]}
+            lumpings = {}
+            for key,value in product_datas['tipos_embalo'].items():
+                lumpings[key] = value
+            
+            return {'ProductsDatas':product,'LumpingsInfos':lumpings}   
+        except Exception as e:
             return e
