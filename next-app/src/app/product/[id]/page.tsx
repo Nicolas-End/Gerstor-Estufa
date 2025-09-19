@@ -6,7 +6,7 @@ import Sidebar from "@/Components/sidebar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
-
+import ProductEdit from "./product-edit";
 import { GetProductByID, ValidateHomeAcess } from "@/lib/ts/api";
 import { showAlert, showError } from "@/lib/controller/alertsController";
 
@@ -25,6 +25,7 @@ export default function DeliveryFormPage() {
   const [productDatas, setProductDatas] = useState<any>({});
   const [lumpingsInfo, setLumpingsInfo] = useState<any>({});
   const [pageIsLoading, setPageIsLoading] = useState(true);
+  const [isEditOpen, setIsEditOpen] = useState(false); // <--- modal state
   const params = useParams();
   const id: any = params?.id ? params.id : null;
 
@@ -65,6 +66,57 @@ export default function DeliveryFormPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Abre o modal
+  const openEditModal = () => {
+    setIsEditOpen(true);
+  };
+
+  // Fecha o modal
+  const closeEditModal = () => {
+    setIsEditOpen(false);
+  };
+
+  /**
+   * Recebe os dados do modal quando o usuário submete.
+   * Aqui atualizamos apenas o estado local (frontend).
+   * Substitua por chamada à API se quiser persistir no backend.
+   */
+  const handleEditSubmit = (product: {
+    name: string;
+    quantity: number;
+    items: Array<{
+      id?: number;
+      name?: string;
+      unit?: string;
+      quantity?: number;
+      capacity?: number | "";
+    }>;
+  }) => {
+    // Atualiza nome e quantidade
+    setProductDatas((prev: any) => ({
+      ...prev,
+      name: product.name,
+      quantity: product.quantity,
+    }));
+
+    // Converte items para o formato lumpingsInfo { unidade: capacidade }
+    const lumpingsObj: Record<string, number> = {};
+    if (Array.isArray(product.items)) {
+      product.items.forEach((it) => {
+        const unit = it.unit ?? "";
+        const cap = typeof it.capacity === "number" ? it.capacity : (it.capacity === "" ? 0 : Number(it.capacity || 0));
+        if (unit) lumpingsObj[unit] = cap;
+      });
+    }
+    setLumpingsInfo(lumpingsObj);
+
+    // Feedback visual
+    showAlert("Produto atualizado com sucesso (apenas no front-end).");
+
+    // Fecha o modal (o component ProductEdit também chama onClose)
+    setIsEditOpen(false);
+  };
+
   if (pageIsLoading) {
     return (
       <div className={styles.loaderWrap}>
@@ -98,10 +150,8 @@ export default function DeliveryFormPage() {
               {id ? (
                 <button
                   type="button"
-                  onClick={() =>
-                    router.push(`../products/${decodeURIComponent(id)}`)
-                  }
                   className={styles.editBtn}
+                  onClick={openEditModal}
                 >
                   Editar
                 </button>
@@ -144,14 +194,14 @@ export default function DeliveryFormPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.entries(lumpingsInfo).map(([key, value]:any, index) => (
+                        {Object.entries(lumpingsInfo).map(([key, value]: any, index) => (
                           <tr key={index}>
                             <td>{key}</td>
                             <td>{value}</td>
                           </tr>
                         ))}
 
-                      
+
                       </tbody>
                     </table>
 
@@ -175,6 +225,13 @@ export default function DeliveryFormPage() {
             </div>
           </section>
         </main>
+
+        {/* Modal de edição - ligado ao estado isEditOpen */}
+        <ProductEdit
+          isOpen={isEditOpen}
+          onClose={closeEditModal}
+          onSubmit={handleEditSubmit}
+        />
 
         <ToastContainer position="top-right" autoClose={4000} />
       </div>

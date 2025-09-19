@@ -10,7 +10,7 @@ interface ItemEntry {
   capacity?: number;
 }
 
-interface ProductFormProps {
+interface ProductEditProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (product: {
@@ -20,7 +20,7 @@ interface ProductFormProps {
   }) => void;
 }
 
-export default function ProductForm({ isOpen, onClose, onSubmit }: ProductFormProps) {
+export default function ProductEdit({ isOpen, onClose, onSubmit }: ProductEditProps) {
   const [productName, setProductName] = React.useState("");
   const [productQuantity, setProductQuantity] = React.useState<number | "">("");
   const [items, setItems] = React.useState<ItemEntry[]>([]);
