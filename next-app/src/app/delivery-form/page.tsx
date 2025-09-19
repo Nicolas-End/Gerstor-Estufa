@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { AddNewDelivery, ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
+import { AddNewDelivery, ValidateHomeAcess, GetAllClients, GetAllTrucksDrivers } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -48,7 +48,12 @@ export default function DeliveryFormPage() {
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
   const [ clientInfo, setClientInfo] = useState<any>(null);
-  const [driverInfo, setDriverInfo] = useState<any>(null);
+// Estado para todos os motoristas
+const [driverInfo, setDriverInfo] = useState<any[]>([]);
+
+// Estado para motorista selecionado
+const [selectedDriver, setSelectedDriver] = useState<any>(null);
+
 
   // Adiciona nova linha de item
   const addItem = () => {
@@ -81,7 +86,8 @@ export default function DeliveryFormPage() {
         return;
       }
       setPageIsLoading(false);
-      const clients = await GetAllClients()
+
+      const [clients, trucks_drivers] = await Promise.all([GetAllClients(),GetAllTrucksDrivers()])
       if (typeof clients === "string") {
         switch (clients) {
           case "Credencial Invalida":
@@ -95,7 +101,24 @@ export default function DeliveryFormPage() {
             return;
         }
       }
+      if (typeof trucks_drivers === "string"){
+        switch(trucks_drivers){
+          case "Nenhum Caminoeiro Cadastrado":
+            return;
+          case "Credenciais Invalidas":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+            return;
+          default :
+            showError("não possivel mostar os caminhoneiros tente novamte mais tarde")
+
+            return;
+        }
+      }
+      const driversArray = Array.isArray(trucks_drivers) ? trucks_drivers : [];
+
       setClients(clients)
+      setDriverInfo(driversArray)
 
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
@@ -110,8 +133,6 @@ export default function DeliveryFormPage() {
 
   // Envia o formulário ao back-end
   const handleSubmit = async (e: React.FormEvent) => {
-    const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
-    const typeClientId = clientInfo.cpf ? 'cpf' : clientInfo.cnpj ? 'cnpj' : 'id'
     const clientName = clientInfo.name
     e.preventDefault();
     const formData = {
@@ -122,8 +143,7 @@ export default function DeliveryFormPage() {
       clientName,
       clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
       typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
-      driverId: driverInfo?.cpf || clientInfo?.cnpj || 'idDriver',
-      typeDriverId: driverInfo?.cpf ? 'cpf' : driverInfo?.cnpj ? 'cnpj' : 'id'
+
     };
 
     try {
@@ -274,30 +294,31 @@ export default function DeliveryFormPage() {
 
                 {/*Caminhoneiro*/}
                 <div>
-                  <label
-                    htmlFor="deliveryDate"
-                    className="block text-green-900 text-[18px] mb-2"
-                  >Caminhoneiro
-                  </label>
-                  <select
-                    value={driverInfo?.cpf || driverInfo?.cnpj || ""}
-                    required
-                    onChange={(e) => {
-                      const selectedDriver = clients.find(
-                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
-                      );
-                      setDriverInfo(selectedDriver || null);
-                    }}
-                    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
-                  >
-                    <option value="">Escolha um Caminhoneiro</option>
-                    {clients.map((client: any, index: number) => (
-                      <option key={index} value={client.cpf || client.cnpj}>
-                        {client.name} - {client.cpf || client.cnpj}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+  <label
+    htmlFor="driverSelect"
+    className="block text-green-900 text-[18px] mb-2"
+  >
+    Caminhoneiro
+  </label>
+  <select
+    id="driverSelect"
+    value={selectedDriver?.email || ""}
+    required
+    onChange={(e) => {
+      const driver = driverInfo.find((d: any) => d.email === e.target.value);
+      setSelectedDriver(driver || null);
+    }}
+    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
+  >
+    <option value="">Escolha um Caminhoneiro</option>
+    {driverInfo.map((driver: any, index: number) => (
+      <option key={index} value={driver.email}>
+        {driver.name} - {driver.email}
+      </option>
+    ))}
+  </select>
+</div>
+
               </div>
 
               {/* Seção Dinâmica */}

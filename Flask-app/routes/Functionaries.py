@@ -144,3 +144,22 @@ def DeleteFunctionary():
     except Exception as e:
         print('Error: ',e)
         return "Error Interno",500
+
+@functionary_bp.route('/get-truckers', methods=['POST'])
+def GetAllTruckers():
+    try:
+        token = request.headers.get('Authorization')
+ 
+        datas  = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas", 401
+        
+        get_all_truckers = FunctionariesController().GetAllTruckersDrivers(datas['company_email'])
+
+        if get_all_truckers:
+            return jsonify({'Truckers':get_all_truckers}),200
+        
+        return "Nenhum caminhoneiro cadastrado",404
+    except Exception as e:
+        print('Error: ',e)
+        return "Error Interno",500

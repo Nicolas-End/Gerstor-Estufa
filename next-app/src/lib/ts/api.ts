@@ -5,7 +5,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
-import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
+import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruckDrivers, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
@@ -18,6 +18,7 @@ import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
 import { addCookies } from "../controller/cookiesController";
+import { NODE_RESOLVE_OPTIONS } from "next/dist/build/webpack-config";
 
 
 
@@ -406,6 +407,17 @@ export async function DeleteProduct(id:string) {
 export async function GetProductByID(id:string) {
     try{
     const response = await getProductDatasByID(id)
+    return response
+  }catch(error){
+    console.log('Error: ',error)
+    throw error
+  }
+}
+
+export async function GetAllTrucksDrivers() {
+  try{
+    const response = await getAllTruckDrivers()
+
     return response
   }catch(error){
     console.log('Error: ',error)

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { createApiWithAuth } from '@/lib/config/axiosConfig'
 import { AwardIcon } from 'lucide-react';
+import { NODE_RESOLVE_OPTIONS } from 'next/dist/build/webpack-config';
 interface ApiResponse{
     'status':string,
     'message'?:string,
@@ -102,6 +103,26 @@ export const deleteFunctionary = async(functionary_email:string) => {
     switch(response.status){
       case 204:
         return "Funcionario Deletado"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw error
+  }
+}
+
+export const getAllTruckDrivers = async() =>{
+  try{
+    const api = await createApiWithAuth()
+  
+    const response = await api.post('/functionary/get-truckers')
+    switch(response.status){
+      case 200:
+        return response.data.Truckers
+      case 404:
+        return "Nenhum Caminoeiro Cadastrado"
       case 401:
         return "Credenciais Invalidas"
       default:
