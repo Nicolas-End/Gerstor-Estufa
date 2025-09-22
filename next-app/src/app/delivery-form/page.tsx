@@ -143,7 +143,8 @@ const [selectedDriver, setSelectedDriver] = useState<any>(null);
       clientName,
       clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
       typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
-
+      truckDriverEmail: selectedDriver?.email ,
+      truckDriverName: selectedDriver?.name
     };
 
     try {
