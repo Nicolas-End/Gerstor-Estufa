@@ -18,9 +18,10 @@ interface ProductEditProps {
     quantity: number;
     items: ItemEntry[];
   }) => void;
+  id:string|null|number
 }
 
-export default function ProductEdit({ isOpen, onClose, onSubmit }: ProductEditProps) {
+export default function ProductEdit({ isOpen, onClose, onSubmit ,id }: ProductEditProps) {
   const [productName, setProductName] = React.useState("");
   const [productQuantity, setProductQuantity] = React.useState<number | "">("");
   const [items, setItems] = React.useState<ItemEntry[]>([]);
@@ -67,7 +68,7 @@ export default function ProductEdit({ isOpen, onClose, onSubmit }: ProductEditPr
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 backdrop-blur-md" onClick={onClose} />
       <div className="relative bg-white p-6 rounded-xl shadow-lg w-96 z-10">
-        <h2 className="text-xl font-bold mb-4 text-[#005E40]">Adicionar Produto</h2>
+        <h2 className="text-xl font-bold mb-4 text-[#005E40]">Editar Produto</h2>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             type="text"

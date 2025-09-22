@@ -25,7 +25,7 @@ export default function ProductsPage() {
   const [productsDatas, setProductsDatas] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [editingProductId, setEditingProductId] = useState<number | null | string>(null);
 
   // função para abrir o modal de edição
   const openEditModal = (id: number) => {
@@ -228,6 +228,7 @@ export default function ProductsPage() {
               )
             );
           }}
+          id={editingProductId}
         />
       )}
     </div>
