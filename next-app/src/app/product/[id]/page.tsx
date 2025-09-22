@@ -20,14 +20,14 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
-
+  const params = useParams();
+  const id: any = params?.id ? params.id : null;
   // Estados dos campos principais
   const [productDatas, setProductDatas] = useState<any>({});
   const [lumpingsInfo, setLumpingsInfo] = useState<any>({});
   const [pageIsLoading, setPageIsLoading] = useState(true);
-  const [isEditOpen, setIsEditOpen] = useState(false); // <--- modal state
-  const params = useParams();
-  const id: any = params?.id ? params.id : null;
+  const [isEditOpen, setIsEditOpen] = useState(false); 
+  
 
   const initializePage = async () => {
     try {
@@ -231,6 +231,7 @@ export default function DeliveryFormPage() {
           isOpen={isEditOpen}
           onClose={closeEditModal}
           onSubmit={handleEditSubmit}
+          id={id}
         />
 
         <ToastContainer position="top-right" autoClose={4000} />

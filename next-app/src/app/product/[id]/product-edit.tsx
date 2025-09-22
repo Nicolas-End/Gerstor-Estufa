@@ -1,7 +1,11 @@
 "use client";
-import { showSucess } from "@/lib/controller/alertsController";
-import React from "react";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { GetProductByID } from "@/lib/ts/api";
+
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { ToastContainer } from "react-toastify";
+import styles from "./page.module.css";
 interface ItemEntry {
   id: number;
   name: string;
@@ -18,14 +22,43 @@ interface ProductEditProps {
     quantity: number;
     items: ItemEntry[];
   }) => void;
-  id:string|null|number
+  id:string
 }
 
 export default function ProductEdit({ isOpen, onClose, onSubmit ,id }: ProductEditProps) {
   const [productName, setProductName] = React.useState("");
   const [productQuantity, setProductQuantity] = React.useState<number | "">("");
   const [items, setItems] = React.useState<ItemEntry[]>([]);
-
+  const [pageIsLoading, setPageIsLoading] = useState(true)
+  const router = useRouter();
+  const initProductEdit = async () => {
+    try{
+      const response = await GetProductByID(id)
+      if (typeof response === "string") {
+              switch (response) {
+                case "Produto Não Cadastrado":
+                  showAlert('Produto não cadastrado no sistema')
+                  onclose
+                  return;
+                case "Credenciais Invalidas":
+                  showError("Suas Credenciais São invalidas");
+                  router.push('/logout')
+                  return;
+                case "Erro Interno":
+                  onclose
+                  return;
+              }
+      }
+      setProductName(response.ProductsDatas.name)
+      setProductQuantity(response.ProductsDatas.quantity)
+      for (const [, value] of Object.entries(response.LumpingsInfos)) {
+        setItems(prev => [...prev, value as ItemEntry])
+      }
+      setPageIsLoading(false)
+    }catch(error){
+      showError("Houve um erro Tente novamente mais tarde")
+    }
+  } 
   const addItem = () => {
     setItems((prev) => [
       ...prev,
@@ -61,9 +94,23 @@ export default function ProductEdit({ isOpen, onClose, onSubmit ,id }: ProductEd
     setItems([]);
     onClose();
   };
-
+    useEffect(() => {
+      initProductEdit()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+  
   if (!isOpen) return null;
-
+  if (pageIsLoading) {
+    return (
+      <div className={styles.loaderWrap}>
+        <div className={styles.loaderBox}>
+          <div className={styles.spinner} />
+          <span className={styles.loaderText}>Carregando...</span>
+        </div>
+      </div>
+    );
+  }
+  else {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 backdrop-blur-md" onClick={onClose} />
@@ -171,4 +218,5 @@ export default function ProductEdit({ isOpen, onClose, onSubmit ,id }: ProductEd
             <ToastContainer position="top-right" autoClose={4000} />
     </div>
   );
+}
 }
