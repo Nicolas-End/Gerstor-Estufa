@@ -138,8 +138,10 @@ O Gestor-Estufa é uma plataforma inovadora para gerenciamento de estufas, desen
 ## 👤 Autor
 Nicolas Silva
 -  GitHub: [@Nicolas-End](https://github.com/Nicolas-End)
+
 Mathias
 -  Github: [@ferreiar](https://github.com/ferreiar)
+
 Luis Barcelos
 -  Github: [@Luisbw8](https://github.com/Luisbw8)
 
