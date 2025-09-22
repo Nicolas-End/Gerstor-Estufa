@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
-
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
 import { DeleteEspecificDelivery, GetDeliverys } from "@/lib/ts/api";
@@ -13,20 +13,43 @@ import { ToastContainer, toast } from "react-toastify";
 
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
-
 import { socketService } from "@/lib/config/sockteioConfig";
 import { Socket } from "socket.io-client";
 
+import StatusChecklist, { Status } from "./status-delivery";
 
 export default function PedidosPage() {
-
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
-  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos')
+  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos');
 
+  // --- modal de status (somente visual) ---
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [modalOrder, setModalOrder] = useState<any | null>(null);
+  const [modalStatus, setModalStatus] = useState<Status>("pendente");
+
+  const openStatusModal = (order: any) => {
+    setModalOrder(order);
+    // tenta casar um valor visual inicial (se tiver order.status)
+    const normalized = String(order?.status ?? "pendente").toLowerCase();
+    if (normalized.includes("and")) setModalStatus("andamento");
+    else if (normalized.includes("final") || normalized.includes("concl")) setModalStatus("concluido");
+    else setModalStatus("pendente");
+    setIsStatusModalOpen(true);
+  };
+
+  const closeStatusModal = () => {
+    setIsStatusModalOpen(false);
+    setModalOrder(null);
+  };
+
+  const handleSaveStatus = () => {
+    // Só fecha o modal — sem alterar nada no estado global / sem chamadas à API.
+    closeStatusModal();
+  };
 
   function confirmToast(id: string) {
     const toastId = toast.info(
@@ -36,9 +59,7 @@ export default function PedidosPage() {
           <button
             onClick={() => {
               toast.dismiss(toastId);
-
               showDeleteDeliveryBox(id)
-
             }}
             className="bg-green-600 text-white px-3 py-1 rounded mr-2"
           >
@@ -59,13 +80,11 @@ export default function PedidosPage() {
     )
   }
 
-
   async function showDeleteDeliveryBox(delivery_id: string) {
     const data = await DeleteEspecificDelivery(delivery_id)
     if (data === true) {
       router.refresh()
       showSucess("Excluido com sucesso")
-
     } else if (data === "Credencial Invalida") {
       showAlert("Credencial invalida")
       router.push('/logout')
@@ -78,19 +97,16 @@ export default function PedidosPage() {
       return;
     }
     showAlert('Houve algum erro no processo !!')
-
-
   }
+
   const initializeDeliverys = async () => {
     try {
-
       const deliverys: any = await GetDeliverys();
 
       if (typeof deliverys == "string") {
         switch (deliverys) {
           case "Credencial Invalida":
             showAlert("Credencias Invalidas")
-
             router.push("/logout")
             return;
           default:
@@ -166,6 +182,7 @@ export default function PedidosPage() {
               + Adicionar
             </button>
           </div>
+
           <select
             value={searchStatus}
             onChange={e =>
@@ -178,8 +195,8 @@ export default function PedidosPage() {
             <option value="em andamento">Em andamento</option>
             <option value="finalizado">Finalizado</option>
           </select>
-          <div className={styles.ordersList}>
 
+          <div className={styles.ordersList}>
             {deliverysToDo.filter(order => {
               if (searchStatus === 'Todos') return true;
               return order.status === searchStatus
@@ -200,11 +217,23 @@ export default function PedidosPage() {
                       <span className={styles.orderUnit}>Caixas</span>
                     </div>
                     <div className="gap-6 flex flex-row-reverse">
+                      {/* Botão que abre modal de status (somente visual) */}
+                      <div>
+                        <button
+                          onClick={() => openStatusModal(order)}
+                          title="Visualizar status"
+                          className="px-2 py-1 rounded"
+                        >
+                          <FontAwesomeIcon icon={faArrowsRotate} className="text-white hover:text-blue-500 transition-colors duration-200" />
+                        </button>
+                      </div>
+
                       <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
                       <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
                       <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
                   </div>
+
                   {selectedOrder?.id === order.id && (
                     <div className={styles.details}>
                       <p className="text-black">
@@ -219,6 +248,32 @@ export default function PedidosPage() {
               ))}
           </div>
         </div>
+
+        {/* Modal de status: somente visual (sem persistência) */}
+        {isStatusModalOpen && modalOrder && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/40" onClick={closeStatusModal} />
+            <div className="relative bg-white p-6 rounded-xl shadow-lg w-96 z-10">
+              <h2 className="text-xl font-bold mb-4">Visualizar Status - {modalOrder.Produto ?? modalOrder.id}</h2>
+
+              <StatusChecklist
+                value={modalStatus}
+                onChange={(s) => setModalStatus(s)}
+                name={`status-checklist-${modalOrder.id}`}
+              />
+
+              <div className="flex justify-end gap-2 mt-6">
+                <button onClick={closeStatusModal} className="px-4 py-2 rounded border">
+                  Cancelar
+                </button>
+                <button onClick={handleSaveStatus} className="px-4 py-2 rounded bg-[#005E40] text-white">
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <ToastContainer
           position="top-right"
           autoClose={4000}
@@ -229,7 +284,6 @@ export default function PedidosPage() {
           pauseOnFocusLoss
           draggable
         />
-
       </div>
     );
   }
