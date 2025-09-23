@@ -85,3 +85,7 @@ export const getProductDatasByID = async (id:string) =>{
     throw error
   }
 }
+
+export const editProduct = async (id:string) => {
+  
+}

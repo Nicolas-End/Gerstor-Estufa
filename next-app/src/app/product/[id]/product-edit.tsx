@@ -216,7 +216,7 @@ export default function ProductEdit({ isOpen, onClose, onSubmit, id }: ProductEd
                 type="submit"
                 className="bg-[#005E40] font-bold text-white px-4 py-2 rounded-lg hover:bg-green-700"
               >
-                Adicionar
+                Editar
               </button>
             </div>
           </form>

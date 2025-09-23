@@ -25,17 +25,17 @@ export default function ProductsPage() {
   const [productsDatas, setProductsDatas] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingProductId, setEditingProductId] = useState<number | null | string>(null);
+  const [editingProductId, setEditingProductId] = useState<string>('');
 
   // função para abrir o modal de edição
-  const openEditModal = (id: number) => {
+  const openEditModal = (id: string) => {
     setEditingProductId(id);
     setIsEditModalOpen(true);
   };
 
   // função de fechar
   const closeEditModal = () => {
-    setEditingProductId(null);
+    setEditingProductId('');
     setIsEditModalOpen(false);
   };
 

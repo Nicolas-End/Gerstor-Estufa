@@ -98,3 +98,16 @@ def GetEspecificProduct():
     except Exception as e:
         print('Error: ',e)
         return e, 500
+    
+@stock_products_bp.route('/edit', methods=['POST'])
+def EditProductDatas():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+        return 'ok',200
+        
+    except Exception as e:
+        print('Error: ',e)
+        return e,500
