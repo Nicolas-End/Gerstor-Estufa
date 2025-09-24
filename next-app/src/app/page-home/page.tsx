@@ -33,7 +33,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <a href="#home" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
             <a href="#projeto" className="text-[#fff] font-bold hover:text-[#115a4d]">Projeto</a>
-            <a href="/creators" className="text-[#fff] font-bold hover:text-[#115a4d]">Criadores</a>
+            <a href="#criadores" className="text-[#fff] font-bold hover:text-[#115a4d]">Criadores</a>
             <div className="flex space-x-4">
               <a href="./register" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Registre-se</a>
               <a href="./home" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Entrar</a>
@@ -55,7 +55,7 @@ const Navbar = () => {
           <div className="md:hidden mt-4 space-y-4 text-[#0a2c26] font-bold bg-[#fff] p-4 rounded-lg shadow-lg">
             <a href="#home" className="block hover:text-[#115a4d]">Home</a>
             <a href="#projeto" className="block hover:text-[#115a4d]">Projeto</a>
-            <a href="/creators" className="block hover:text-[#115a4d]">Criadores</a>
+            <a href="#criadores" className="block hover:text-[#115a4d]">Criadores</a>
             <a href="/services" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Registre-se</a>
             <a href="./home" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Entrar</a>
           </div>
@@ -200,6 +200,55 @@ const About: React.FC = () => {
   );
 };
 
+const TeamSection: React.FC = () => {
+  const team = [
+    { file: "Digão.jpeg", name: "Digão", role: "Design" },
+    { file: "Torreli.jpeg", name: "Torreli", role: "Analista" },
+    { file: "Mathias.jpeg", name: "Mathias", role: "Programador" },
+    { file: "Giovani.jpeg", name: "Giovani", role: "Analista" },
+    { file: "Nicolas.jpeg", name: "Nicolas", role: "Programador" },
+    { file: "Luis.jpeg", name: "Luis", role: "Programador" },
+    { file: "Luan.jpeg", name: "Luan", role: "Design" },
+  ];
+
+  return (
+    <section id="criadores" className="bg-[#bdd96b] py-16 px-6">
+      <div className="container mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#04291f] mb-8">Equipe</h2>
+
+        {/* Row on desktop, wrap on mobile */}
+        <div className="flex flex-wrap md:flex-nowrap justify-center gap-8 md:gap-10 items-start">
+          {team.map((member, idx) => {
+            // alterna animação: índices pares -> vem de cima (fade-down), ímpares -> vem de baixo (fade-up)
+            const aos = idx % 2 === 0 ? "fade-down" : "fade-up";
+            return (
+              <div
+                key={member.name}
+                data-aos={aos}
+                className="flex flex-col items-center w-40 md:w-48 text-center"
+              >
+                <div className="w-40 h-40 md:w-48 md:h-48 rounded-lg overflow-hidden shadow-md team-photo-hover">
+                  <img
+                    src={`/${member.file}`}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="mt-3">
+                  <div className="text-lg font-semibold text-[#04291f]">{member.name}</div>
+                  <div className="text-sm text-gray-600">{member.role}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 
 
 const App = () => {
@@ -215,6 +264,7 @@ const App = () => {
       <Navbar />
       <Home />
       <About />
+      <TeamSection />
     </div>
   );
 };
