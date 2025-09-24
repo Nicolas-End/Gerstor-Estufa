@@ -9,7 +9,7 @@ import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruc
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
-import{addNewProduct, deleteProduct, editProduct, getProductDatasByID, getStockProducts} from "@/lib/services/productStocks"
+import{addNewProduct, deleteProduct, editProduct, getAllProductsWithItens, getProductDatasByID, getStockProducts} from "@/lib/services/productStocks"
 // processos relacioandos ao cliente
 import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
@@ -17,8 +17,7 @@ import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/s
 import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
-import { addCookies } from "../controller/cookiesController";
-import { NODE_RESOLVE_OPTIONS } from "next/dist/build/webpack-config";
+import { addCookies } from "@/lib/controller/cookiesController";
 
 
 
@@ -428,6 +427,16 @@ export async function GetAllTrucksDrivers() {
 export async function EditProduct(formsDatas:{ name: string; quantity: number; items: any, id:string }) {
   try{
     const response = await editProduct(formsDatas)
+
+    return response
+  }catch(error){
+    return error
+  }
+}
+
+export async function GetAllProductsWithItens() {
+  try{
+    const response = await getAllProductsWithItens()
 
     return response
   }catch(error){

@@ -118,3 +118,22 @@ def EditProductDatas():
     except Exception as e:
         print('Error: ',e)
         return e,500
+    
+@stock_products_bp.route('/get-all-with-itens',methods=['POST'])
+def GetAllProductsWithItens():
+    try:
+        token = request.headers.get('Authorization')
+        datas = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas",401
+        
+        products_datas = ProductController().GetAllProductsToDeliveryPage(datas['company_email'])
+
+        if products_datas:
+            return jsonify({"productsDatas":products_datas}),200
+        else:
+            return 'Erro Produtos',409
+
+    except Exception as e:
+        print("Error: ",e)
+        return e, 500

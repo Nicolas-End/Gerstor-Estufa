@@ -106,3 +106,22 @@ export const editProduct = async (formsDatas:{ name: string; quantity: number; i
     throw error
   }
 }
+
+export const getAllProductsWithItens= async() => {
+  try{
+    const api = await createApiWithAuth()
+    const response = await api.post('/products/get-all-with-itens')
+
+    switch(response.status){
+      case 200:
+        return response.data.productDatas
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Desconhecido "
+
+    }
+  }catch(error){
+    throw error
+  }
+}

@@ -36,6 +36,16 @@ class ProductController:
             
             return e
 
+    def GetAllProductsToDeliveryPage(self,company_email):
+        try:
+            products_registered = list(self.coll.find({"company_email":company_email}))
+            products_datas = []
+            for product in products_registered:
+                products_datas.append({'id':product['id'],'name':product['name'],'quantity':product['quantidade'],'lullaby':product['tipos_embalo']})   
+
+            return products_datas
+        except Exception as e:
+            return e
     def AddNewStockProduct(self, company_email, products_data):
         try:
             name = products_data.get('name')
