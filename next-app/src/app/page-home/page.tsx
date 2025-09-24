@@ -31,8 +31,8 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
-            <a href="/about" className="text-[#fff] font-bold hover:text-[#115a4d]">Projeto</a>
+            <a href="#home" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
+            <a href="#projeto" className="text-[#fff] font-bold hover:text-[#115a4d]">Projeto</a>
             <a href="/creators" className="text-[#fff] font-bold hover:text-[#115a4d]">Criadores</a>
             <div className="flex space-x-4">
               <a href="./register" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Registre-se</a>
@@ -53,8 +53,8 @@ const Navbar = () => {
 
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4 text-[#0a2c26] font-bold bg-[#fff] p-4 rounded-lg shadow-lg">
-            <a href="#" className="block hover:text-[#115a4d]">Home</a>
-            <a href="/about" className="block hover:text-[#115a4d]">Projeto</a>
+            <a href="#home" className="block hover:text-[#115a4d]">Home</a>
+            <a href="#projeto" className="block hover:text-[#115a4d]">Projeto</a>
             <a href="/creators" className="block hover:text-[#115a4d]">Criadores</a>
             <a href="/services" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Registre-se</a>
             <a href="./home" className="block bg-[#0a2c26] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] transition">Entrar</a>
@@ -69,6 +69,7 @@ const Home = () => {
   return (
     <section
       className="relative flex flex-col md:flex-row-reverse items-center justify-center px-8 py-12 mt-16 min-h-screen"
+      id="home"
     >
       {/* Fundo com a imagem Onda Verde */}
       <img
@@ -130,13 +131,13 @@ const About: React.FC = () => {
   }, []);
 
   return (
-    <section className="bg-[#e0edba] py-16 px-8">
+    <section className="bg-[#e0edba] py-16 px-8" id="projeto">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-8">
           {/* Imagem só no desktop */}
           {!isMobile && (
             <div
-              className="md:w-1/2 flex justify-center md:justify-start"
+              className="md:w-1/2 flex justify-center md:justify-start md:mr-[300px]"
               data-aos="fade-right"
             >
               <img
