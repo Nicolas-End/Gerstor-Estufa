@@ -27,4 +27,4 @@ def CreateApp():
     return app
 
 if __name__ == '__main__':
-    CreateApp().run()
+    CreateApp().run(host='0.0.0', port=5000)
