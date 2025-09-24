@@ -63,6 +63,7 @@ export default function ProductsPage() {
     } catch (error) {
       showError("Houve um erro Interno tente novamente mais tarde")
     }
+
   }
   // Carrega produtos do backend
   const initializeProducts = async () => {

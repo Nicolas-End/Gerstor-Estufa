@@ -9,7 +9,7 @@ import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruc
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
-import{addNewProduct, deleteProduct, getProductDatasByID, getStockProducts} from "@/lib/services/productStocks"
+import{addNewProduct, deleteProduct, editProduct, getProductDatasByID, getStockProducts} from "@/lib/services/productStocks"
 // processos relacioandos ao cliente
 import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
@@ -42,7 +42,7 @@ export async function ValidateLogin(email: string, password: string) {
       }
     }
   } catch (error) {
-    throw error
+    return error
   }
 
 }
@@ -155,7 +155,7 @@ export async function FunctionariesQuantity(router: AppRouterInstance) {
       return response.functionaries_quantity
     }
   } catch (error) {
-    throw error
+    return error
   }
 
 }
@@ -166,7 +166,7 @@ export async function AddNewFunctionary(name: string, email: string, password: s
     return response
   } catch (error) {
     console.log("Erro adicionar Funcionario: ", error)
-    throw error
+    return error
   }
 }
 
@@ -225,7 +225,7 @@ export async function EditDelivery(FormsData: any) {
     return response
   } catch (error) {
     console.log("Erro no Edit Delivery: ", error)
-    throw error
+    return error
   }
 }
 
@@ -248,7 +248,7 @@ export async function DeleteEspecificDelivery(delivery_id: string) {
     return response
   } catch (error) {
     console.log('Erro ao Deletar Entrega: ', error)
-    throw error
+    return error
   }
 }
 
@@ -276,7 +276,7 @@ export async function AddNewTruck(data: {
     return resposne
   } catch (error) {
     console.log("Erro Adicionar Caminhão: ", error)
-    throw error
+    return error
   }
 }
 
@@ -287,7 +287,7 @@ export async function DeleteTruck(placa:string) {
     return response
   }catch(error){
     console.log('Erro ao apagar caminhão')
-    throw error
+    return error
   }
 }
 
@@ -311,7 +311,7 @@ export async function AddNewClient(name: string, address: { [key: string]: strin
     return response
   } catch (error) {
     console.log("Error Adicionar Cliente: ", error);
-    throw error
+    return error
   }
 }
 
@@ -322,7 +322,7 @@ export async function GetEspecificClient(id: string) {
     return response
   } catch (error) {
     console.log("Error ao pegar cliente especifico: ", error)
-    throw error
+    return error
   }
 
 }
@@ -333,7 +333,7 @@ export async function DeleteClient(id:string,type:string) {
     return response
   }catch(error){
     console.log("Erro Excluir Cliente: ",error)
-    throw error
+    return error
   }
 }
 //====== CAMINHÕES ======
@@ -367,7 +367,7 @@ export async function GetEspecificTruck(placa: string): Promise<any> {
     return response
   } catch (error) {
     console.log("Error: ", error)
-    throw error
+    return error
   }
 
 }
@@ -380,7 +380,7 @@ export async function GetStocksProducts() {
     return response
   }catch(error){
     console.log('Error: ',error)
-    throw error
+    return error
   }
 }
 export async function AddNewProduct(formsDatas:{ name: string; quantity: number; items: any }) {
@@ -390,7 +390,7 @@ export async function AddNewProduct(formsDatas:{ name: string; quantity: number;
     return response
   }catch(error){
     console.log("Error: ",error)
-    throw error
+    return error
   }
 }
 
@@ -400,7 +400,7 @@ export async function DeleteProduct(id:string) {
     return response
   }catch(error){
     console.log('Error: ',error)
-    throw error
+    return error
   }
 }
 
@@ -410,7 +410,7 @@ export async function GetProductByID(id:string) {
     return response
   }catch(error){
     console.log('Error: ',error)
-    throw error
+    return error
   }
 }
 
@@ -421,6 +421,16 @@ export async function GetAllTrucksDrivers() {
     return response
   }catch(error){
     console.log('Error: ',error)
-    throw error
+    return error
+  }
+}
+
+export async function EditProduct(formsDatas:{ name: string; quantity: number; items: any, id:string }) {
+  try{
+    const response = await editProduct(formsDatas)
+
+    return response
+  }catch(error){
+    return error
   }
 }

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import styles from "./page.module.css";
+import { editProduct } from "@/lib/services/productStocks";
 interface ItemEntry {
   id: number;
   name: string;
@@ -21,6 +22,7 @@ interface ProductEditProps {
     name: string;
     quantity: number;
     items: ItemEntry[];
+    id:string
   }) => void;
   id: string
 }
@@ -55,6 +57,7 @@ export default function ProductEdit({ isOpen, onClose, onSubmit, id }: ProductEd
 
       for (const [key, value] of Object.entries(response.LumpingsInfos)) {
         loadedItems.push({
+          id: Date.now() + Math.random(), 
           unit: key,
           capacity: value,
         });
@@ -87,7 +90,7 @@ export default function ProductEdit({ isOpen, onClose, onSubmit, id }: ProductEd
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (!productName.trim() || productQuantity === "") return;
 
@@ -95,10 +98,8 @@ export default function ProductEdit({ isOpen, onClose, onSubmit, id }: ProductEd
       name: productName.trim(),
       quantity: Number(productQuantity),
       items,
+      id
     });
-    setProductName("");
-    setProductQuantity("");
-    setItems([]);
     onClose();
   };
   useEffect(() => {
@@ -166,9 +167,9 @@ export default function ProductEdit({ isOpen, onClose, onSubmit, id }: ProductEd
                   </p>
                 )}
 
-                {items.map((item, index) => (
+                {items.map((item) => (
                   <div
-                    key={index}
+                    key={item.id}
                     className="flex flex-col space-y-2 bg-gray-50 p-3 rounded-lg"
                   >
                     {/* Unidade */}

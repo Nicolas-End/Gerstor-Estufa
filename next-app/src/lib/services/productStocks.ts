@@ -86,6 +86,23 @@ export const getProductDatasByID = async (id:string) =>{
   }
 }
 
-export const editProduct = async (id:string) => {
-  
+export const editProduct = async (formsDatas:{ name: string; quantity: number; items: any, id:string }) => {
+  try{
+    const api = await createApiWithAuth()
+    const data = {'ProductsDatas':formsDatas}
+    const response = await api.post('/products/edit',data)
+
+    switch(response.status){
+      case 204:
+        return "Produto Editado"
+      case 400:
+        return "Valores Inseridos Invalidos"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw error
+  }
 }

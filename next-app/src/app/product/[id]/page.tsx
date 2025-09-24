@@ -7,8 +7,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
 import ProductEdit from "./product-edit";
-import { GetProductByID, ValidateHomeAcess } from "@/lib/ts/api";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { EditProduct, GetProductByID, ValidateHomeAcess } from "@/lib/ts/api";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -61,6 +61,33 @@ export default function DeliveryFormPage() {
     }
   };
 
+    /**
+   * Recebe os dados do modal quando o usuário submete. 
+   */
+
+  const handleEdit = async(product: { name: string; quantity: number; items: ItemEntry[],id:string }) =>{
+    try{
+        const response = await EditProduct(product)
+        switch(response){
+          case "Credenciais Invalidas":
+            showAlert("Suas Credenciais São Invalidas")
+            router.push('/logout')
+            return;
+          case "Produto Editado":
+            showSucess("Produto Editado com sucesso")
+            router.refresh()
+            return;
+          case "Valores Inseridos Invalidos":
+            showAlert("Alguns dos valores inseridos são invalidos")
+            return;
+          default:
+            showAlert("Houve um erro interno tente novamente mais tarde")
+            return;
+        }
+    }catch(error){
+      showError("Houve um erro internotente novamente mais tarde")
+    }
+  }
   useEffect(() => {
     initializePage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,46 +103,7 @@ export default function DeliveryFormPage() {
     setIsEditOpen(false);
   };
 
-  /**
-   * Recebe os dados do modal quando o usuário submete.
-   * Aqui atualizamos apenas o estado local (frontend).
-   * Substitua por chamada à API se quiser persistir no backend.
-   */
-  const handleEditSubmit = (product: {
-    name: string;
-    quantity: number;
-    items: Array<{
-      id?: number;
-      name?: string;
-      unit?: string;
-      quantity?: number;
-      capacity?: number | "";
-    }>;
-  }) => {
-    // Atualiza nome e quantidade
-    setProductDatas((prev: any) => ({
-      ...prev,
-      name: product.name,
-      quantity: product.quantity,
-    }));
 
-    // Converte items para o formato lumpingsInfo { unidade: capacidade }
-    const lumpingsObj: Record<string, number> = {};
-    if (Array.isArray(product.items)) {
-      product.items.forEach((it) => {
-        const unit = it.unit ?? "";
-        const cap = typeof it.capacity === "number" ? it.capacity : (it.capacity === "" ? 0 : Number(it.capacity || 0));
-        if (unit) lumpingsObj[unit] = cap;
-      });
-    }
-    setLumpingsInfo(lumpingsObj);
-
-    // Feedback visual
-    showAlert("Produto atualizado com sucesso (apenas no front-end).");
-
-    // Fecha o modal (o component ProductEdit também chama onClose)
-    setIsEditOpen(false);
-  };
 
   if (pageIsLoading) {
     return (
@@ -230,7 +218,7 @@ export default function DeliveryFormPage() {
         <ProductEdit
           isOpen={isEditOpen}
           onClose={closeEditModal}
-          onSubmit={handleEditSubmit}
+          onSubmit={handleEdit}
           id={id}
         />
 
