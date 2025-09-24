@@ -218,18 +218,8 @@ export default function PedidosPage() {
                     </div>
                     <div className="gap-6 flex flex-row-reverse">
                       {/* Botão que abre modal de status (somente visual) */}
-                      <div>
-                        <button
-                          onClick={() => openStatusModal(order)}
-                          title="Visualizar status"
-                          className="px-2 py-1 rounded"
-                        >
-                          <FontAwesomeIcon icon={faArrowsRotate} className="text-white hover:text-blue-500 transition-colors duration-200" />
-                        </button>
-                      </div>
-
                       <div><button onClick={() => confirmToast(order.id)}><FontAwesomeIcon icon={faTrash} className="text-white hover:text-red-600 transition-colors duration-200 " /></button></div>
-                      <div><button><FontAwesomeIcon icon={faTruckFast} className="text-white hover:text-green-500 transition-colors duration-200" /></button></div>
+                      <div><button onClick={() => openStatusModal(order)}><FontAwesomeIcon icon={faArrowsRotate} className="text-white hover:text-blue-500 transition-colors duration-200" /></button></div>
                       <div><button onClick={() => router.push(`delivery-form/${order.id}`)}><FontAwesomeIcon icon={faPenToSquare} className="text-white hover:text-yellow-400 transition-colors duration-200" /></button></div>
                     </div>
                   </div>
