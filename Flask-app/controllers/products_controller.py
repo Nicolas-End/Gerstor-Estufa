@@ -40,7 +40,7 @@ class ProductController:
         try:
             name = products_data.get('name')
             if not name or not isinstance(name, str):
-                print("Erro: produto sem nome válido")
+                
                 return False
 
             id_unico = str(uuid.uuid4())
@@ -98,6 +98,33 @@ class ProductController:
         except Exception as e :
             return e
     
+    def EditProductById(self,company_email, products_data):
+        try:
+            name = products_data.get('name')
+            if not name or not isinstance(name, str):
+                return False
+            
+            product_id = products_data.get('id')
+            
+            product_filter = {'company_email':company_email,'id':product_id}
+            
+            lumping_infos = {l['unit']: l['capacity'] for l in products_data.get('items', [])}
+
+            product_infos = {
+                'name': name,
+                'quantidade': products_data.get('quantity', 0),
+                'tipos_embalo': lumping_infos
+            }
+            
+            status = self.coll.update_one(product_filter,{"$set":product_infos})
+            
+            if status:
+                return True
+            
+            return False 
+
+        except Exception as e:
+            return e
     def SplitProductDatas (self,product_datas):
         try:
             product = {"name":product_datas['name'],"quantity":product_datas["quantidade"]}

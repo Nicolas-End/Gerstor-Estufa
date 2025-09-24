@@ -89,7 +89,6 @@ def GetEspecificProduct():
         product_id = request.get_json()['id']
         
         product_exist = ProductController().GetProductById(datas['company_email'],product_id)
-        
         if product_exist:
             return jsonify({'ProductInfos':product_exist}) ,200
         else:
@@ -106,7 +105,15 @@ def EditProductDatas():
         datas = DescriptoToken(token)
         if not datas:
             return "Credenciais Invalidas",401
-        return 'ok',200
+       
+        product = request.get_json()['ProductsDatas']
+        
+        product_edited = ProductController().EditProductById(datas['company_email'], product)
+        
+        if product_edited:
+            return "Produto Editado",204
+        
+        return "Algum Valor Invalido foi Inserido", 400
         
     except Exception as e:
         print('Error: ',e)

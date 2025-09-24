@@ -102,9 +102,13 @@ export default function ProductEdit({ isOpen, onClose, onSubmit, id }: ProductEd
     onClose();
   };
   useEffect(() => {
-    initProductEdit()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    //sistema para verificar se o produto foi esolhido e não da erro de id nulo
+    if (id !== ""){
+      initProductEdit()
+    }
+
+
+  }, [id]);
 
   if (!isOpen) return null;
   if (pageIsLoading) {
