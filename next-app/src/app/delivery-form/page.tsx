@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { AddNewDelivery, ValidateHomeAcess, GetAllClients, GetAllTrucksDrivers } from "@/lib/ts/api";
+import { AddNewDelivery, ValidateHomeAcess, GetAllClients, GetAllTrucksDrivers, GetAllProductsWithItens } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -48,11 +48,11 @@ export default function DeliveryFormPage() {
   const unitOptions = ["Caixas", "Vasos", "Solto"];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
   const [ clientInfo, setClientInfo] = useState<any>(null);
-// Estado para todos os motoristas
-const [driverInfo, setDriverInfo] = useState<any[]>([]);
-
-// Estado para motorista selecionado
-const [selectedDriver, setSelectedDriver] = useState<any>(null);
+  // Estado para todos os motoristas
+  const [driverInfo, setDriverInfo] = useState<any[]>([]);
+  const [productsStocks, setProductsStocks] = useState<any[]>([]);
+  // Estado para motorista selecionado
+  const [selectedDriver, setSelectedDriver] = useState<any>(null);
 
 
   // Adiciona nova linha de item
@@ -87,7 +87,7 @@ const [selectedDriver, setSelectedDriver] = useState<any>(null);
       }
       setPageIsLoading(false);
 
-      const [clients, trucks_drivers] = await Promise.all([GetAllClients(),GetAllTrucksDrivers()])
+      const [clients, trucks_drivers, products_stocks] = await Promise.all([GetAllClients(),GetAllTrucksDrivers(),GetAllProductsWithItens()])
       if (typeof clients === "string") {
         switch (clients) {
           case "Credencial Invalida":

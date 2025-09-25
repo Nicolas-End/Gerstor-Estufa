@@ -13,12 +13,12 @@ services:
       - backend
 
   backend:
-    build: ./flask-app
+    build: ./Flask-app
     container_name: flask-backend
     ports:
       - "5000:5000"
     volumes:
-      - ./flask-app:/app
+      - ./Flask-app:/app
     command: python main.py
     stdin_open: true
     tty: true
