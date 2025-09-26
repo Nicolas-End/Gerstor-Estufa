@@ -117,7 +117,8 @@ def AddNewDelivery():
         truckDriverName = formsData['truckDriverName']
         truckDriverEmail = formsData['truckDriverEmail']
 
-        return "ok",200
+        print(formsData)
+        return 'ok',200
         ok = DeliveryController().AddNewDelivery(datas['company_email'],itens,address,date,name,clientId,idType,truckDriverName,truckDriverEmail)
         if ok:
             return jsonify({'status':'ok'}),200

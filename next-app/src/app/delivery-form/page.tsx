@@ -12,16 +12,18 @@ import { socketService } from "@/lib/config/sockteioConfig";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ValidateQuantities from "./validateProductQuantity";
 
 // Define formato de cada item
 interface ItemEntry {
-  id: number;
+  item_id: number;
   name: string;
   unit: string;
   quantity: number;
   limit_quantity: number;
   lubally: string[];
   capacity:number;
+  product_id: string;
 }
 
 export default function DeliveryFormPage() {
@@ -62,7 +64,7 @@ export default function DeliveryFormPage() {
   const addItem = () => {
     setItems((prev) => [
       ...prev,
-      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, limit_quantity:0, lubally: [""], capacity:1},
+      { item_id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, limit_quantity:0, lubally: [""], capacity:1, product_id:''},
     ]);
   };
 
@@ -73,7 +75,7 @@ export default function DeliveryFormPage() {
     value: string | number
   ) => {
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+      prev.map((item) => (item.item_id === id ? { ...item, [field]: value } : item))
     );
   };
 
@@ -144,7 +146,7 @@ export default function DeliveryFormPage() {
 
   // Remove item pelo id
   const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.item_id !== id));
   };
 
   // Envia o formulário ao back-end
@@ -165,6 +167,12 @@ export default function DeliveryFormPage() {
 
     try {
       setIsLoading(true);
+      const productValidate = ValidateQuantities(items)
+      
+      if (!productValidate){
+        setIsLoading(false);
+        return;
+      }
       const data = await AddNewDelivery(formData);
       const socket = await socketService.initSocket()
       if (data === true) {
@@ -359,7 +367,7 @@ export default function DeliveryFormPage() {
                   )}
                   {items.map((item) => (
                     <div
-                      key={item.id}
+                      key={item.item_id}
                       className="flex flex-col md:flex-row md:items-center md:space-x-4 bg-gray-50 p-4 rounded-lg"
                     >
                       {/* Nome do item */}
@@ -371,13 +379,14 @@ export default function DeliveryFormPage() {
                             (p: any) => p.name === selectedName
                           );
 
-                          // Atualiza nome
-                          updateItem(item.id, "name", selectedName);
-
+                          // Atualiza nome a quantidade e o id do produto em si
+                          updateItem(item.item_id, "name", selectedName);
+                          updateItem(item.item_id,'quantity', 0)
+                          updateItem(item.item_id,'product_id',selectedProduct.id)
                           // Atualiza os tipos de embalos disponivies para tal produto
                           if (selectedProduct) {
-                            updateItem(item.id, "lubally", selectedProduct.lullaby);
-                            updateItem(item.id, "limit_quantity" , selectedProduct.quantity)
+                            updateItem(item.item_id, "lubally", selectedProduct.lullaby);
+                            updateItem(item.item_id, "limit_quantity" , selectedProduct.quantity)
                           }
                         }
                         }
@@ -402,7 +411,7 @@ export default function DeliveryFormPage() {
                           onChange={(e) =>{
 
                             updateItem(
-                              item.id,
+                              item.item_id,
                               "quantity",
                               parseInt(e.target.value) || 0
                             )
@@ -415,9 +424,9 @@ export default function DeliveryFormPage() {
                         <select
                           value={item.unit}
                           onChange={(e) =>{
-                            updateItem(item.id, "unit", e.target.value)
-                            updateItem(item.id, "capacity", item.lubally[e.target.value])
-                            
+                            updateItem(item.item_id, "unit", e.target.value)
+                            updateItem(item.item_id, "capacity", item.lubally[e.target.value])
+                            updateItem(item.item_id,'quantity', 0)
                           }
                           }
                           className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
@@ -432,7 +441,7 @@ export default function DeliveryFormPage() {
                         {/* Botão remover */}
                         <button
                           type="button"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item.item_id)}
                           className="text-red-600 hover:text-red-800 font-medium"
                         >
                           Remover

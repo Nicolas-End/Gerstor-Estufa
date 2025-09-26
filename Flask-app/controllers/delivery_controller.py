@@ -202,13 +202,14 @@ class DeliveryController:
         except Exception as e:
             print('Error: ',e)
             return False
+        
     def SplitItensToAdd (self,itens,unique_id,company_email):
         itens_quantidy = 0
         products = []
         for i in itens:
             product_data = {
                 'delivery_id': unique_id,
-                'id': i['id'],
+                'id': i['id'],  #id do produto em si
                 'productName': i['name'],
                 'productUnit': i['unit'],
                 'productQuantidy': i['quantity'],
