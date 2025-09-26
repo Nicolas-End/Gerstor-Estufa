@@ -10,13 +10,17 @@ import { DeleteEspecificDelivery, GetDeliverys } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-
 import { socketService } from "@/lib/config/sockteioConfig";
 import { Socket } from "socket.io-client";
-
 import StatusChecklist, { Status } from "./status-delivery";
+
+function normalizeStatus(raw: any) {
+  const s = String(raw ?? "").toLowerCase();
+  if (s.includes("and") || s.includes("em andamento") || s.includes("andamento")) return "andamento";
+  if (s.includes("final") || s.includes("concl")) return "finalizado";
+  return "pendente";
+}
 
 export default function PedidosPage() {
   const router = useRouter();
@@ -211,7 +215,14 @@ export default function PedidosPage() {
                     onClick={() => setSelectedOrder(order)}
                     className={styles.orderItem}
                   >
-                    <p className={styles.orderName}>{order.Produto}</p>
+                    <div className={styles.nameRow}>
+                      <span
+                        className={`${(styles as any).statusDotInline} ${(styles as any)[`dot-${normalizeStatus(order.status)}`]}`}
+                        aria-hidden="true"
+                        title={String(order.status ?? "Pendente")}
+                      />
+                      <p className={styles.orderName}>{order.Produto}</p>
+                    </div>
                     <div className={styles.orderQuantity}>
                       <span className={styles.orderCount}>{order.Quantidade}</span>{" "}
                       <span className={styles.orderUnit}>Caixas</span>
