@@ -5,6 +5,7 @@ import AOS from "aos";
 import './style.css';
 import "aos/dist/aos.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Footer from "@/Components/footer";
 
 const AOS_DURATION = 700;
 
@@ -364,6 +365,7 @@ const App = () => {
       <Home />
       <About />
       <TeamSection />
+      <Footer />
     </div>
   );
 };
