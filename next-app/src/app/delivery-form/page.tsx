@@ -19,7 +19,9 @@ interface ItemEntry {
   name: string;
   unit: string;
   quantity: number;
-  lubally: string[]
+  limit_quantity: number;
+  lubally: string[];
+  capacity:number;
 }
 
 export default function DeliveryFormPage() {
@@ -60,7 +62,7 @@ export default function DeliveryFormPage() {
   const addItem = () => {
     setItems((prev) => [
       ...prev,
-      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, lubally: [""] },
+      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, limit_quantity:0, lubally: [""], capacity:1},
     ]);
   };
 
@@ -375,7 +377,7 @@ export default function DeliveryFormPage() {
                           // Atualiza os tipos de embalos disponivies para tal produto
                           if (selectedProduct) {
                             updateItem(item.id, "lubally", selectedProduct.lullaby);
-
+                            updateItem(item.id, "limit_quantity" , selectedProduct.quantity)
                           }
                         }
                         }
@@ -394,15 +396,18 @@ export default function DeliveryFormPage() {
                         <input
                           type="number"
                           min={0}
+                          max={item.limit_quantity/item.capacity < 0 ? 0 : Math.floor(item.limit_quantity/item.capacity)}
                           placeholder="Quantidade"
                           value={item.quantity}
-                          onChange={(e) =>
+                          onChange={(e) =>{
+
                             updateItem(
                               item.id,
                               "quantity",
                               parseInt(e.target.value) || 0
                             )
                           }
+                        }
                           className="text-black w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                           required
                         />
@@ -411,12 +416,14 @@ export default function DeliveryFormPage() {
                           value={item.unit}
                           onChange={(e) =>{
                             updateItem(item.id, "unit", e.target.value)
+                            updateItem(item.id, "capacity", item.lubally[e.target.value])
+                            
                           }
                           }
                           className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         >
                           {Object.keys(item.lubally).map((key) => (
-                            <option key={key}>{key}</option> // exibe: caixa, Vaso, ...
+                            <option key={key} value={key}>{key} - {item.lubally[key]}</option> // exibe: caixa, Vaso, ...
                           ))}
 
                         </select>
