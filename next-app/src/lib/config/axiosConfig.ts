@@ -9,7 +9,7 @@ export async function createApiWithAuth():Promise<any>{
   const token = await getTokenCookie()
 
   return axios.create({
-    baseURL: 'http://backend:5000',
+    baseURL: 'http://localhost:5000',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': token || '',
@@ -22,7 +22,7 @@ export async function createApiWithAuth():Promise<any>{
 export async function createApiWithoutAuth():Promise<any>{
 
   return axios.create({
-    baseURL: 'http://backend:5000',
+    baseURL: 'http://localhost:5000',
     headers: {
       'Content-Type': 'application/json',
 

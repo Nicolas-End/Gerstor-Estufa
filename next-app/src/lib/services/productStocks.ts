@@ -114,7 +114,8 @@ export const getAllProductsWithItens= async() => {
 
     switch(response.status){
       case 200:
-        return response.data.productDatas
+        
+        return response.data.productsDatas
       case 401:
         return "Credenciais Invalidas"
       default:

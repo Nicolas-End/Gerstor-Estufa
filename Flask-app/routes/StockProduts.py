@@ -128,7 +128,7 @@ def GetAllProductsWithItens():
             return "Credenciais Invalidas",401
         
         products_datas = ProductController().GetAllProductsToDeliveryPage(datas['company_email'])
-
+        
         if products_datas:
             return jsonify({"productsDatas":products_datas}),200
         else:

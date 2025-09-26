@@ -19,6 +19,7 @@ interface ItemEntry {
   name: string;
   unit: string;
   quantity: number;
+  lubally: string[]
 }
 
 export default function DeliveryFormPage() {
@@ -45,9 +46,9 @@ export default function DeliveryFormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [clients, setClients] = useState<any[]>([]);
   const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
-  const unitOptions = ["Caixas", "Vasos", "Solto"];
+  let unitOptions = [''];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
-  const [ clientInfo, setClientInfo] = useState<any>(null);
+  const [clientInfo, setClientInfo] = useState<any>(null);
   // Estado para todos os motoristas
   const [driverInfo, setDriverInfo] = useState<any[]>([]);
   const [productsStocks, setProductsStocks] = useState<any[]>([]);
@@ -59,7 +60,7 @@ export default function DeliveryFormPage() {
   const addItem = () => {
     setItems((prev) => [
       ...prev,
-      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1 },
+      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, lubally: [""] },
     ]);
   };
 
@@ -87,7 +88,7 @@ export default function DeliveryFormPage() {
       }
       setPageIsLoading(false);
 
-      const [clients, trucks_drivers, products_stocks] = await Promise.all([GetAllClients(),GetAllTrucksDrivers(),GetAllProductsWithItens()])
+      const [clients, trucks_drivers, products_stocks] = await Promise.all([GetAllClients(), GetAllTrucksDrivers(), GetAllProductsWithItens()])
       if (typeof clients === "string") {
         switch (clients) {
           case "Credencial Invalida":
@@ -101,24 +102,37 @@ export default function DeliveryFormPage() {
             return;
         }
       }
-      if (typeof trucks_drivers === "string"){
-        switch(trucks_drivers){
+      if (typeof trucks_drivers === "string") {
+        switch (trucks_drivers) {
           case "Nenhum Caminoeiro Cadastrado":
             return;
           case "Credenciais Invalidas":
             showAlert("Suas credenciais são invalidas")
             router.push('/logout')
             return;
-          default :
+          default:
             showError("não possivel mostar os caminhoneiros tente novamte mais tarde")
 
             return;
         }
       }
+      if (typeof products_stocks === "string") {
+        switch (products_stocks) {
+          case "Credenciais Invalidas":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+            return;
+          default:
+            showError("não possivel mostar as embalagens tente novamte mais tarde")
+            return;
+        }
+      }
       const driversArray = Array.isArray(trucks_drivers) ? trucks_drivers : [];
+
 
       setClients(clients)
       setDriverInfo(driversArray)
+      setProductsStocks(products_stocks)
 
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
@@ -143,7 +157,7 @@ export default function DeliveryFormPage() {
       clientName,
       clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
       typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
-      truckDriverEmail: selectedDriver?.email ,
+      truckDriverEmail: selectedDriver?.email,
       truckDriverName: selectedDriver?.name
     };
 
@@ -216,7 +230,7 @@ export default function DeliveryFormPage() {
               onSubmit={handleSubmit}
               className="bg-white p-6 rounded-lg shadow overflow-auto flex flex-col mb-6 min-h-fit"
             >
-             
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {/* Seleção do Cliente */}
                 <div className="mb-4">
@@ -278,7 +292,7 @@ export default function DeliveryFormPage() {
                   <DatePicker
                     id="deliveryDate"
                     selected={deliveryDate} // Use 'selected' para passar a data
-                    onChange={(date: Date | null) => setDeliveryDate(date)} 
+                    onChange={(date: Date | null) => setDeliveryDate(date)}
                     className="text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholderText="dd/mm/aaaa"
                     required
@@ -291,34 +305,34 @@ export default function DeliveryFormPage() {
                     dateFormat="dd/MM/yyyy" // Formato que será exibido a data 
                   />
                 </div>
-                
+
 
                 {/*Caminhoneiro*/}
                 <div>
-  <label
-    htmlFor="driverSelect"
-    className="block text-green-900 text-[18px] mb-2"
-  >
-    Caminhoneiro
-  </label>
-  <select
-    id="driverSelect"
-    value={selectedDriver?.email || ""}
-    required
-    onChange={(e) => {
-      const driver = driverInfo.find((d: any) => d.email === e.target.value);
-      setSelectedDriver(driver || null);
-    }}
-    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
-  >
-    <option value="">Escolha um Caminhoneiro</option>
-    {driverInfo.map((driver: any, index: number) => (
-      <option key={index} value={driver.email}>
-        {driver.name} - {driver.email}
-      </option>
-    ))}
-  </select>
-</div>
+                  <label
+                    htmlFor="driverSelect"
+                    className="block text-green-900 text-[18px] mb-2"
+                  >
+                    Caminhoneiro
+                  </label>
+                  <select
+                    id="driverSelect"
+                    value={selectedDriver?.email || ""}
+                    required
+                    onChange={(e) => {
+                      const driver = driverInfo.find((d: any) => d.email === e.target.value);
+                      setSelectedDriver(driver || null);
+                    }}
+                    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
+                  >
+                    <option value="">Escolha um Caminhoneiro</option>
+                    {driverInfo.map((driver: any, index: number) => (
+                      <option key={index} value={driver.email}>
+                        {driver.name} - {driver.email}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
               </div>
 
@@ -347,16 +361,34 @@ export default function DeliveryFormPage() {
                       className="flex flex-col md:flex-row md:items-center md:space-x-4 bg-gray-50 p-4 rounded-lg"
                     >
                       {/* Nome do item */}
-                      <input
-                        type="text"
-                        placeholder="Nome do item"
-                        value={item.name}
-                        onChange={(e) =>
-                          updateItem(item.id, "name", e.target.value)
+                      <select
+                        value={item.name} // estado que guarda o valor selecionado
+                        onChange={(e) => {
+                          const selectedName = e.target.value;
+                          const selectedProduct = productsStocks.find(
+                            (p: any) => p.name === selectedName
+                          );
+
+                          // Atualiza nome
+                          updateItem(item.id, "name", selectedName);
+
+                          // Atualiza os tipos de embalos disponivies para tal produto
+                          if (selectedProduct) {
+                            updateItem(item.id, "lubally", selectedProduct.lullaby);
+
+                          }
                         }
-                        className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-gray-600"
+                        }
+                        className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         required
-                      />
+                      >
+                        <option value="" disabled>Selecione uma categoria</option>
+                        {productsStocks.map((product: any, index: number) => (
+                          <option key={index} value={product.email}>
+                            {product.name}
+                          </option>
+                        ))}
+                      </select>
                       <div className="flex space-x-4 md:space-x-[150px]">
                         {/* Quantidade */}
                         <input
@@ -377,16 +409,16 @@ export default function DeliveryFormPage() {
                         {/* Unidade */}
                         <select
                           value={item.unit}
-                          onChange={(e) =>
+                          onChange={(e) =>{
                             updateItem(item.id, "unit", e.target.value)
+                          }
                           }
                           className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         >
-                          {unitOptions.map((u) => (
-                            <option key={u} value={u}>
-                              {u}
-                            </option>
+                          {Object.keys(item.lubally).map((key) => (
+                            <option key={key}>{key}</option> // exibe: caixa, Vaso, ...
                           ))}
+
                         </select>
                       </div>
                       <div className="flex justify-center">
