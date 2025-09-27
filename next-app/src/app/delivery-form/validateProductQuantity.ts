@@ -27,7 +27,6 @@ function ValidateQuantities(items: ItemEntry[]): boolean {
     );
   
     for (const [productId, { total, limit, name }] of Object.entries(grouped)) {
-      console.log(`Produto:${productId} total:${total} limite:${limit}`);
       if (limit !== undefined && total > limit) {
         showAlert(`Produto:  ${name} excedeu o limite: ${total}/${limit}`);
         return false;

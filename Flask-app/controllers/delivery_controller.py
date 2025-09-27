@@ -65,7 +65,7 @@ class DeliveryController:
                 dict_products = []
                 for i in has_products:
                     product_to_do = {
-                        'id': i['id'],
+                        'id': i['product_id'],
                         'name': i['productName'],
                         'unit': i['productUnit'],
                         'quantity': i['productQuantidy']
@@ -207,12 +207,14 @@ class DeliveryController:
         itens_quantidy = 0
         products = []
         for i in itens:
+            total_products = i['capacity'] * i['quantity']
             product_data = {
                 'delivery_id': unique_id,
-                'id': i['id'],  #id do produto em si
+                'product_id': i['product_id'],  #id do produto em si
                 'productName': i['name'],
                 'productUnit': i['unit'],
                 'productQuantidy': i['quantity'],
+                'totalProducts': total_products,
                 'companyEmail': company_email,
             }
             itens_quantidy += i['quantity']

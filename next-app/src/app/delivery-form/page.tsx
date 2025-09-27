@@ -383,6 +383,7 @@ export default function DeliveryFormPage() {
                           updateItem(item.item_id, "name", selectedName);
                           updateItem(item.item_id,'quantity', 0)
                           updateItem(item.item_id,'product_id',selectedProduct.id)
+                          updateItem(item.item_id, "unit", "")
                           // Atualiza os tipos de embalos disponivies para tal produto
                           if (selectedProduct) {
                             updateItem(item.item_id, "lubally", selectedProduct.lullaby);
@@ -409,7 +410,6 @@ export default function DeliveryFormPage() {
                           placeholder="Quantidade"
                           value={item.quantity}
                           onChange={(e) =>{
-
                             updateItem(
                               item.item_id,
                               "quantity",
@@ -431,6 +431,7 @@ export default function DeliveryFormPage() {
                           }
                           className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         >
+                          <option value="" disabled>Escolha uma unidade</option>
                           {Object.keys(item.lubally).map((key) => (
                             <option key={key} value={key}>{key} - {item.lubally[key]}</option> // exibe: caixa, Vaso, ...
                           ))}
