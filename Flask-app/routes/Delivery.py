@@ -4,6 +4,7 @@ from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from jwt.exceptions import InvalidSignatureError
 import os
+from controllers.products_controller import ProductController
 from controllers.delivery_controller import DeliveryController
 from controllers.cripto_controller import CriptographyController
 load_dotenv()
@@ -107,7 +108,8 @@ def AddNewDelivery():
         if not datas:
             return "Credenciais Invalidas", 401 #dados do usuario sendo descriptografado
         
-        formsData = request.get_json()['FormsData']
+        delivery_datas = request.get_json()
+        formsData = delivery_datas['FormsData']
         itens = formsData['items']
         address = formsData['address']
         date = formsData['deliveryDate']
@@ -119,8 +121,12 @@ def AddNewDelivery():
 
 
         ok = DeliveryController().AddNewDelivery(datas['company_email'],itens,address,date,name,clientId,idType,truckDriverName,truckDriverEmail)
+        
         if ok:
-            return jsonify({'status':'ok'}),200
+            less_product_quantity =  ProductController().DeleteSomeProductsToAddDelivery(datas['company_email'],delivery_datas['ProductsValidate'])
+            
+            if less_product_quantity:
+                return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),500
     except InvalidSignatureError as i:
         return jsonify({'status': 'invalid'}), 400

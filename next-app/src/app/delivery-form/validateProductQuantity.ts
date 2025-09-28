@@ -1,4 +1,6 @@
 import { showAlert } from "@/lib/controller/alertsController";
+import { group } from "console";
+import { convertSegmentPathToStaticExportFilename } from "next/dist/shared/lib/segment-cache/segment-value-encoding";
 
 
 interface ItemEntry {
@@ -12,7 +14,7 @@ interface ItemEntry {
     product_id: string;
 }
 
-function ValidateQuantities(items: ItemEntry[]): boolean {
+function ValidateQuantities(items: ItemEntry[]):{} {
     const grouped = items.reduce<Record<string, { total: number; limit: number, name:string}>>(
       (acc, item) => {
         const limit = Number(item.limit_quantity); // garante número
@@ -32,7 +34,8 @@ function ValidateQuantities(items: ItemEntry[]): boolean {
         return false;
       }
     }
-    return true;
+    
+    return grouped
 
 }
   

@@ -204,9 +204,9 @@ export async function GetEspecificDelivery(id: string) {
   }
 }
 
-export async function AddNewDelivery(FormsData: any) {
+export async function AddNewDelivery(FormsData: any, productValidate: any) {
   try {
-    const response = await addNewDelivery(FormsData)
+    const response = await addNewDelivery(FormsData, productValidate)
 
     return response
   } catch (error) {

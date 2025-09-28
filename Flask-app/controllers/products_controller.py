@@ -135,6 +135,18 @@ class ProductController:
 
         except Exception as e:
             return e
+        
+
+    def DeleteSomeProductsToAddDelivery(self,company_email,product_to_delete):
+        try:
+            for key in product_to_delete:
+                product_filter = {'company_email':company_email, 'id':key}
+                update =  {'quantidade':(product_to_delete[key]['limit']-product_to_delete[key]['total'])}
+                self.coll.update_one(product_filter,{"$set":update})
+            
+            return True
+        except Exception as e:  
+            return e
     def SplitProductDatas (self,product_datas):
         try:
             product = {"name":product_datas['name'],"quantity":product_datas["quantidade"]}

@@ -169,11 +169,11 @@ export default function DeliveryFormPage() {
       setIsLoading(true);
       const productValidate = ValidateQuantities(items)
       
-      if (!productValidate){
+      if (productValidate === false){
         setIsLoading(false);
         return;
       }
-      const data = await AddNewDelivery(formData);
+      const data = await AddNewDelivery(formData,productValidate);
       const socket = await socketService.initSocket()
       if (data === true) {
         showSucess("Entrega Adicionada com Sucesso");
