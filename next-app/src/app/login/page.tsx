@@ -34,7 +34,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await ValidateLogin(email, password);
+      const response:any = await ValidateLogin(email, password);
       if (response.status === "ok") {
 
         const role = response.role

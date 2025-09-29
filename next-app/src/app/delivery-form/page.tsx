@@ -424,15 +424,16 @@ export default function DeliveryFormPage() {
                         <select
                           value={item.unit}
                           onChange={(e) =>{
-                            updateItem(item.item_id, "unit", e.target.value)
-                            updateItem(item.item_id, "capacity", item.lubally[e.target.value])
+                            const value:any = e.target.value
+                            updateItem(item.item_id, "unit", value)
+                            updateItem(item.item_id, "capacity", item.lubally[value])
                             updateItem(item.item_id,'quantity', 0)
                           }
                           }
                           className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         >
                           <option value="" disabled>Escolha uma unidade</option>
-                          {Object.keys(item.lubally).map((key) => (
+                          {Object.keys(item.lubally).map((key:any) => (
                             <option key={key} value={key}>{key} - {item.lubally[key]}</option> // exibe: caixa, Vaso, ...
                           ))}
 
