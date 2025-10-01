@@ -212,5 +212,5 @@ Flask-app/
 |     ├── Functionaries.py
 |     ├── StockProducts.py
 |     ├── Trucks.py
-|     ├── User.py
+|     └──  User.py
 └── ...
