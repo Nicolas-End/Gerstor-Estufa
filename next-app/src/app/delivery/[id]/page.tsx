@@ -134,9 +134,9 @@ export default function ProdutoPage() {
         {/* Banner do cliente */}
         <div className={styles.banner}>
           <h2 className={styles.bannerTitle}
-           onClick={() =>
-                  router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)
-                }>{deliverysDatas.produto}</h2>
+            onClick={() =>
+              router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)
+            }>{deliverysDatas.produto}</h2>
           <div className={styles.bannerRight}>
             <span className={styles.quantityBadge}>{deliverysDatas.quantidade}</span>
             <span className={styles.bannerSub}>Caixas</span>
@@ -145,18 +145,21 @@ export default function ProdutoPage() {
 
         {/* Tabela de produtos */}
         <div className="border border-zinc-300 rounded-lg overflow-hidden text-black">
-          <div className="hidden sm:grid grid-cols-5 font-semibold text-[#0a2c26] px-4 py-2 text-sm border-b border-zinc-300">
+          {/* cabeçalho - agora com 6 colunas */}
+          <div className="hidden sm:grid grid-cols-6 items-center font-semibold text-[#0a2c26] px-4 py-2 text-sm border-b border-zinc-300">
             <span>Selecionar</span>
             <span>Nome</span>
             <span className="text-center">Quantidade</span>
             <span className="text-center">Data</span>
             <span className="text-right">Local</span>
+            <span className="text-right">Entregue por</span>
           </div>
 
           {products.map((product, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 sm:grid-cols-5 px-4 py-3 border-t border-zinc-200 text-sm gap-y-1 sm:items-center text-black"
+              /* aqui também 6 colunas em sm (mobile: 1 coluna) */
+              className="grid grid-cols-1 sm:grid-cols-6 px-4 py-3 border-t border-zinc-200 text-sm gap-y-1 sm:items-center text-black"
             >
               <div className="flex items-center space-x-2">
                 <input
@@ -165,25 +168,32 @@ export default function ProdutoPage() {
                   onChange={() => handleCheckboxChange(index)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm">{checkedItems[index]?'Preparado':'Preparando'}</span>
+                <span className="text-sm">{checkedItems[index] ? "Preparado" : "Preparando"}</span>
               </div>
+
               <div>
                 <span className="sm:hidden font-semibold text-[#0a2c26]">Nome: </span>
                 {product.name}
               </div>
+
               <div className="text-left sm:text-center">
-                <span className="sm:hidden font-semibold text-[#0a2c26]">
-                  Quantidade:
-                </span>{" "}
+                <span className="sm:hidden font-semibold text-[#0a2c26]">Quantidade:</span>{" "}
                 {product.quantity} {product.unit}
               </div>
+
               <div className="text-left sm:text-center">
-                <span className="sm:hidden font-semibold text-[#0a2c26]">Data: </span>
+                <span className="sm:hidden font-semibold text-[#0a2c26]">Data:</span>
                 {formatDateBR(deliverysDatas.data)}
               </div>
+
               <div className="text-left sm:text-right">
-                <span className="sm:hidden font-semibold text-[#0a2c26]">Local: </span>
+                <span className="sm:hidden font-semibold text-[#0a2c26]">Local:</span>
                 {deliverysDatas.endereco}
+              </div>
+
+              <div className="text-left sm:text-right">
+                <span className="sm:hidden font-semibold text-[#0a2c26]">Entregue por: </span>
+                {deliverysDatas.nome_cami || "—"}
               </div>
             </div>
           ))}
