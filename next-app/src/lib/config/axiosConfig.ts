@@ -9,11 +9,9 @@ export async function createApiWithAuth():Promise<any>{
   const token = await getTokenCookie()
 
   return axios.create({
-<<<<<<< HEAD
+
     baseURL: 'https://gerenciador-empresarial-1cfr.vercel.app',
-=======
-    baseURL: 'http://localhost:5000',
->>>>>>> feat
+
     headers: {
       'Content-Type': 'application/json',
       'Authorization': token || '',
@@ -26,11 +24,9 @@ export async function createApiWithAuth():Promise<any>{
 export async function createApiWithoutAuth():Promise<any>{
 
   return axios.create({
-<<<<<<< HEAD
+
     baseURL: 'https://gerenciador-empresarial-1cfr.vercel.app',
-=======
-    baseURL: 'http://localhost:5000',
->>>>>>> feat
+
     headers: {
       'Content-Type': 'application/json',
 
