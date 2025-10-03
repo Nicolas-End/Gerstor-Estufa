@@ -265,7 +265,7 @@ export default function PedidosPage() {
                         <strong>Local de Entrega:</strong> {order.LocalEntrega}
                       </p>
                       <p className="text-black">
-                        <strong>Data de Entrega:</strong> {order.DataEntrega}
+                        <strong>Data de Entrega:</strong> {new Date(order.DataEntrega).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                   )}
