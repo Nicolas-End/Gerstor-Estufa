@@ -27,7 +27,7 @@ export default function PedidosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-
+  const [modalId, setModalId] = useState<string> ("")
   const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos');
 
   // --- modal de status (somente visual) ---
@@ -37,11 +37,14 @@ export default function PedidosPage() {
 
   const openStatusModal = (order: any) => {
     setModalOrder(order);
+
     // tenta casar um valor visual inicial (se tiver order.status)
     const normalized = String(order?.status ?? "pendente").toLowerCase();
-    if (normalized.includes("and")) setModalStatus("andamento");
-    else if (normalized.includes("final") || normalized.includes("concl")) setModalStatus("concluido");
+    if (normalized.includes("and") || normalized.includes("andamento")) setModalStatus("andamento");
+    else if (normalized.includes("final") || normalized.includes("concluido")) setModalStatus("concluido");
+
     else setModalStatus("pendente");
+    setModalId(order.id)
     setIsStatusModalOpen(true);
   };
 
@@ -261,6 +264,7 @@ export default function PedidosPage() {
                 value={modalStatus}
                 onChange={(s) => setModalStatus(s)}
                 name={`status-checklist-${modalOrder.id}`}
+                id={modalId}
               />
 
               <div className="flex justify-end gap-2 mt-6">
@@ -268,7 +272,7 @@ export default function PedidosPage() {
                   Cancelar
                 </button>
                 <button onClick={handleSaveStatus} className="px-4 py-2 rounded bg-[#005E40] text-white">
-                  Fechar
+                  Concluir
                 </button>
               </div>
             </div>

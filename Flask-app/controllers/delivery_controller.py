@@ -99,6 +99,8 @@ class DeliveryController:
                     'quantidade': has_deliverys['Quantidade'],
                     'endereco': has_deliverys['LocalEntrega'],
                     'data': has_deliverys['dataParaEntrega'],
+                    'nome_cami': has_deliverys['NomeCaminhoneiro'],
+                    'email_cami':has_deliverys['EmailCaminhoneiro'],
                     tipoId:clienteId
                 }
 
