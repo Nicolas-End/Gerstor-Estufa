@@ -17,21 +17,12 @@ export default function Footer() {
             <div className="space-y-3">
               <h3 className="font-semibold text-lg">Início</h3>
               <ul className="space-y-2 text-gray-300">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                <li id="ancorahome">
+                  <a href="#home" className="hover:text-white transition-colors">
                     Home
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Cursos
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Downloads
-                  </a>
-                </li>
+
               </ul>
             </div>
 
@@ -40,18 +31,18 @@ export default function Footer() {
               <h3 className="font-semibold text-lg">Sobre-nós</h3>
               <ul className="space-y-2 text-gray-300">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#projeto" className="hover:text-white transition-colors">
                     Informações da Empresa
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#contato" className="hover:text-white transition-colors">
                     Contato
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Blog
+                  <a href="#criadores" className="hover:text-white transition colors">
+                    Criadores
                   </a>
                 </li>
               </ul>
@@ -61,11 +52,7 @@ export default function Footer() {
             <div className="space-y-3">
               <h3 className="font-semibold text-lg">Suporte</h3>
               <ul className="space-y-2 text-gray-300">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQ
-                  </a>
-                </li>
+
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
                     Telefones
@@ -83,7 +70,7 @@ export default function Footer() {
           {/* Social Media and Contact Button */}
           <div className="flex flex-col items-center lg:items-end gap-4">
             {/* Contact Button */}
-            <p className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full">Contato</p>
+            <p className="bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-full">Contato</p>
 
             {/* Social Media Icons */}
             <div className="flex gap-4">
