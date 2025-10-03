@@ -28,7 +28,7 @@ export default function PedidosPage() {
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
-  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos');
+  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'andamento' | 'finalizado'>('Todos');
 
   // --- modal de status (somente visual) ---
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
@@ -214,13 +214,13 @@ export default function PedidosPage() {
           <select
             value={searchStatus}
             onChange={e =>
-              setSearchStatus(e.target.value as 'Todos' | 'pendente' | 'em andamento' | 'finalizado')
+              setSearchStatus(e.target.value as 'Todos' | 'pendente' | 'andamento' | 'finalizado')
             }
             className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
           >
             <option value="Todos">Todos</option>
             <option value="pendente">Pendente</option>
-            <option value="em andamento">Em andamento</option>
+            <option value="andamento">Andamento</option>
             <option value="finalizado">Finalizado</option>
           </select>
 
