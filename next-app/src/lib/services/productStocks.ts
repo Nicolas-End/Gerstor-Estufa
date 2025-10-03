@@ -63,3 +63,66 @@ export const deleteProduct = async(id:string) =>{
     throw error
   }
 }
+
+export const getProductDatasByID = async (id:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'id':id}
+    const response = await api.post('/products/get-especific',data)
+
+    switch(response.status){
+      case 200:
+        return response.data.ProductInfos
+      case 409:
+        return "Produto Não Cadastrado"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+
+  }catch(error){
+    throw error
+  }
+}
+
+export const editProduct = async (formsDatas:{ name: string; quantity: number; items: any, id:string }) => {
+  try{
+    const api = await createApiWithAuth()
+    const data = {'ProductsDatas':formsDatas}
+    const response = await api.post('/products/edit',data)
+
+    switch(response.status){
+      case 204:
+        return "Produto Editado"
+      case 400:
+        return "Valores Inseridos Invalidos"
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw error
+  }
+}
+
+export const getAllProductsWithItens= async() => {
+  try{
+    const api = await createApiWithAuth()
+    const response = await api.post('/products/get-all-with-itens')
+
+    switch(response.status){
+      case 200:
+        
+        return response.data.productsDatas
+      case 401:
+        return "Credenciais Invalidas"
+      default:
+        return "Erro Desconhecido "
+
+    }
+  }catch(error){
+    throw error
+  }
+}

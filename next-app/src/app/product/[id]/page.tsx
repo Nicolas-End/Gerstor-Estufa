@@ -6,9 +6,9 @@ import Sidebar from "@/Components/sidebar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
-
-import { ValidateHomeAcess } from "@/lib/ts/api";
-import { showError } from "@/lib/controller/alertsController";
+import ProductEdit from "./product-edit";
+import { EditProduct, GetProductByID, ValidateHomeAcess } from "@/lib/ts/api";
+import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 
 // Define formato de cada item
 interface ItemEntry {
@@ -20,14 +20,15 @@ interface ItemEntry {
 
 export default function DeliveryFormPage() {
   const router = useRouter(); // Navegação
-
-  // Estados dos campos principais
-  const [items, setItems] = useState<ItemEntry[]>([]);
-  const [itemsInfo, setItemsInfo] = useState<any>({});
-  const [pageIsLoading, setPageIsLoading] = useState(true);
   const params = useParams();
   const id: any = params?.id ? params.id : null;
- 
+  // Estados dos campos principais
+  const [productDatas, setProductDatas] = useState<any>({});
+  const [lumpingsInfo, setLumpingsInfo] = useState<any>({});
+  const [pageIsLoading, setPageIsLoading] = useState(true);
+  const [isEditOpen, setIsEditOpen] = useState(false); 
+  
+
   const initializePage = async () => {
     try {
       const canAccess = await ValidateHomeAcess(router);
@@ -35,18 +36,74 @@ export default function DeliveryFormPage() {
         router.push("/logout");
         return;
       }
-      setItemsInfo(items);
+      const response = await GetProductByID(id)
+      if (typeof response === "string") {
+        switch (response) {
+          case "Produto Não Cadastrado":
+            showAlert('Produto não cadastrado no sistema')
+            router.push('/products')
+            return;
+          case "Credenciais Invalidas":
+            showError("Suas Credenciais São invalidas");
+            router.push('/logout')
+            return;
+          case "Erro Interno":
+            router.push('/products')
+            return;
+        }
+      }
+      setProductDatas(response.ProductsDatas)
+      setLumpingsInfo(response.LumpingsInfos)
       setPageIsLoading(false);
     } catch (err) {
       showError("Erro ao carregar. Redirecionando...");
-      router.push("/login");
+      router.push("/home");
     }
   };
 
+    /**
+   * Recebe os dados do modal quando o usuário submete. 
+   */
+
+  const handleEdit = async(product: { name: string; quantity: number; items: ItemEntry[],id:string }) =>{
+    try{
+        const response = await EditProduct(product)
+        switch(response){
+          case "Credenciais Invalidas":
+            showAlert("Suas Credenciais São Invalidas")
+            router.push('/logout')
+            return;
+          case "Produto Editado":
+            showSucess("Produto Editado com sucesso")
+            router.refresh()
+            return;
+          case "Valores Inseridos Invalidos":
+            showAlert("Alguns dos valores inseridos são invalidos")
+            return;
+          default:
+            showAlert("Houve um erro interno tente novamente mais tarde")
+            return;
+        }
+    }catch(error){
+      showError("Houve um erro internotente novamente mais tarde")
+    }
+  }
   useEffect(() => {
     initializePage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Abre o modal
+  const openEditModal = () => {
+    setIsEditOpen(true);
+  };
+
+  // Fecha o modal
+  const closeEditModal = () => {
+    setIsEditOpen(false);
+  };
+
+
 
   if (pageIsLoading) {
     return (
@@ -81,10 +138,8 @@ export default function DeliveryFormPage() {
               {id ? (
                 <button
                   type="button"
-                  onClick={() =>
-                    router.push(`../products/${decodeURIComponent(id)}`)
-                  }
                   className={styles.editBtn}
+                  onClick={openEditModal}
                 >
                   Editar
                 </button>
@@ -103,13 +158,13 @@ export default function DeliveryFormPage() {
           <section className={styles.productBox}>
             <div className={styles.productRow}>
               <div className={styles.productLabel}>Nome do produto:</div>
-              <div className={styles.productValue}>Pimenta</div>
+              <div className={styles.productValue}>{productDatas.name}</div>
             </div>
 
             <div className={styles.productRow}>
               <div className={styles.productLabel}>Quantidade:</div>
               <div className={styles.productValue}>
-                <span>1000</span>
+                <span>{productDatas.quantity}</span>
               </div>
             </div>
 
@@ -127,14 +182,14 @@ export default function DeliveryFormPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Caixa</td>
-                          <td>10</td>
-                        </tr>
-                        <tr>
-                          <td>Pacote</td>
-                          <td>5</td>
-                        </tr>
+                        {Object.entries(lumpingsInfo).map(([key, value]: any, index) => (
+                          <tr key={index}>
+                            <td>{key}</td>
+                            <td>{value}</td>
+                          </tr>
+                        ))}
+
+
                       </tbody>
                     </table>
 
@@ -145,7 +200,7 @@ export default function DeliveryFormPage() {
                         <div className={styles.cardSubtitle}>Quantidade Máxima</div>
                         <div className={styles.cardValue}>10</div>
                       </div>
-                      
+
                       <div className={styles.mobileCard}>
                         <div className={styles.cardTitle}>Pacote</div>
                         <div className={styles.cardSubtitle}>Capacidade Máxima</div>
@@ -158,6 +213,14 @@ export default function DeliveryFormPage() {
             </div>
           </section>
         </main>
+
+        {/* Modal de edição - ligado ao estado isEditOpen */}
+        <ProductEdit
+          isOpen={isEditOpen}
+          onClose={closeEditModal}
+          onSubmit={handleEdit}
+          id={id}
+        />
 
         <ToastContainer position="top-right" autoClose={4000} />
       </div>

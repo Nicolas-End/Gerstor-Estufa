@@ -92,8 +92,9 @@
 }
 
 .orderName {
-  font-size: 1.25rem;
-  font-weight: bold;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #ffffff;
 }
 
@@ -128,28 +129,69 @@
   border-radius: 8px;
 }
 
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusDotInline {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+/* cores por status */
+.dot-pendente {
+  background: #dc2626;
+}
+
+.dot-andamento {
+  background: #f59e0b;
+}
+
+.dot-finalizado {
+  background: #16a34a;
+}
+
 @media (max-width: 768px) {
-  .container{
+  .container {
     min-height: 100vh !important;
   }
-  
+
   .ordersList {
     grid-template-columns: 1fr;
   }
-  
+
   .header {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
   }
-  
+
   .titleSection {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
   }
-  
+
   .title {
     text-align: center;
+  }
+
+  .statusDotInline {
+    width: 12px;
+    height: 12px;
+  }
+
+  .nameRow {
+    gap: 8px;
+  }
+
+  .orderName {
+    font-size: 1rem;
   }
 }

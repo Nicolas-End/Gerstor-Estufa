@@ -206,4 +206,11 @@ Flask-app/
 │   ├── functionaries.py
 │   ├── token_controller.py
 │   └── user_controller.py
+├── routes/
+|     ├── Clients.py
+|     ├── Delivery.py
+|     ├── Functionaries.py
+|     ├── StockProducts.py
+|     ├── Trucks.py
+|     └──  User.py
 └── ...

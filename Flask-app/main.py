@@ -27,5 +27,9 @@ def CreateApp():
     return app
 app = CreateApp()
 if __name__ == '__main__':
+<<<<<<< HEAD
 
     app.run()
+=======
+    CreateApp().run(host='0.0.0.0', port=5000)
+>>>>>>> feat

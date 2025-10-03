@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
 import ProductForm from "./products-form";
+import ProductsEditForm from "../product/[id]/product-edit";
 
 interface ItemEntry {
   id: number;
@@ -23,38 +24,53 @@ export default function ProductsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [productsDatas, setProductsDatas] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string>('');
+
+  // função para abrir o modal de edição
+  const openEditModal = (id: string) => {
+    setEditingProductId(id);
+    setIsEditModalOpen(true);
+  };
+
+  // função de fechar
+  const closeEditModal = () => {
+    setEditingProductId('');
+    setIsEditModalOpen(false);
+  };
 
   // modal control
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const deleteProduct = async (id:string) =>{
-      try{
-        const response = await DeleteProduct(id)
-        switch(response){
-          case "Credenciais Invalidas":
-            showAlert("Suas Credenciais são invalidas")
-            router.push('/logout')
-            return
-          case "Erro Interno":
-            showError("Houve um erro Interno tente novamente mais tarde")
-            return
-          case "Produto Apagado":
-            showSucess("Produto apagado com sucesso")
-            break
-          case "Produto Não Cadastrado":
-            showAlert("Produto Não Existe")
-            break
-        }
-        initializeProducts()
-      }catch(error){
-        showError("Houve um erro Interno tente novamente mais tarde")
+  const deleteProduct = async (id: string) => {
+    try {
+      const response = await DeleteProduct(id)
+      switch (response) {
+        case "Credenciais Invalidas":
+          showAlert("Suas Credenciais são invalidas")
+          router.push('/logout')
+          return
+        case "Erro Interno":
+          showError("Houve um erro Interno tente novamente mais tarde")
+          return
+        case "Produto Apagado":
+          showSucess("Produto apagado com sucesso")
+          break
+        case "Produto Não Cadastrado":
+          showAlert("Produto Não Existe")
+          break
       }
+      initializeProducts()
+    } catch (error) {
+      showError("Houve um erro Interno tente novamente mais tarde")
     }
+
+  }
   // Carrega produtos do backend
   const initializeProducts = async () => {
     try {
       const response = await GetStocksProducts();
       setProductsDatas(Array.isArray(response) ? response : []);
-      
+
       setIsLoading(false);
     } catch (error) {
       showError("Houve um erro, tente novamente mais tarde");
@@ -64,47 +80,47 @@ export default function ProductsPage() {
 
   useEffect(() => {
     initializeProducts();
-    
+
   }, []);
 
   // Adiciona produto localmente (substituir por chamada API se quiser)
   const handleAddProduct = async (product: { name: string; quantity: number; items: ItemEntry[] }) => {
-    try{
-    if (!product.name.trim()) {
-      showError("Preencha o nome do produto");
-      return;
-    }
-    if (product.quantity === undefined || Number(product.quantity) < 0) {
-      showError("Quantidade inválida");
-      return;
-    }
+    try {
+      if (!product.name.trim()) {
+        showError("Preencha o nome do produto");
+        return;
+      }
+      if (product.quantity === undefined || Number(product.quantity) < 0) {
+        showError("Quantidade inválida");
+        return;
+      }
 
-    const newProduct = {
-      id: Date.now(),
-      ...product,
-    };
-    setIsModalOpen(false);
-    const response = await AddNewProduct(product)
-    switch (response){
-      case "Credencial Invalida":
-        showError("Credenciais Invalidas")
-        router.push('/logout')
-        return;
-      case "Criado com Sucesso":
-        showSucess("Produto Adicinado com sucesso")
-        break;
-      case "Erro Interno":
-        showError("Houve um erro Interno tente novamente mais tarde")
-        return;
-      case "Produto Ja Cadastrado":
-        showAlert("Produto Ja esta cadastrado no sistema")
-        return;
+      const newProduct = {
+        id: Date.now(),
+        ...product,
+      };
+      setIsModalOpen(false);
+      const response = await AddNewProduct(product)
+      switch (response) {
+        case "Credencial Invalida":
+          showError("Credenciais Invalidas")
+          router.push('/logout')
+          return;
+        case "Criado com Sucesso":
+          showSucess("Produto Adicinado com sucesso")
+          break;
+        case "Erro Interno":
+          showError("Houve um erro Interno tente novamente mais tarde")
+          return;
+        case "Produto Ja Cadastrado":
+          showAlert("Produto Ja esta cadastrado no sistema")
+          return;
+      }
+      setProductsDatas((prev) => [newProduct, ...prev]);
+
+    } catch (error) {
+      showError("Houve um erro Interno tente novamente mais tarde")
     }
-    setProductsDatas((prev) => [newProduct, ...prev]);
-    
-  }catch(error){
-    showError("Houve um erro Interno tente novamente mais tarde")
-  }
   };
 
   // filtro de busca
@@ -159,17 +175,17 @@ export default function ProductsPage() {
             >
               <FontAwesomeIcon icon={faBox} className={styles.productIcon} />
               <div>
-                
+
                 <p className={styles.productName}>{product.name}</p>
                 {product.quantity !== undefined && (
                   <p className="text-sm opacity-80">
-                    {product.quantity} {product.unit ?? ""}
+                    Quantidade: {product.quantity} {product.unit ?? ""}
                   </p>
                 )}
 
               </div>
 
-              <div className="gap-6 flex flex-row-reverse">
+              <div className="flex items-center ml-auto gap-6">
                 <div>
                   <button
                     type="button"
@@ -178,11 +194,11 @@ export default function ProductsPage() {
                     <FontAwesomeIcon
                       icon={faTrash}
                       className="text-white hover:text-red-600 transition-colors duration-200 "
-                      
+
                     />
                   </button>
                 </div>
-                <button type="button" onClick={() => router.push(`/products/${product.id}`)}>
+                <button type="button" onClick={() => openEditModal(product.id)}>
                   <FontAwesomeIcon
                     icon={faPenToSquare}
                     className="text-white hover:text-yellow-400 transition-colors duration-200"
@@ -194,12 +210,28 @@ export default function ProductsPage() {
         </div>
         <ToastContainer position="top-right" autoClose={4000} />
       </div>
-      {/* Modal separado */}
+      {/* Modal de adicionar produto */}
       <ProductForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddProduct}
       />
+
+      {/* Modal de editar produto */}
+      {editingProductId !== null && (
+        <ProductsEditForm
+          isOpen={isEditModalOpen}
+          onClose={closeEditModal}
+          onSubmit={(updatedProduct) => {
+            setProductsDatas((prev) =>
+              prev.map((p) =>
+                p.id === editingProductId ? { ...p, ...updatedProduct } : p
+              )
+            );
+          }}
+          id={editingProductId}
+        />
+      )}
     </div>
   );
 }

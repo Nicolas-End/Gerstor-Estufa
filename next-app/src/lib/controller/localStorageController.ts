@@ -10,10 +10,15 @@ export const addRole = (role: string)=> {
 }
 
 export const getRole =  () =>{
-    try{
-        const role = localStorage.getItem('role_from_user')
-        return role
-    }catch(error){
-        throw error
+    try{    
+        //so roda do navegador
+        if( typeof window !== "undefined"){
+            const role = localStorage.getItem("role_from_user");
+            return role;
+        }
+        return null; //se ta no server retorna null
+    } catch(error){
+        console.log("Erro ao acessar localStorage", error);
+        return null;
     }
 }

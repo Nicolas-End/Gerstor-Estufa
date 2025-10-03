@@ -5,11 +5,11 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 // Faz o controle das entregas da empresa
 import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
 
-import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
+import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruckDrivers, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
 import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
 
-import{addNewProduct, deleteProduct, getStockProducts} from "@/lib/services/productStocks"
+import{addNewProduct, deleteProduct, editProduct, getAllProductsWithItens, getProductDatasByID, getStockProducts} from "@/lib/services/productStocks"
 // processos relacioandos ao cliente
 import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
@@ -17,7 +17,7 @@ import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/s
 import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
-import { addCookies } from "../controller/cookiesController";
+import { addCookies } from "@/lib/controller/cookiesController";
 
 
 
@@ -41,7 +41,7 @@ export async function ValidateLogin(email: string, password: string) {
       }
     }
   } catch (error) {
-    throw error
+    return error
   }
 
 }
@@ -154,7 +154,7 @@ export async function FunctionariesQuantity(router: AppRouterInstance) {
       return response.functionaries_quantity
     }
   } catch (error) {
-    throw error
+    return error
   }
 
 }
@@ -165,7 +165,7 @@ export async function AddNewFunctionary(name: string, email: string, password: s
     return response
   } catch (error) {
     console.log("Erro adicionar Funcionario: ", error)
-    throw error
+    return error
   }
 }
 
@@ -204,9 +204,9 @@ export async function GetEspecificDelivery(id: string) {
   }
 }
 
-export async function AddNewDelivery(FormsData: any) {
+export async function AddNewDelivery(FormsData: any, productValidate: any) {
   try {
-    const response = await addNewDelivery(FormsData)
+    const response = await addNewDelivery(FormsData, productValidate)
 
     return response
   } catch (error) {
@@ -224,7 +224,7 @@ export async function EditDelivery(FormsData: any) {
     return response
   } catch (error) {
     console.log("Erro no Edit Delivery: ", error)
-    throw error
+    return error
   }
 }
 
@@ -247,7 +247,7 @@ export async function DeleteEspecificDelivery(delivery_id: string) {
     return response
   } catch (error) {
     console.log('Erro ao Deletar Entrega: ', error)
-    throw error
+    return error
   }
 }
 
@@ -275,7 +275,7 @@ export async function AddNewTruck(data: {
     return resposne
   } catch (error) {
     console.log("Erro Adicionar Caminhão: ", error)
-    throw error
+    return error
   }
 }
 
@@ -286,7 +286,7 @@ export async function DeleteTruck(placa:string) {
     return response
   }catch(error){
     console.log('Erro ao apagar caminhão')
-    throw error
+    return error
   }
 }
 
@@ -310,7 +310,7 @@ export async function AddNewClient(name: string, address: { [key: string]: strin
     return response
   } catch (error) {
     console.log("Error Adicionar Cliente: ", error);
-    throw error
+    return error
   }
 }
 
@@ -321,7 +321,7 @@ export async function GetEspecificClient(id: string) {
     return response
   } catch (error) {
     console.log("Error ao pegar cliente especifico: ", error)
-    throw error
+    return error
   }
 
 }
@@ -332,7 +332,7 @@ export async function DeleteClient(id:string,type:string) {
     return response
   }catch(error){
     console.log("Erro Excluir Cliente: ",error)
-    throw error
+    return error
   }
 }
 //====== CAMINHÕES ======
@@ -366,7 +366,7 @@ export async function GetEspecificTruck(placa: string): Promise<any> {
     return response
   } catch (error) {
     console.log("Error: ", error)
-    throw error
+    return error
   }
 
 }
@@ -379,7 +379,7 @@ export async function GetStocksProducts() {
     return response
   }catch(error){
     console.log('Error: ',error)
-    throw error
+    return error
   }
 }
 export async function AddNewProduct(formsDatas:{ name: string; quantity: number; items: any }) {
@@ -389,7 +389,7 @@ export async function AddNewProduct(formsDatas:{ name: string; quantity: number;
     return response
   }catch(error){
     console.log("Error: ",error)
-    throw error
+    return error
   }
 }
 
@@ -399,6 +399,47 @@ export async function DeleteProduct(id:string) {
     return response
   }catch(error){
     console.log('Error: ',error)
-    throw error
+    return error
+  }
+}
+
+export async function GetProductByID(id:string) {
+    try{
+    const response = await getProductDatasByID(id)
+    return response
+  }catch(error){
+    console.log('Error: ',error)
+    return error
+  }
+}
+
+export async function GetAllTrucksDrivers() {
+  try{
+    const response = await getAllTruckDrivers()
+
+    return response
+  }catch(error){
+    console.log('Error: ',error)
+    return error
+  }
+}
+
+export async function EditProduct(formsDatas:{ name: string; quantity: number; items: any, id:string }) {
+  try{
+    const response = await editProduct(formsDatas)
+
+    return response
+  }catch(error){
+    return error
+  }
+}
+
+export async function GetAllProductsWithItens() {
+  try{
+    const response = await getAllProductsWithItens()
+
+    return response
+  }catch(error){
+    return error
   }
 }

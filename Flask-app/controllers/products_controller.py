@@ -33,14 +33,24 @@ class ProductController:
             else:
                 return []
         except Exception as e:
-            print('Error: ', e)
+            
             return e
 
+    def GetAllProductsToDeliveryPage(self,company_email):
+        try:
+            products_registered = list(self.coll.find({"company_email":company_email}))
+            products_datas = []
+            for product in products_registered:
+                products_datas.append({'id':product['id'],'name':product['name'],'quantity':product['quantidade'],'lullaby':product['tipos_embalo']})   
+
+            return products_datas
+        except Exception as e:
+            return e
     def AddNewStockProduct(self, company_email, products_data):
         try:
             name = products_data.get('name')
             if not name or not isinstance(name, str):
-                print("Erro: produto sem nome válido")
+                
                 return False
 
             id_unico = str(uuid.uuid4())
@@ -67,7 +77,7 @@ class ProductController:
             return True
 
         except Exception as e:
-            print("Erro em AddNewStockProduct:", e)
+            
             return e
 
     def DeleteProduct(self,company_email,product_id):
@@ -79,5 +89,71 @@ class ProductController:
                 return True
             return False
         except Exception as e:
-            print('Error: ',e)
+            
+            return e
+    
+    def GetProductById(self,company_email,product_id):
+        try:
+            product_filter = {'company_email':company_email,'id':product_id}
+            
+            found_product = self.coll.find_one(product_filter)
+            
+            if found_product:
+                products_datas_split = self.SplitProductDatas(found_product)
+                
+                return products_datas_split 
+            
+            else :
+                return False
+        except Exception as e :
+            return e
+    
+    def EditProductById(self,company_email, products_data):
+        try:
+            name = products_data.get('name')
+            if not name or not isinstance(name, str):
+                return False
+            
+            product_id = products_data.get('id')
+            
+            product_filter = {'company_email':company_email,'id':product_id}
+            
+            lumping_infos = {l['unit']: l['capacity'] for l in products_data.get('items', [])}
+
+            product_infos = {
+                'name': name,
+                'quantidade': products_data.get('quantity', 0),
+                'tipos_embalo': lumping_infos
+            }
+            
+            status = self.coll.update_one(product_filter,{"$set":product_infos})
+            
+            if status:
+                return True
+            
+            return False 
+
+        except Exception as e:
+            return e
+        
+
+    def DeleteSomeProductsToAddDelivery(self,company_email,product_to_delete):
+        try:
+            for key in product_to_delete:
+                product_filter = {'company_email':company_email, 'id':key}
+                update =  {'quantidade':(product_to_delete[key]['limit']-product_to_delete[key]['total'])}
+                self.coll.update_one(product_filter,{"$set":update})
+            
+            return True
+        except Exception as e:  
+            return e
+    def SplitProductDatas (self,product_datas):
+        try:
+            product = {"name":product_datas['name'],"quantity":product_datas["quantidade"]}
+            lumpings = {}
+            for key,value in product_datas['tipos_embalo'].items():
+                lumpings[key] = value
+            
+            return {'ProductsDatas':product,'LumpingsInfos':lumpings}   
+        except Exception as e:
             return e

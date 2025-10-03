@@ -27,10 +27,10 @@ export const deliveryQuantity = async () => {
 }
 // Adiciona uma nova entrega ao banco de dado
 
-export const addNewDelivery = async(FormData:any) => {
+export const addNewDelivery = async(FormData:any, productValidate:any) => {
   try{
     const api = await createApiWithAuth()
-    const data  = {'FormsData':FormData}
+    const data  = {'FormsData':FormData, 'ProductsValidate':productValidate}
     const response:any = await api.post('/deliverys/add-new',data)
     switch(response.status){
       case 200:

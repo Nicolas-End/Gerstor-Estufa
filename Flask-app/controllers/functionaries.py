@@ -31,7 +31,7 @@ class FunctionariesController():
             else:
                 return [], True
         except Exception as e:
-            print('Error : ',e)
+            
             return 'Error',False
     
     def GetFunctionaryQuantidy(self,company_email):
@@ -42,7 +42,7 @@ class FunctionariesController():
             else:
                 return 0, True
         except Exception as e:
-            print('Error : ',e)
+            
             return 'Error',False
     
     def AddNewFunctionary(self,company_email,company_name,name,password,email,role):
@@ -65,7 +65,7 @@ class FunctionariesController():
             return 'ok',True
         
         except Exception as e:
-            print('Error: ',e)
+          
             return 'Error',False
     def GetEspecificFunctionary(self,company_email,email):
         try:
@@ -83,7 +83,7 @@ class FunctionariesController():
                 return functionary_data
             return None
         except Exception as e:
-            print('Error: ',e)
+          
             return e
     def DeleteFunctionary(self,functionary_data):
         try:
@@ -96,5 +96,35 @@ class FunctionariesController():
                 return False
             
         except Exception as e:
-            print("Error: ",e)
+
+            return e
+    
+    def GetAllTruckersDrivers(self,company_email):
+        try:
+            trucker_drivers_filters = {'company_email':company_email,"role":"Caminhoneiro"}
+
+            got_all_truckers = list(self.coll.find(trucker_drivers_filters))
+
+            if got_all_truckers:
+
+                truckers_list = self.SplitTruckersDatas(got_all_truckers)
+                return truckers_list
+            
+            else:
+
+                return False
+        except Exception as e:
+            return e
+        
+    def SplitTruckersDatas(self,truckers):
+        try:
+            truckers_list = []
+            for i in truckers:
+                truckers_datas = {
+                    'name':i['name'],
+                    'email':i['email']
+                }
+                truckers_list.append(truckers_datas)
+            return truckers_list
+        except Exception as e:
             return e

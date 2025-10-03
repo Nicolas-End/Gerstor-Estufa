@@ -28,9 +28,14 @@ export default function Sidebar() {
   const [minimized, setMinimized] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
 
   const pathname = usePathname();
-  const role = getRole()
+  
+  useEffect(() =>{
+    const storedRole = getRole();
+    setRole(storedRole);
+  }, []);
 
   const isActive = (path: string) => (pathname === path ? styles.navItemActive : "");
 
@@ -85,7 +90,7 @@ export default function Sidebar() {
           <ShoppingBag size={20} /> <span>Pedidos</span>
         </Link>
         <Link
-          href="/historicos"
+          href="/delivery-history"
           className={`${styles.navItem} ${isActive("/historicos")}`}
         >
           <History size={20} /> <span>Histórico</span>

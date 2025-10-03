@@ -165,7 +165,7 @@ export default function ProdutoPage() {
                   onChange={() => handleCheckboxChange(index)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm">Preparado</span>
+                <span className="text-sm">{checkedItems[index]?'Preparado':'Preparando'}</span>
               </div>
               <div>
                 <span className="sm:hidden font-semibold text-[#0a2c26]">Nome: </span>

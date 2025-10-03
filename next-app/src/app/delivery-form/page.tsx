@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { useRouter } from "next/navigation";
-import { AddNewDelivery, ValidateHomeAcess, GetAllClients } from "@/lib/ts/api";
+import { AddNewDelivery, ValidateHomeAcess, GetAllClients, GetAllTrucksDrivers, GetAllProductsWithItens } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
@@ -12,13 +12,18 @@ import { socketService } from "@/lib/config/sockteioConfig";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ValidateQuantities from "./validateProductQuantity";
 
 // Define formato de cada item
 interface ItemEntry {
-  id: number;
+  item_id: number;
   name: string;
   unit: string;
   quantity: number;
+  limit_quantity: number;
+  lubally: string[];
+  capacity:number;
+  product_id: string;
 }
 
 export default function DeliveryFormPage() {
@@ -45,16 +50,21 @@ export default function DeliveryFormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [clients, setClients] = useState<any[]>([]);
   const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
-  const unitOptions = ["Caixas", "Vasos", "Solto"];
+  let unitOptions = [''];
   const [items, setItems] = useState<ItemEntry[]>([]); // Lista de itens no pedido
-  const [ clientInfo, setClientInfo] = useState<any>(null);
-  const [driverInfo, setDriverInfo] = useState<any>(null);
+  const [clientInfo, setClientInfo] = useState<any>(null);
+  // Estado para todos os motoristas
+  const [driverInfo, setDriverInfo] = useState<any[]>([]);
+  const [productsStocks, setProductsStocks] = useState<any[]>([]);
+  // Estado para motorista selecionado
+  const [selectedDriver, setSelectedDriver] = useState<any>(null);
+
 
   // Adiciona nova linha de item
   const addItem = () => {
     setItems((prev) => [
       ...prev,
-      { id: Date.now(), name: "", unit: unitOptions[0], quantity: 1 },
+      { item_id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, limit_quantity:0, lubally: [""], capacity:1, product_id:''},
     ]);
   };
 
@@ -65,7 +75,7 @@ export default function DeliveryFormPage() {
     value: string | number
   ) => {
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+      prev.map((item) => (item.item_id === id ? { ...item, [field]: value } : item))
     );
   };
 
@@ -81,7 +91,8 @@ export default function DeliveryFormPage() {
         return;
       }
       setPageIsLoading(false);
-      const clients = await GetAllClients()
+
+      const [clients, trucks_drivers, products_stocks] = await Promise.all([GetAllClients(), GetAllTrucksDrivers(), GetAllProductsWithItens()])
       if (typeof clients === "string") {
         switch (clients) {
           case "Credencial Invalida":
@@ -95,7 +106,37 @@ export default function DeliveryFormPage() {
             return;
         }
       }
+      if (typeof trucks_drivers === "string") {
+        switch (trucks_drivers) {
+          case "Nenhum Caminoeiro Cadastrado":
+            return;
+          case "Credenciais Invalidas":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+            return;
+          default:
+            showError("não possivel mostar os caminhoneiros tente novamte mais tarde")
+
+            return;
+        }
+      }
+      if (typeof products_stocks === "string") {
+        switch (products_stocks) {
+          case "Credenciais Invalidas":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+            return;
+          default:
+            showError("não possivel mostar as embalagens tente novamte mais tarde")
+            return;
+        }
+      }
+      const driversArray = Array.isArray(trucks_drivers) ? trucks_drivers : [];
+
+
       setClients(clients)
+      setDriverInfo(driversArray)
+      setProductsStocks(products_stocks)
 
     } catch (error) {
       console.log("Erro ao iniciar dashboard:", error);
@@ -105,13 +146,11 @@ export default function DeliveryFormPage() {
 
   // Remove item pelo id
   const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.item_id !== id));
   };
 
   // Envia o formulário ao back-end
   const handleSubmit = async (e: React.FormEvent) => {
-    const clientId = clientInfo.cpf || clientInfo.cnpj || 'idClient'
-    const typeClientId = clientInfo.cpf ? 'cpf' : clientInfo.cnpj ? 'cnpj' : 'id'
     const clientName = clientInfo.name
     e.preventDefault();
     const formData = {
@@ -122,13 +161,19 @@ export default function DeliveryFormPage() {
       clientName,
       clientId: clientInfo?.cpf || clientInfo?.cnpj || 'idClient',
       typeClientId: clientInfo?.cpf ? 'cpf' : clientInfo?.cnpj ? 'cpnj' : 'id',
-      driverId: driverInfo?.cpf || clientInfo?.cnpj || 'idDriver',
-      typeDriverId: driverInfo?.cpf ? 'cpf' : driverInfo?.cnpj ? 'cnpj' : 'id'
+      truckDriverEmail: selectedDriver?.email,
+      truckDriverName: selectedDriver?.name
     };
 
     try {
       setIsLoading(true);
-      const data = await AddNewDelivery(formData);
+      const productValidate = ValidateQuantities(items)
+      
+      if (productValidate === false){
+        setIsLoading(false);
+        return;
+      }
+      const data = await AddNewDelivery(formData,productValidate);
       const socket = await socketService.initSocket()
       if (data === true) {
         showSucess("Entrega Adicionada com Sucesso");
@@ -197,7 +242,7 @@ export default function DeliveryFormPage() {
               onSubmit={handleSubmit}
               className="bg-white p-6 rounded-lg shadow overflow-auto flex flex-col mb-6 min-h-fit"
             >
-             
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {/* Seleção do Cliente */}
                 <div className="mb-4">
@@ -260,7 +305,7 @@ export default function DeliveryFormPage() {
                   <DatePicker
                     id="deliveryDate"
                     selected={deliveryDate} // Use 'selected' para passar a data
-                    onChange={(date: Date | null) => setDeliveryDate(date)} 
+                    onChange={(date: Date | null) => setDeliveryDate(date)}
                     className="text-gray-600 w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholderText="dd/mm/aaaa"
                     required
@@ -273,34 +318,35 @@ export default function DeliveryFormPage() {
                     dateFormat="dd/MM/yyyy" // Formato que será exibido a data 
                   />
                 </div>
-                
+
 
                 {/*Caminhoneiro*/}
                 <div>
                   <label
-                    htmlFor="deliveryDate"
+                    htmlFor="driverSelect"
                     className="block text-green-900 text-[18px] mb-2"
-                  >Caminhoneiro
+                  >
+                    Caminhoneiro
                   </label>
                   <select
-                    value={driverInfo?.cpf || driverInfo?.cnpj || ""}
+                    id="driverSelect"
+                    value={selectedDriver?.email || ""}
                     required
                     onChange={(e) => {
-                      const selectedDriver = clients.find(
-                        (c: any) => c.cpf === e.target.value || c.cnpj === e.target.value
-                      );
-                      setDriverInfo(selectedDriver || null);
+                      const driver = driverInfo.find((d: any) => d.email === e.target.value);
+                      setSelectedDriver(driver || null);
                     }}
                     className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
                   >
                     <option value="">Escolha um Caminhoneiro</option>
-                    {clients.map((client: any, index: number) => (
-                      <option key={index} value={client.cpf || client.cnpj}>
-                        {client.name} - {client.cpf || client.cnpj}
+                    {driverInfo.map((driver: any, index: number) => (
+                      <option key={index} value={driver.email}>
+                        {driver.name} - {driver.email}
                       </option>
                     ))}
                   </select>
                 </div>
+
               </div>
 
               {/* Seção Dinâmica */}
@@ -324,57 +370,83 @@ export default function DeliveryFormPage() {
                   )}
                   {items.map((item) => (
                     <div
-                      key={item.id}
+                      key={item.item_id}
                       className="flex flex-col md:flex-row md:items-center md:space-x-4 bg-gray-50 p-4 rounded-lg"
                     >
                       {/* Nome do item */}
-                      <input
-                        type="text"
-                        placeholder="Nome do item"
-                        value={item.name}
-                        onChange={(e) =>
-                          updateItem(item.id, "name", e.target.value)
+                      <select
+                        value={item.name} // estado que guarda o valor selecionado
+                        onChange={(e) => {
+                          const selectedName = e.target.value;
+                          const selectedProduct = productsStocks.find(
+                            (p: any) => p.name === selectedName
+                          );
+
+                          // Atualiza nome a quantidade e o id do produto em si
+                          updateItem(item.item_id, "name", selectedName);
+                          updateItem(item.item_id,'quantity', 0)
+                          updateItem(item.item_id,'product_id',selectedProduct.id)
+                          updateItem(item.item_id, "unit", "")
+                          // Atualiza os tipos de embalos disponivies para tal produto
+                          if (selectedProduct) {
+                            updateItem(item.item_id, "lubally", selectedProduct.lullaby);
+                            updateItem(item.item_id, "limit_quantity" , selectedProduct.quantity)
+                          }
                         }
-                        className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0 placeholder-gray-600"
+                        }
+                        className="text-black flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         required
-                      />
+                      >
+                        <option value="" disabled>Selecione uma categoria</option>
+                        {productsStocks.map((product: any, index: number) => (
+                          <option key={index} value={product.email}>
+                            {product.name}
+                          </option>
+                        ))}
+                      </select>
                       <div className="flex space-x-4 md:space-x-[150px]">
                         {/* Quantidade */}
                         <input
                           type="number"
                           min={0}
+                          max={item.limit_quantity/item.capacity < 0 ? 0 : Math.floor(item.limit_quantity/item.capacity)}
                           placeholder="Quantidade"
                           value={item.quantity}
-                          onChange={(e) =>
+                          onChange={(e) =>{
                             updateItem(
-                              item.id,
+                              item.item_id,
                               "quantity",
                               parseInt(e.target.value) || 0
                             )
                           }
+                        }
                           className="text-black w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                           required
                         />
                         {/* Unidade */}
                         <select
                           value={item.unit}
-                          onChange={(e) =>
-                            updateItem(item.id, "unit", e.target.value)
+                          onChange={(e) =>{
+                            const value:any = e.target.value
+                            updateItem(item.item_id, "unit", value)
+                            updateItem(item.item_id, "capacity", item.lubally[value])
+                            updateItem(item.item_id,'quantity', 0)
+                          }
                           }
                           className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                         >
-                          {unitOptions.map((u) => (
-                            <option key={u} value={u}>
-                              {u}
-                            </option>
+                          <option value="" disabled>Escolha uma unidade</option>
+                          {Object.keys(item.lubally).map((key:any) => (
+                            <option key={key} value={key}>{key} - {item.lubally[key]}</option> // exibe: caixa, Vaso, ...
                           ))}
+
                         </select>
                       </div>
                       <div className="flex justify-center">
                         {/* Botão remover */}
                         <button
                           type="button"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item.item_id)}
                           className="text-red-600 hover:text-red-800 font-medium"
                         >
                           Remover
