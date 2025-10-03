@@ -6,7 +6,7 @@ import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { DeleteEspecificDelivery, GetDeliverys } from "@/lib/ts/api";
+import { DeleteEspecificDelivery, EditDeliveryStatus, GetDeliverys } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,7 +27,7 @@ export default function PedidosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-  const [modalId, setModalId] = useState<string> ("")
+
   const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos');
 
   // --- modal de status (somente visual) ---
@@ -44,7 +44,6 @@ export default function PedidosPage() {
     else if (normalized.includes("final") || normalized.includes("concluido")) setModalStatus("concluido");
 
     else setModalStatus("pendente");
-    setModalId(order.id)
     setIsStatusModalOpen(true);
   };
 
@@ -53,9 +52,31 @@ export default function PedidosPage() {
     setModalOrder(null);
   };
 
-  const handleSaveStatus = () => {
+  const handleSaveStatus = async() => {
+    try{
+    const response = await EditDeliveryStatus(modalOrder.id,modalStatus)
+    if (response=== true){
+      showSucess("Status Do Pedido Atualizado");
+
+    }
+    else if(response === "Credencial Invalida"){
+      showError("Credenciais Invalidas")
+      router.push('/logout')
+
+    }
+    else if(response === "Não Foi Possivel Editar Status"){
+      showAlert('Não foi possivel mudar o status da entrega')
+
+    }
+    else{
+      showAlert('Houve um erro Interno tente novamente mais tarde')
+
+    }
     // Só fecha o modal — sem alterar nada no estado global / sem chamadas à API.
     closeStatusModal();
+  }catch(error){
+    showAlert('Houve um erro Interno tente novamente mais tarde')
+  }
   };
 
   function confirmToast(id: string) {
@@ -264,7 +285,6 @@ export default function PedidosPage() {
                 value={modalStatus}
                 onChange={(s) => setModalStatus(s)}
                 name={`status-checklist-${modalOrder.id}`}
-                id={modalId}
               />
 
               <div className="flex justify-end gap-2 mt-6">

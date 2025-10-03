@@ -3,7 +3,7 @@ import { cookies } from "next/headers"
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas } from "@/lib/services/delivery";
+import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas, editDeliveryStatus } from "@/lib/services/delivery";
 
 import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruckDrivers, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
@@ -251,6 +251,16 @@ export async function DeleteEspecificDelivery(delivery_id: string) {
   }
 }
 
+export async function EditDeliveryStatus(delivery_id:string, delivery_status:string ) {
+  try {
+    const response = await editDeliveryStatus(delivery_id,delivery_status)
+
+    return response
+  } catch (error) {
+    console.log('Erro ao Deletar Entrega: ', error)
+    return error
+  }
+}
 // ======= CAMINHÕES ===========
 export async function getTrucks() {
   try {

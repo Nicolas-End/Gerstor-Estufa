@@ -205,6 +205,19 @@ class DeliveryController:
             print('Error: ',e)
             return False
         
+    def EditDeliveryStatus(self,company_email, delivery_id,delivery_status):
+        try:
+            delivery_filter = {'EmailEntrega':company_email, 'idEntrega':delivery_id}
+            new_delivery_status = {"$set":{'status':delivery_status}}
+
+            changed_status =  self.delivery_coll.update_one(delivery_filter,new_delivery_status)
+
+            if changed_status:
+                return True
+            return False
+        except Exception as e:
+            return e
+        
     def SplitItensToAdd (self,itens,unique_id,company_email):
         itens_quantidy = 0
         products = []
