@@ -27,7 +27,7 @@ export default function PedidosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-  const [modalId, setModalId] = useState<string> ("")
+  const [modalId, setModalId] = useState<string>("")
   const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos');
 
   // --- modal de status (somente visual) ---
@@ -244,7 +244,7 @@ export default function PedidosPage() {
                         <strong>Local de Entrega:</strong> {order.LocalEntrega}
                       </p>
                       <p className="text-black">
-                        <strong>Data de Entrega:</strong> {order.DataEntrega}
+                        <strong>Data de Entrega:</strong> {new Date(order.DataEntrega).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                   )}
