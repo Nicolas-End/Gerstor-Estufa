@@ -78,7 +78,7 @@ export default function ProdutoPage() {
           <div style={{ display: "flex", gap: 8 }}>
             <button
               type="button"
-              onClick={() => router.push("/clients")}
+              onClick={() => router.back()}
               className="bg-[#0a3b2c] text-white font-bold py-1 px-4 rounded-lg shadow hover:bg-[#117255] transition"
             >
               Voltar

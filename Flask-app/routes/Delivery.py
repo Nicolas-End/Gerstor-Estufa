@@ -108,25 +108,8 @@ def AddNewDelivery():
         if not datas:
             return "Credenciais Invalidas", 401 #dados do usuario sendo descriptografado
         
-        delivery_datas = request.get_json()
-        formsData = delivery_datas['FormsData']
-        itens = formsData['items']
-        address = formsData['address']
-        date = formsData['deliveryDate']
-        name = formsData['clientName']
-        clientId = formsData['clientId']
-        idType = formsData['typeClientId']
-        truckDriverName = formsData['truckDriverName']
-        truckDriverEmail = formsData['truckDriverEmail']
 
-
-        ok = DeliveryController().AddNewDelivery(datas['company_email'],itens,address,date,name,clientId,idType,truckDriverName,truckDriverEmail)
-        
-        if ok:
-            less_product_quantity =  ProductController().DeleteSomeProductsToAddDelivery(datas['company_email'],delivery_datas['ProductsValidate'])
-            
-            if less_product_quantity:
-                return jsonify({'status':'ok'}),200
+        return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),500
     except InvalidSignatureError as i:
         return jsonify({'status': 'invalid'}), 400
