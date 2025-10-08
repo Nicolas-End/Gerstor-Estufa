@@ -53,7 +53,7 @@ export default function EditClientPage() {
               return;
           }
         }
-        
+
         setClientInfo(response || {});
 
         if (response?.cnpj) {
@@ -308,13 +308,15 @@ export default function EditClientPage() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Cliente Editado..." : "Concluir Edição"}
-            </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-fit bg-green-900 text-white font-semibold py-1.5 px-4 rounded-md shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Editando Funcionário..." : "Salvar Modificações"}
+              </button>
+            </div>
           </form>
         </div>
       </div>

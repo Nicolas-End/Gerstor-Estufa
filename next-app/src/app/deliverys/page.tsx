@@ -6,7 +6,7 @@ import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 import Sidebar from "@/Components/sidebar";
-import { DeleteEspecificDelivery, GetDeliverys } from "@/lib/ts/api";
+import { DeleteEspecificDelivery, EditDeliveryStatus, GetDeliverys } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -28,7 +28,7 @@ export default function PedidosPage() {
   const [deliverysToDo, setDeliverysToDo] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
-  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'em andamento' | 'finalizado'>('Todos');
+  const [searchStatus, setSearchStatus] = useState<'Todos' | 'pendente' | 'andamento' | 'finalizado'>('Todos');
 
   // --- modal de status (somente visual) ---
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
@@ -37,10 +37,12 @@ export default function PedidosPage() {
 
   const openStatusModal = (order: any) => {
     setModalOrder(order);
+
     // tenta casar um valor visual inicial (se tiver order.status)
     const normalized = String(order?.status ?? "pendente").toLowerCase();
-    if (normalized.includes("and")) setModalStatus("andamento");
-    else if (normalized.includes("final") || normalized.includes("concl")) setModalStatus("concluido");
+    if (normalized.includes("and") || normalized.includes("andamento")) setModalStatus("andamento");
+    else if (normalized.includes("final") || normalized.includes("concluido")) setModalStatus("concluido");
+
     else setModalStatus("pendente");
     setIsStatusModalOpen(true);
   };
@@ -50,9 +52,31 @@ export default function PedidosPage() {
     setModalOrder(null);
   };
 
-  const handleSaveStatus = () => {
+  const handleSaveStatus = async() => {
+    try{
+    const response = await EditDeliveryStatus(modalOrder.id,modalStatus)
+    if (response=== true){
+      showSucess("Status Do Pedido Atualizado");
+
+    }
+    else if(response === "Credencial Invalida"){
+      showError("Credenciais Invalidas")
+      router.push('/logout')
+
+    }
+    else if(response === "Não Foi Possivel Editar Status"){
+      showAlert('Não foi possivel mudar o status da entrega')
+
+    }
+    else{
+      showAlert('Houve um erro Interno tente novamente mais tarde')
+
+    }
     // Só fecha o modal — sem alterar nada no estado global / sem chamadas à API.
     closeStatusModal();
+  }catch(error){
+    showAlert('Houve um erro Interno tente novamente mais tarde')
+  }
   };
 
   function confirmToast(id: string) {
@@ -190,13 +214,13 @@ export default function PedidosPage() {
           <select
             value={searchStatus}
             onChange={e =>
-              setSearchStatus(e.target.value as 'Todos' | 'pendente' | 'em andamento' | 'finalizado')
+              setSearchStatus(e.target.value as 'Todos' | 'pendente' | 'andamento' | 'finalizado')
             }
             className="w-fit px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
           >
             <option value="Todos">Todos</option>
             <option value="pendente">Pendente</option>
-            <option value="em andamento">Em andamento</option>
+            <option value="andamento">Andamento</option>
             <option value="finalizado">Finalizado</option>
           </select>
 
@@ -241,7 +265,7 @@ export default function PedidosPage() {
                         <strong>Local de Entrega:</strong> {order.LocalEntrega}
                       </p>
                       <p className="text-black">
-                        <strong>Data de Entrega:</strong> {order.DataEntrega}
+                        <strong>Data de Entrega:</strong> {new Date(order.DataEntrega).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                   )}
@@ -268,7 +292,7 @@ export default function PedidosPage() {
                   Cancelar
                 </button>
                 <button onClick={handleSaveStatus} className="px-4 py-2 rounded bg-[#005E40] text-white">
-                  Fechar
+                  Concluir
                 </button>
               </div>
             </div>

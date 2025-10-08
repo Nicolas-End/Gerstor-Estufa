@@ -188,3 +188,22 @@ def DeleteDelivery():
     except Exception as e:
         print('Error: ',e)
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@delivery_bp.route('/edit-status', methods=["POST"])
+def EditDeliveryStatus():
+    try:
+        token = request.headers.get('Authorization')
+        datas  = DescriptoToken(token)
+        if not datas:
+            return "Credenciais Invalidas", 401
+        
+        delivery_infos = request.get_json()
+        changed_delivery_status = DeliveryController().EditDeliveryStatus(datas['company_email'],delivery_infos['id'],delivery_infos['status'])
+
+        if changed_delivery_status:
+            return "Status Atualizado",204
+    
+        return "Não foi possivel atualizar",409
+    except Exception as e:
+        print('Error: ',e)
+        return "Erro Interno",500

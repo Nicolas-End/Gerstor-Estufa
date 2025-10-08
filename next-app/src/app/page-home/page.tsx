@@ -31,9 +31,9 @@ const Navbar = () => {
             </a>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8" id="ancoraprojeto">
             <a href="#home" className="text-[#fff] font-bold hover:text-[#115a4d]">Home</a>
-            <a href="#projeto" className="text-[#fff] font-bold hover:text-[#115a4d]">Projeto</a>
+            <a href="#projeto"  className="text-[#fff] font-bold hover:text-[#115a4d]">Projeto</a>
             <a href="#criadores" className="text-[#fff] font-bold hover:text-[#115a4d]">Criadores</a>
             <div className="flex space-x-4">
               <a href="./register" className="bg-[#fff] text-[#0a2c26] font-bold px-4 py-2 rounded-lg hover:bg-[#115a4d] hover:text-white transition">Registre-se</a>

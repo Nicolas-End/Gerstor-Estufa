@@ -136,7 +136,7 @@ export default function RegisterEmployeePage() {
                 <Sidebar />
                 <div className="flex-1 p-8 flex flex-col">
                     <div className="flex justify-between items-center mb-6 p-4 bg-white rounded-lg shadow">
-                        <h1 className="text-2xl font-bold text-gray-800">Cadastrar Funcionário</h1>
+                        <h1 className="text-2xl font-bold text-gray-800">Editar Funcionário</h1>
                         <button
                             type="button"
                             onClick={() => router.back()}
@@ -200,13 +200,15 @@ export default function RegisterEmployeePage() {
 
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="bg-green-900 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
-                        >
-                            {isLoading ? "Editando Funcionário..." : "Editar"}
-                        </button>
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-fit bg-green-900 text-white font-semibold py-1.5 px-4 rounded-md shadow hover:bg-green-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            >
+                                {isLoading ? "Editando Funcionário..." : "Salvar Modificações"}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>

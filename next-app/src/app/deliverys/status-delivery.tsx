@@ -5,17 +5,18 @@ export type Status = "pendente" | "andamento" | "concluido";
 
 interface StatusChecklistProps {
   value?: Status;
+
   onChange?: (s: Status) => void;
   name?: string; // name do grupo de radios (útil se houver mais de um checklist)
 }
 
 export default function StatusChecklist({
   value = "pendente",
+
   onChange,
   name = "status-checklist",
 }: StatusChecklistProps) {
   const [status, setStatus] = React.useState<Status>(value);
-
   React.useEffect(() => {
     setStatus(value);
   }, [value]);

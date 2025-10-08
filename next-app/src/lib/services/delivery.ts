@@ -129,3 +129,25 @@ export const deleteEspecificDelivery = async(delivery_id:string) =>{
     throw(error)
   }
 }
+
+export const editDeliveryStatus = async(delivery_id:string, delivery_status:string) =>{
+  try{
+    const api = await createApiWithAuth()
+    const data = {'id':delivery_id,'status':delivery_status}
+
+    const response = await api.post('/deliverys/edit-status',data)
+    switch (response.status){
+      case 204: 
+        return true
+      case 401:
+        return "Credencial Invalida"
+      case 409:
+        return "Não Foi Possivel Editar Status"
+      default:
+        return "Erro Interno"
+
+    }
+  }catch(error){
+    throw(error)
+  }
+}
