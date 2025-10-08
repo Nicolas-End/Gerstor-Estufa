@@ -10,7 +10,7 @@ export async function createApiWithAuth():Promise<any>{
 
   return axios.create({
 
-    baseURL: 'https://gerenciador-empresarial-1cfr.vercel.app',
+    baseURL: 'https://gerstor-estufa.vercel.app',
 
     headers: {
       'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export async function createApiWithoutAuth():Promise<any>{
 
   return axios.create({
 
-    baseURL: 'https://gerenciador-empresarial-1cfr.vercel.app',
+    baseURL: 'https://gerstor-estufa.vercel.app',
 
     headers: {
       'Content-Type': 'application/json',
