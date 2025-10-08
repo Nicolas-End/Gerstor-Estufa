@@ -221,7 +221,7 @@ export default function PedidosPage() {
             <option value="Todos">Todos</option>
             <option value="pendente">Pendente</option>
             <option value="andamento">Andamento</option>
-            <option value="finalizado">Finalizado</option>
+            <option value="concluido">concluido</option>
           </select>
 
           <div className={styles.ordersList}>
