@@ -53,7 +53,6 @@ def token_desc(token):
 def connection():
     token = request.args.get('Token')
     descripto = token_desc(token)
-
     if not descripto:
         print(' ')
         print('Token inválido, desconectando...')
@@ -66,15 +65,13 @@ def connection():
     print(' ')
 
 @socketio.on('new_delivery')
-def new_deli():
+def new_deli(msg=''):
     try:
         print(rooms())
         emit('add_delivery', to=rooms(), include_self=False)
     except Exception as e:
         print('Error: ',e)
 
-    
-    
 
 
 

@@ -107,18 +107,6 @@ export default function ProdutoPage() {
               Voltar
             </button>
 
-            {clientInfo.clientId && (
-              <button
-                type="button"
-                onClick={() =>
-                  router.push(`/client/${clientInfo.typeId}&${clientInfo.clientId}`)
-                }
-                className={styles.backBtn}
-              >
-                Acessar Cliente
-              </button>
-            )}
-
             {id ? (
               <button
                 type="button"

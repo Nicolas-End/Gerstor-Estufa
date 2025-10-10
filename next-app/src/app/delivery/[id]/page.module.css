@@ -120,6 +120,10 @@
   font-size:18px;
   font-weight:800;
   color: #ffffff;
+  text-decoration:underline;
+}
+.bannerTitle:hover{
+  cursor: pointer;
 }
 .bannerSub {
   margin-top:6px;
@@ -145,6 +149,7 @@
     height: 34px;
     font-size: 14px;
   }
+  
 }
 
 /* Animation */
