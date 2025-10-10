@@ -35,7 +35,7 @@ class DeliveryController:
     def GetDeliverys(self,company_email):
         try:
 
-            has_deliverys = list(self.delivery_coll.find({"EmailEntrega": company_email}))
+            has_deliverys = list(self.delivery_coll.find({"EmailEntrega": company_email,"status": {"$in": ["pendente", "andamento"]}}))
     
             if has_deliverys:
                 dict_deliverys = []
@@ -56,7 +56,11 @@ class DeliveryController:
         except Exception as e:
             print('Error: ', e)
             return 'Error', False
-    
+    def GetCompletedDeliverys(self,company_email):
+        try:
+            print('ok')
+        except:
+            print("Error:")
     def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
             has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))
