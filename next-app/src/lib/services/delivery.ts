@@ -118,7 +118,7 @@ export const getDeliverysToHistory = async () =>{
         return response.data.deliverys
       case 401:
         return "Credencial Invalida"
-      case 500:
+      default:
         return "Erro Interno"
     }
   }catch(error){

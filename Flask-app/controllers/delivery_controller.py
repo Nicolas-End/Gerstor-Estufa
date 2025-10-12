@@ -77,7 +77,7 @@ class DeliveryController:
                         'dataEntrega': i['dataParaEntrega'],
                         'status':i['status'],
                         'cliente':i['TipoProduto'],
-                        "Caminhoneiro":i['NomeCaminhoneiro'],
+                        "caminhoneiro":i['NomeCaminhoneiro'],
                      }
                     dict_deliverys.append(deliverys_to_do.copy())
 
