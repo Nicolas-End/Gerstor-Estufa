@@ -3,7 +3,7 @@ import { cookies } from "next/headers"
 
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 // Faz o controle das entregas da empresa
-import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas, editDeliveryStatus } from "@/lib/services/delivery";
+import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysToDo, addNewDelivery, getEspecificDeliveryDatas, editDeliveryStatus, getDeliverysToHistory } from "@/lib/services/delivery";
 
 import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruckDrivers, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
@@ -216,6 +216,16 @@ export async function AddNewDelivery(FormsData: any, productValidate: any) {
 
 }
 
+export async function GetDeliverysToHistory() {
+  try{
+    const response = await getDeliverysToHistory()
+
+    return response
+  }catch(error){
+    console.log("Erro adicionar nova entrega: ", error)
+    throw(error)
+  }
+}
 
 export async function EditDelivery(FormsData: any) {
   try {

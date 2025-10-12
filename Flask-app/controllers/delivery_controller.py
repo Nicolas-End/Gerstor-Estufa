@@ -35,7 +35,10 @@ class DeliveryController:
     def GetDeliverys(self,company_email):
         try:
 
-            has_deliverys = list(self.delivery_coll.find({"EmailEntrega": company_email}))
+            has_deliverys = list(self.delivery_coll.find({
+    "EmailEntrega": company_email,
+    "status": {"$in": ["pendente", "andamento"]}
+}))
     
             if has_deliverys:
                 dict_deliverys = []
@@ -57,6 +60,32 @@ class DeliveryController:
             print('Error: ', e)
             return 'Error', False
     
+    def GetDeliverysToHistoty(self,company_email):
+        try:
+            has_deliverys = list(self.delivery_coll.find({
+    "EmailEntrega": company_email,
+    "status": "concluido"
+}))
+    
+            if has_deliverys:
+                dict_deliverys = []
+                for i in has_deliverys:
+                    deliverys_to_do = {
+                        'id': i['idEntrega'],
+                        'quantidade': i['Quantidade'],
+                        'localEntrega': i['LocalEntrega'],
+                        'dataEntrega': i['dataParaEntrega'],
+                        'status':i['status'],
+                        'cliente':i['TipoProduto'],
+                        "Caminhoneiro":i['NomeCaminhoneiro'],
+                     }
+                    dict_deliverys.append(deliverys_to_do.copy())
+
+                return dict_deliverys, True
+            else:
+                return 0, True
+        except Exception as e:
+            return e
     def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
             has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))

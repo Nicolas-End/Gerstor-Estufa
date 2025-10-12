@@ -3,27 +3,30 @@ import Sidebar from "@/Components/sidebar";
 export default function OrderDashboard() {
   const orders = [
     {
-      pedido: "577309",
+      id: "577309",
       usuario: "CABA VEY",
       valor: "R$ 35",
       status: "lido (23/08 - 20:24)",
       isHighlighted: false,
     },
     {
-      pedido: "577273",
+      id: "577273",
       usuario: "NICOLAS NAMORADOR",
       valor: "R$ 36",
       status: "lido (23/08 - 20:02)",
       isHighlighted: true,
     },
     {
-      pedido: "577256",
+      id: "577256",
       usuario: "matinhas DA CACHINHOS",
       valor: "R$ 59",
       status: "lido (23/08 - 19:54)",
       isHighlighted: false,
     },
   ];
+  const initializeDeliverys = async () =>{
+    
+  }
 
   return (
     <div className="min-h-screen flex bg-gray-50">
@@ -62,11 +65,11 @@ export default function OrderDashboard() {
                 <tbody>
                   {orders.map((order) => (
                     <tr
-                      key={order.pedido}
+                      key={order.id}
                       className={`border-b border-gray-100 hover:bg-gray-50 ${order.isHighlighted ? "bg-red-50" : ""}`}
                     >
                       <td className="py-3 px-4">
-                        <span className="text-blue-600 text-sm font-medium">{order.pedido}</span>
+                        <span className="text-blue-600 text-sm font-medium">{order.id}</span>
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-900">{order.usuario}</td>
                       <td className="py-3 px-4">
