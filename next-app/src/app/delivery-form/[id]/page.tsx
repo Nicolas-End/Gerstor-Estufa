@@ -3,10 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/Components/sidebar";
 import {
-  ValidateHomeAcess,
   GetEspecificDelivery,
   EditDelivery,
   GetAllClients,
+  GetAllTrucksDrivers,
+  GetAllProductsWithItens,
 } from "@/lib/ts/api";
 import {
   showAlert,
@@ -18,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 
 interface ItemEntry {
   id: number;
@@ -41,6 +43,9 @@ export default function EditDeliveryFormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState<ItemEntry[]>([]);
   const unitOptions = ["Caixas", "Vasos", "Solto"];
+  const [driverInfo,setDriverInfo] = useState<any[]>([])
+  const [productsStocks, setProductsStocks] = useState<any[]>([]);
+  const [selectedDriver, setSelectedDriver] = useState<any>(null);
 
   // Funções auxiliares
   const addItem = () => {
@@ -90,21 +95,53 @@ export default function EditDeliveryFormPage() {
       setCustomerName(delivery.deliveryDatas.produto);
       setAddress(delivery.deliveryDatas.endereco);
       setDeliveryDate(new Date(delivery.deliveryDatas.data));
-
-      const clients = await GetAllClients();
+      setSelectedDriver({'email':delivery.deliveryDatas.email_cami, 'name':delivery.deliveryDatas.nome_cami});
+      const [clients, trucks_drivers, products_stocks] = await Promise.all([GetAllClients(), GetAllTrucksDrivers(), GetAllProductsWithItens()])
       if (typeof clients === "string") {
         switch (clients) {
           case "Credencial Invalida":
-            showAlert("Suas credenciais são inválidas");
-            router.push("/logout");
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+
             break;
           default:
-            showError("Não foi possível mostrar os clientes. Tente novamente.");
+            showError("não possivel mostar os cliente tente novamte mais tarde")
+
             return;
         }
       }
-      setClients(clients);
+      if (typeof trucks_drivers === "string") {
+        switch (trucks_drivers) {
+          case "Nenhum Caminoeiro Cadastrado":
+            return;
+          case "Credenciais Invalidas":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+            return;
+          default:
+            showError("não possivel mostar os caminhoneiros tente novamte mais tarde")
 
+            return;
+        }
+      }
+      if (typeof products_stocks === "string") {
+        switch (products_stocks) {
+          case "Credenciais Invalidas":
+            showAlert("Suas credenciais são invalidas")
+            router.push('/logout')
+            return;
+          default:
+            showError("não possivel mostar as embalagens tente novamte mais tarde")
+            return;
+        }
+      }
+      const driversArray = Array.isArray(trucks_drivers) ? trucks_drivers : [];
+
+
+      setClients(clients)
+      setDriverInfo(driversArray)
+      setProductsStocks(products_stocks)
+      
       const idClient =
         delivery.deliveryDatas.cpf || delivery.deliveryDatas.cnpj || "";
       const selectedClient = clients.find(
@@ -161,6 +198,7 @@ export default function EditDeliveryFormPage() {
 
   useEffect(() => {
     initializeDeliverForm();
+    
   }, []);
 
   if (pageIsLoading) {
@@ -278,21 +316,31 @@ export default function EditDeliveryFormPage() {
                   />
                 </div>
 
-                {/* Caminhoneiro */}
                 <div>
                   <label
-                    htmlFor="truckDriver"
+                    htmlFor="driverSelect"
                     className="block text-green-900 text-[18px] mb-2"
                   >
                     Caminhoneiro
                   </label>
-                  <input
-                    id="truckDriver"
-                    type="text"
-                    className="text-black w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
-                    placeholder="Digite o nome do caminhoneiro"
+                  <select
+                    id="driverSelect"
+                    value={selectedDriver?.email || ""}
                     required
-                  />
+                    onChange={(e) => {
+                      const driver = driverInfo.find((d: any) => d.email === e.target.value);
+                      setSelectedDriver(driver || null);
+                      
+                    }}
+                    className="w-full md:w-auto px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150"
+                  >
+                    <option value="">Escolha um Caminhoneiro</option>
+                    {driverInfo.map((driver: any, index: number) => (
+                      <option key={index} value={driver.email}>
+                        {driver.name} - {driver.email}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
