@@ -57,7 +57,6 @@ export default function PedidosPage() {
     const response = await EditDeliveryStatus(modalOrder.id,modalStatus)
     if (response=== true){
       showSucess("Status Do Pedido Atualizado");
-
     }
     else if(response === "Credencial Invalida"){
       showError("Credenciais Invalidas")
@@ -74,6 +73,7 @@ export default function PedidosPage() {
     }
     // Só fecha o modal — sem alterar nada no estado global / sem chamadas à API.
     closeStatusModal();
+    initializeDeliverys()
   }catch(error){
     showAlert('Houve um erro Interno tente novamente mais tarde')
   }

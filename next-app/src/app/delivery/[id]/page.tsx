@@ -180,8 +180,13 @@ export default function ProdutoPage() {
               </div>
 
               <div className="text-left sm:text-right">
-                <span className="sm:hidden font-semibold text-[#0a2c26]">Entregue por: </span>
+                <span className="sm:hidden font-semibold text-[#0a2c26]"
+                >Entregue por: </span>
+                <p className="cursor-pointer underline" onClick={()=>{
+                  router.push(`/functionary/${deliverysDatas.email_cami}`)
+                }}>
                 {deliverysDatas.nome_cami || "—"}
+                </p>
               </div>
             </div>
           ))}

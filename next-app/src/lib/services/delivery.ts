@@ -109,6 +109,22 @@ export const getDeliverysToDo = async () =>{
   }
 }
 
+export const getDeliverysToHistory = async () =>{
+  try{
+    const api = await createApiWithAuth()
+    const response = await api.post('/deliverys/get-all-to-history')
+    switch (response.status){
+      case 200:
+        return response.data.deliverys
+      case 401:
+        return "Credencial Invalida"
+      default:
+        return "Erro Interno"
+    }
+  }catch(error){
+    throw(error)
+  }
+}
 
 export const deleteEspecificDelivery = async(delivery_id:string) =>{
   try{
