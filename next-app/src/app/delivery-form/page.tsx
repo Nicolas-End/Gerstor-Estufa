@@ -78,6 +78,10 @@ export default function DeliveryFormPage() {
       prev.map((item) => (item.item_id === id ? { ...item, [field]: value } : item))
     );
   };
+    const removeItem = (id: number) => {
+    setItems((prev) => prev.filter((item) => item.item_id !== id));
+  };
+
 
   // Inicia a Pagina Form Verifica se o usuario é valido
   const initializeDeliverForm = async () => {
@@ -145,9 +149,6 @@ export default function DeliveryFormPage() {
   };
 
   // Remove item pelo id
-  const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.item_id !== id));
-  };
 
   // Envia o formulário ao back-end
   const handleSubmit = async (e: React.FormEvent) => {
