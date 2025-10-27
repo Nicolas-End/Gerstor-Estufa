@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GetEspecificDelivery } from "@/lib/ts/api";
 import Sidebar from "@/Components/sidebar";
-import { showAlert } from "@/lib/controller/alertsController";
+import { showAlert } from "@/lib/controller/alerts-controller";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "lucide-react";

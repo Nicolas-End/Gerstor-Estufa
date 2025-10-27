@@ -10,8 +10,8 @@ import { DeleteEspecificDelivery, EditDeliveryStatus, GetDeliverys } from "@/lib
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-import { socketService } from "@/lib/config/sockteioConfig";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
+import { socketService } from "@/lib/config/sockteio-config";
 import { Socket } from "socket.io-client";
 import StatusChecklist, { Status } from "./status-delivery";
 

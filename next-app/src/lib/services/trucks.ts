@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import {createApiWithAuth} from '@/lib/config/axiosConfig'
+import {createApiWithAuth} from '@/lib/config/axios-config'
 
 interface TruckData {
   'modelo': string;

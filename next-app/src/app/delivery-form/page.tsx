@@ -6,9 +6,9 @@ import { AddNewDelivery, ValidateHomeAcess, GetAllClients, GetAllTrucksDrivers, 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 
-import { socketService } from "@/lib/config/sockteioConfig";
+import { socketService } from "@/lib/config/sockteio-config";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

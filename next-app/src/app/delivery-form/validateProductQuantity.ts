@@ -1,4 +1,4 @@
-import { showAlert } from "@/lib/controller/alertsController";
+import { showAlert } from "@/lib/controller/alerts-controller";
 import { group } from "console";
 import { convertSegmentPathToStaticExportFilename } from "next/dist/shared/lib/segment-cache/segment-value-encoding";
 

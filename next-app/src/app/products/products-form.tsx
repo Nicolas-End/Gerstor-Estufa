@@ -1,5 +1,5 @@
 "use client";
-import { showSucess } from "@/lib/controller/alertsController";
+import { showSucess } from "@/lib/controller/alerts-controller";
 import React from "react";
 import { ToastContainer } from "react-toastify";
 interface ItemEntry {

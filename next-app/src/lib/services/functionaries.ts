@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createApiWithAuth } from '@/lib/config/axiosConfig'
+import { createApiWithAuth } from '@/lib/config/axios-config'
 import { AwardIcon } from 'lucide-react';
 import { NODE_RESOLVE_OPTIONS } from 'next/dist/build/webpack-config';
 interface ApiResponse{

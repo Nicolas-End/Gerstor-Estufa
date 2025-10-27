@@ -13,7 +13,7 @@ import {
   showAlert,
   showError,
   showSucess,
-} from "@/lib/controller/alertsController";
+} from "@/lib/controller/alerts-controller";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";

@@ -1,12 +1,12 @@
 "use client";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 import { GetProductByID } from "@/lib/ts/api";
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import styles from "./page.module.css";
-import { editProduct } from "@/lib/services/productStocks";
+import { editProduct } from "@/lib/services/product-stocks";
 interface ItemEntry {
   id: number;
   name: string;

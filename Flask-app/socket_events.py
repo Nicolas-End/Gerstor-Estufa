@@ -24,38 +24,22 @@ socketio = SocketIO(
     async_mode='eventlet'   
 )
 
-# Função decoradora que pega o token do usuario
-def require_token(f):
-    @wraps(f)
-    def wrapper( *args, **kwargs):
-        token = request.headers.get('Datas') 
-        if not token:
-            return False
-        try:
-            token_datas = CriptographyController().DecriptoDatas(token)
-        except Exception as e:
-            print("Erro ao decodificar token:", e)
-            return False
-        return f(token_datas, *args, **kwargs)
-    return wrapper
 
-@app.route('/')
-def index():
-    return "O socket ta funcionando",200
 
-def token_desc(token):
+
+def token_description(token):
+    """ Get the user Datas By the Unique Token for each user"""
     if token:
-        desc_token = CriptographyController().DecriptoDatas(token)
-        return desc_token
+        datas_from_user = CriptographyController().DecriptoDatas(token)
+        return datas_from_user
     return False
 
 @socketio.on('connect')
 def connection():
+
     token = request.args.get('Token')
-    descripto = token_desc(token)
+    descripto = token_description(token)
     if not descripto:
-        print(' ')
-        print('Token inválido, desconectando...')
         disconnect()
         return
 
@@ -65,8 +49,9 @@ def connection():
     print(' ')
 
 @socketio.on('new_delivery')
-def new_deli(msg=''):
+def new_deli(*args):
     try:
+
         print(rooms())
         emit('add_delivery', to=rooms(), include_self=False)
     except Exception as e:
@@ -74,11 +59,6 @@ def new_deli(msg=''):
 
 
 
-
-    
-@socketio.on('certo')
-def certo():
-    print('Certinho')
 
     
     

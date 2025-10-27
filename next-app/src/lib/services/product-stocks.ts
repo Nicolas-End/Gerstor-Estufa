@@ -1,4 +1,4 @@
-import { createApiWithAuth } from '@/lib/config/axiosConfig'
+import { createApiWithAuth } from '@/lib/config/axios-config'
 
 export const getStockProducts = async ()=>{
     try{
