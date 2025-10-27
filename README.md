@@ -147,4 +147,4 @@ Luis Barcelos
 
 ---
 
-⭐ Se este projeto te ajudou, considere dar uma estrela no GitHub!
+⭐ Se este projeto te interresou, considere dar uma estrela no GitHub!
