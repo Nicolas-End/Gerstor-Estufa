@@ -35,7 +35,17 @@ class ProductController:
         except Exception as e:
             
             return e
-
+    def RestoreProductsQuantityFromADeliveryId(self,company_email,products_to_restore):
+        try:
+            for product in products_to_restore:
+                product_filter = {'company_email':company_email, 'id':product['id']}
+                product_in_mongo_db =  self.GetProductById(company_email,product['id'])
+                update =  {'quantidade':(product_in_mongo_db['ProductsDatas']['quantity']+products_to_restore['total-product'])}
+                self.coll.update_one(product_filter,{"$set":update})
+            
+            return True
+        except Exception as e:
+            return e
     def GetAllProductsToDeliveryPage(self,company_email):
         try:
             products_registered = list(self.coll.find({"company_email":company_email}))

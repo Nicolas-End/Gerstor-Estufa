@@ -2,7 +2,6 @@ from config.config import DataBase
 from dotenv import load_dotenv
 import uuid
 import os
-
 load_dotenv()
 
 """
@@ -97,7 +96,8 @@ class DeliveryController:
                         'id': i['product_id'],
                         'name': i['productName'],
                         'unit': i['productUnit'],
-                        'quantity': i['productQuantidy']
+                        'quantity': i['productQuantidy'],
+                        'total-product':i['totalProducts']
                      }
                     dict_products.append(product_to_do.copy())
 
@@ -150,7 +150,6 @@ class DeliveryController:
         except Exception as e:
             print('Error: ', e)
             return False
-        
     def DeleteProduct(self,company_email,delivery_id):
         try:
             was_deleted = self.product_coll.delete_many({"companyEmail": company_email,"delivery_id": delivery_id})    
