@@ -132,7 +132,7 @@ def AddNewDelivery():
         
         delivery_datas = request.get_json()
         formsData = delivery_datas['FormsData']
-        itens = formsData['items']
+        items = formsData['items']
         address = formsData['address']
         date = formsData['deliveryDate']
         name = formsData['clientName']
@@ -141,7 +141,7 @@ def AddNewDelivery():
         truckDriverName = formsData['truckDriverName']
         truckDriverEmail = formsData['truckDriverEmail']
 
-        ok = DeliveryController().AddNewDelivery(datas['company_email'],itens,address,date,name,clientId,idType,truckDriverName,truckDriverEmail)
+        ok = DeliveryController().AddNewDelivery(datas['company_email'],items,address,date,name,clientId,idType,truckDriverName,truckDriverEmail)
 
         if ok:
             
@@ -169,14 +169,14 @@ def EditDeviveryDatas():
         
         formsData = request.get_json()['FormsData']
         delivery_id = formsData['id']
-        itens = formsData['items']
+        items = formsData['items']
         address = formsData['address']
         date = formsData['deliveryDate']
         name = formsData['name']
         clientId = formsData['clientId']
         idType = formsData['typeClientId']
         
-        ok = DeliveryController().EditDelivery(datas['company_email'],delivery_id,itens,address,date,name,clientId,idType)
+        ok = DeliveryController().EditDelivery(datas['company_email'],delivery_id,items,address,date,name,clientId,idType)
         if ok:
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400

@@ -139,6 +139,7 @@ class ProductController:
 
     def DeleteSomeProductsToAddDelivery(self,company_email,product_to_delete):
         try:
+            """this function was made to get some units of a determined Stock Product"""
             for key in product_to_delete:
                 product_filter = {'company_email':company_email, 'id':key}
                 update =  {'quantidade':(product_to_delete[key]['limit']-product_to_delete[key]['total'])}

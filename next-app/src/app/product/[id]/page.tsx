@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
 import ProductEdit from "./product-edit";
 import { EditProduct, GetProductByID, ValidateHomeAcess } from "@/lib/ts/api";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 
 // Define formato de cada item
 interface ItemEntry {

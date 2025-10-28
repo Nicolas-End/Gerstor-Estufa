@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/Components/sidebar";
-import { getRoleCookie } from "@/lib/controller/cookiesController";
-import { socketService } from '@/lib/config/sockteioConfig'
-import { showSucess } from "@/lib/controller/alertsController";
+import { getRoleCookie } from "@/lib/controller/cookies-controller";
+import { socketService } from '@/lib/config/sockteio-config'
+import { showSucess } from "@/lib/controller/alerts-controller";
 import { AsyncCallbackSet } from "next/dist/server/lib/async-callback-set";
 import { Socket } from "socket.io-client";
 

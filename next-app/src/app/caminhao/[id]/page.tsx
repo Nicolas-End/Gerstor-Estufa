@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "@/Components/sidebar";
 import { ToastContainer } from "react-toastify";
 import { GetEspecificTruck, ValidateHomeAcess } from "@/lib/ts/api";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { showAlert, showError } from "@/lib/controller/alerts-controller";
 
 export default function ProdutoPage() {
   const router = useRouter();

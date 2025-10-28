@@ -7,9 +7,9 @@ import { deliveryQuantity, editDelivery, deleteEspecificDelivery, getDeliverysTo
 
 import { addNewFunctionary, deleteFunctionary, functionariesQuantity, getAllTruckDrivers, getEspecificFunctionary, getFunctionaries } from "@/lib/services/functionaries";
 // Faz o processo e controle de senha do usuario
-import { changePassword, sendEmailRecovery } from "@/lib/services/passwordRecovery";
+import { changePassword, sendEmailRecovery } from "@/lib/services/password-recovery";
 
-import{addNewProduct, deleteProduct, editProduct, getAllProductsWithItens, getProductDatasByID, getStockProducts} from "@/lib/services/productStocks"
+import{addNewProduct, deleteProduct, editProduct, getAllProductsWithItens, getProductDatasByID, getStockProducts} from "@/lib/services/product-stocks"
 // processos relacioandos ao cliente
 import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/services/clients";
 
@@ -17,7 +17,7 @@ import { addClient, deleteClient, getClients, getEspecificClient } from "@/lib/s
 import { addNewCompany, login, validateUserAcess } from "@/lib/services/user";
 
 import { addNewTruck, deleteTruck, getAllTrucks, getEspecificTruck } from "@/lib/services/trucks";
-import { addCookies } from "@/lib/controller/cookiesController";
+import { addCookies } from "@/lib/controller/cookies-controller";
 
 
 

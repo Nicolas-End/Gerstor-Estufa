@@ -9,8 +9,8 @@ import { ValidateHomeAcess, GetAllClients, DeleteClient } from "@/lib/ts/api";
 ;
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
+import { getRoleCookie } from "@/lib/controller/cookies-controller";
 import { verify } from "crypto";
 
 export default function ClientsPage() {

@@ -1,7 +1,7 @@
 'use server'
 import axios from 'axios';
 import { cookies } from 'next/headers';
-import { getTokenCookie } from '../controller/cookiesController';
+import { getTokenCookie } from '../controller/cookies-controller';
 
 // Cria o axios para fazer as requisições para api
 // Para ver requisições veja os servies

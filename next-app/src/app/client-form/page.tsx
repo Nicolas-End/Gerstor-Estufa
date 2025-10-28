@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ValidateHomeAcess, AddNewClient } from "@/lib/ts/api";
 import { ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 
 export default function RegisterClientPage() {
   const router = useRouter();

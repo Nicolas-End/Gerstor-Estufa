@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AddNewTruck, ValidateHomeAcess } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 import { validators } from "tailwind-merge";
 
     function validarPlaca(placa: string){

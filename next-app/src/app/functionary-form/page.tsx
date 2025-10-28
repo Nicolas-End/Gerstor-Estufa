@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { AddNewFunctionary, ValidateHomeAcess } from "@/lib/ts/api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 
 export default function RegisterEmployeePage() {
     const router = useRouter();

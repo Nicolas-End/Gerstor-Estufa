@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
 import { SendRecuperationEmail } from "@/lib/ts/api";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 import  Head  from "next/head";
 
 const ForgetPassword: React.FC = () => {

@@ -7,7 +7,7 @@ import Sidebar from "@/Components/sidebar";
 import { AddNewProduct, DeleteProduct, GetStocksProducts } from "@/lib/ts/api";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 import ProductForm from "./products-form";
 import ProductsEditForm from "../product/[id]/product-edit";
 

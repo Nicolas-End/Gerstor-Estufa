@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { validateTokenUser } from "@/lib/ts/api";
 import { ToastContainer, toast } from "react-toastify";
 import Link from "next/link";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 import { renderToHTMLOrFlight } from "next/dist/server/app-render/app-render";
 export default function ProdutoPage() {
   const router = useRouter();

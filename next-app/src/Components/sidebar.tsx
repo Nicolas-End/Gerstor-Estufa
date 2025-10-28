@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import styles from "./sidebar.module.css";
 
-import { getRole } from "@/lib/controller/localStorageController";
+import { getRole } from "@/lib/controller/local-storage-controller";
 
 export default function Sidebar() {
   const [minimized, setMinimized] = useState(false);

@@ -9,8 +9,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
-import { getRoleCookie } from "@/lib/controller/cookiesController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
+import { getRoleCookie } from "@/lib/controller/cookies-controller";
 import { PassThrough } from "stream";
 
 export default function FuncionarioPage() {

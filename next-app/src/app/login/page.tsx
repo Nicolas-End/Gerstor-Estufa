@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { showAlert, showError } from "@/lib/controller/alertsController";
-import { addRole } from "@/lib/controller/localStorageController";
+import { showAlert, showError } from "@/lib/controller/alerts-controller";
+import { addRole } from "@/lib/controller/local-storage-controller";
 import { Socket } from "socket.io-client";
-import { socketService } from "@/lib/config/sockteioConfig";
+import { socketService } from "@/lib/config/sockteio-config";
 
 
 

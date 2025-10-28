@@ -1,6 +1,6 @@
 'use client'
 import Sidebar from "@/Components/sidebar";
-import { showAlert, showError } from "@/lib/controller/alertsController";
+import { showAlert, showError } from "@/lib/controller/alerts-controller";
 import { GetDeliverysToHistory } from "@/lib/ts/api";
 import { routerServerGlobal } from "next/dist/server/lib/router-utils/router-server-context";
 import { useRouter } from "next/navigation";

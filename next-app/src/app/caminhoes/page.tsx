@@ -8,7 +8,7 @@ import { faSearch, faTruck, faPenToSquare, faTrash } from "@fortawesome/free-sol
 import { useEffect, useState } from "react";
 import { DeleteTruck, GetTrucks, ValidateHomeAcess } from "@/lib/ts/api";
 import { useRouter } from "next/navigation";
-import { showAlert, showError, showSucess } from "@/lib/controller/alertsController";
+import { showAlert, showError, showSucess } from "@/lib/controller/alerts-controller";
 
 export default function CaminhoesPage() {
     const router = useRouter();

@@ -1,9 +1,9 @@
 
 'use client'
 import { useRouter } from "next/navigation"
-import { deleteCookies } from "@/lib/controller/cookiesController";
+import { deleteCookies } from "@/lib/controller/cookies-controller";
 import { useEffect } from "react";
-import { socketService } from "@/lib/config/sockteioConfig";
+import { socketService } from "@/lib/config/sockteio-config";
 
 export default function Logout(){
     const router = useRouter();
