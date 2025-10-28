@@ -167,7 +167,7 @@ export default function EditDeliveryFormPage() {
           product_id: product_selected.id,
         };
       });
-
+      
       // filtra nulls e adiciona de uma vez
       setItems(productsToAdd.filter(Boolean));
 
