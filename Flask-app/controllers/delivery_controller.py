@@ -170,6 +170,8 @@ class DeliveryController:
             
             itens_quantidy = 0
             products = []
+
+            """verify the itens to put in the delivery infos"""
             for i in itens:
                 product_data = {
                     'delivery_id': unique_id,
@@ -181,12 +183,16 @@ class DeliveryController:
                 }
                 itens_quantidy += i['quantity']
                 products.append(product_data)
+
+            """indetify if the client is cpf or cpnj"""
             if typeId and clientId:
                 idType = typeId
                 idClient = clientId
             else:
                 idType = 'id'
                 idClient = 'idCliente'
+
+            """datas from the delivery"""
             delivery_data = {
                 'idEntrega':unique_id,
                 'TipoProduto': name,
@@ -198,6 +204,7 @@ class DeliveryController:
                 idType:idClient
                 
             }
+            
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)
            

@@ -40,7 +40,8 @@ class ProductController:
             for product in products_to_restore:
                 product_filter = {'company_email':company_email, 'id':product['id']}
                 product_in_mongo_db =  self.GetProductById(company_email,product['id'])
-                update =  {'quantidade':(product_in_mongo_db['ProductsDatas']['quantity']+products_to_restore['total-product'])}
+                update =  {'quantidade':(product_in_mongo_db['ProductsDatas']['quantity']+product['total-product'])}
+                
                 self.coll.update_one(product_filter,{"$set":update})
             
             return True
