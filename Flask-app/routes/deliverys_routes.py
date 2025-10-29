@@ -175,6 +175,7 @@ def EditDeviveryDatas():
         name = formsData['name']
         clientId = formsData['clientId']
         idType = formsData['typeClientId']
+
         ProductController().RestoreProductsQuantityFromADeliveryId(datas['company_email'],DeliveryController().GetProductsFromDelivery(datas['company_email'],delivery_id))
         ok = DeliveryController().EditDelivery(datas['company_email'],delivery_id,items,address,date,name,clientId,idType)
         if ok:

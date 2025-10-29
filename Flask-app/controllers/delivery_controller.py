@@ -20,7 +20,7 @@ class DeliveryController:
         
     def QuantidyDelivery(self, company_email):
         try:
-            deliverys = self.delivery_coll.count_documents({"EmailEntrega": company_email})
+            deliverys = self.delivery_coll.count_documents({"EmailEntrega": company_email,"status": {"$in": ["pendente", "andamento"]}})
 
             if deliverys:
                 
@@ -170,19 +170,10 @@ class DeliveryController:
             
             itens_quantidy = 0
             products = []
-
+            
+            
             """verify the itens to put in the delivery infos"""
-            for i in itens:
-                product_data = {
-                    'delivery_id': unique_id,
-                    'id': i['id'],
-                    'productName': i['name'],
-                    'productUnit': i['unit'],
-                    'productQuantidy': i['quantity'],
-                    'companyEmail': company_email,
-                }
-                itens_quantidy += i['quantity']
-                products.append(product_data)
+            products, itens_quantidy = self.SplitItensToAdd(itens,unique_id,company_email)
 
             """indetify if the client is cpf or cpnj"""
             if typeId and clientId:
