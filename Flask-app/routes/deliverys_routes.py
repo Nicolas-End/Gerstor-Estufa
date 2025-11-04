@@ -178,6 +178,8 @@ def EditDeviveryDatas():
         ProductController().RestoreProductsQuantityFromADeliveryId(datas['company_email'],DeliveryController().GetProductsFromDelivery(datas['company_email'],delivery_id))
         ok = DeliveryController().EditDelivery(datas['company_email'],delivery_id,items,address,date,name,clientId,idType)
         if ok:
+        
+            less_product_quantity =  ProductController().DeleteSomeProductsToAddDelivery(datas['company_email'],formsData['ProductsValidate'])
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400
     
