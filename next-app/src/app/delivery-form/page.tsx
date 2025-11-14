@@ -22,7 +22,7 @@ interface ItemEntry {
   quantity: number;
   limit_quantity: number;
   lubally: string[];
-  capacity:number;
+  capacity: number;
   product_id: string;
 }
 
@@ -64,7 +64,7 @@ export default function DeliveryFormPage() {
   const addItem = () => {
     setItems((prev) => [
       ...prev,
-      { item_id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, limit_quantity:0, lubally: [""], capacity:1, product_id:''},
+      { item_id: Date.now(), name: "", unit: unitOptions[0], quantity: 1, limit_quantity: 0, lubally: [""], capacity: 1, product_id: '' },
     ]);
   };
 
@@ -78,7 +78,7 @@ export default function DeliveryFormPage() {
       prev.map((item) => (item.item_id === id ? { ...item, [field]: value } : item))
     );
   };
-    const removeItem = (id: number) => {
+  const removeItem = (id: number) => {
     setItems((prev) => prev.filter((item) => item.item_id !== id));
   };
 
@@ -169,12 +169,12 @@ export default function DeliveryFormPage() {
     try {
       setIsLoading(true);
       const productValidate = ValidateQuantities(items)
-      
-      if (productValidate === false){
+
+      if (productValidate === false) {
         setIsLoading(false);
         return;
       }
-      const data = await AddNewDelivery(formData,productValidate);
+      const data = await AddNewDelivery(formData, productValidate);
       const socket = await socketService.initSocket()
       if (data === true) {
         showSucess("Entrega Adicionada com Sucesso");
@@ -382,13 +382,13 @@ export default function DeliveryFormPage() {
 
                           // Atualiza nome a quantidade e o id do produto em si
                           updateItem(item.item_id, "name", selectedName);
-                          updateItem(item.item_id,'quantity', 0)
-                          updateItem(item.item_id,'product_id',selectedProduct.id)
+                          updateItem(item.item_id, 'quantity', 0)
+                          updateItem(item.item_id, 'product_id', selectedProduct.id)
                           updateItem(item.item_id, "unit", "")
                           // Atualiza os tipos de embalos disponivies para tal produto
                           if (selectedProduct) {
                             updateItem(item.item_id, "lubally", selectedProduct.lullaby);
-                            updateItem(item.item_id, "limit_quantity" , selectedProduct.quantity)
+                            updateItem(item.item_id, "limit_quantity", selectedProduct.quantity)
                           }
                         }
                         }
@@ -402,43 +402,44 @@ export default function DeliveryFormPage() {
                           </option>
                         ))}
                       </select>
+                      <select
+                        value={item.unit}
+                        onChange={(e) => {
+                          const value: any = e.target.value
+                          updateItem(item.item_id, "unit", value)
+                          updateItem(item.item_id, "capacity", item.lubally[value])
+                          updateItem(item.item_id, 'quantity', 0)
+                        }
+                        }
+                        className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
+                      >
+                        <option value="" disabled>Escolha uma unidade</option>
+                        {Object.keys(item.lubally).map((key: any) => (
+                          <option key={key} value={key}>{key} - {item.lubally[key]}</option> // exibe: caixa, Vaso, ...
+                        ))}
+
+                      </select>
                       <div className="flex space-x-4 md:space-x-[150px]">
                         {/* Quantidade */}
                         <input
                           type="number"
                           min={0}
-                          max={item.limit_quantity/item.capacity < 0 ? 0 : Math.floor(item.limit_quantity/item.capacity)}
+                          max={item.limit_quantity / item.capacity < 0 ? 0 : Math.floor(item.limit_quantity / item.capacity)}
                           placeholder="Quantidade"
                           value={item.quantity}
-                          onChange={(e) =>{
+                          onChange={(e) => {
                             updateItem(
                               item.item_id,
                               "quantity",
                               parseInt(e.target.value) || 0
                             )
                           }
-                        }
+                          }
                           className="text-black w-24 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
                           required
                         />
                         {/* Unidade */}
-                        <select
-                          value={item.unit}
-                          onChange={(e) =>{
-                            const value:any = e.target.value
-                            updateItem(item.item_id, "unit", value)
-                            updateItem(item.item_id, "capacity", item.lubally[value])
-                            updateItem(item.item_id,'quantity', 0)
-                          }
-                          }
-                          className="text-black w-32 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2 md:mb-0"
-                        >
-                          <option value="" disabled>Escolha uma unidade</option>
-                          {Object.keys(item.lubally).map((key:any) => (
-                            <option key={key} value={key}>{key} - {item.lubally[key]}</option> // exibe: caixa, Vaso, ...
-                          ))}
 
-                        </select>
                       </div>
                       <div className="flex justify-center">
                         {/* Botão remover */}

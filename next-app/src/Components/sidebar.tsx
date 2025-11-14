@@ -95,12 +95,7 @@ export default function Sidebar() {
         >
           <History size={20} /> <span>Histórico</span>
         </Link>
-        <Link
-          href="/notificacoes"
-          className={`${styles.navItem} ${isActive("/notificacoes")}`}
-        >
-          <Bell size={20} /> <span>Notificações</span>
-        </Link>
+
 
         {/* Mobile-only menu button */}
 
