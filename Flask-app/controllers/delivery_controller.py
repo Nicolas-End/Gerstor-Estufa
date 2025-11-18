@@ -2,7 +2,6 @@ from config.config import DataBase
 from dotenv import load_dotenv
 import uuid
 import os
-
 load_dotenv()
 
 """
@@ -21,7 +20,7 @@ class DeliveryController:
         
     def QuantidyDelivery(self, company_email):
         try:
-            deliverys = self.delivery_coll.count_documents({"EmailEntrega": company_email})
+            deliverys = self.delivery_coll.count_documents({"EmailEntrega": company_email,"status": {"$in": ["pendente", "andamento"]}})
 
             if deliverys:
                 
@@ -87,8 +86,12 @@ class DeliveryController:
             else:
                 return 0, True
         except Exception as e:
+<<<<<<< HEAD
             return e
 
+=======
+            return e, False
+>>>>>>> feat
     def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
             has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))
@@ -100,7 +103,8 @@ class DeliveryController:
                         'id': i['product_id'],
                         'name': i['productName'],
                         'unit': i['productUnit'],
-                        'quantity': i['productQuantidy']
+                        'quantity': i['productQuantidy'],
+                        'total-product':i['totalProducts']
                      }
                     dict_products.append(product_to_do.copy())
 
@@ -153,7 +157,6 @@ class DeliveryController:
         except Exception as e:
             print('Error: ', e)
             return False
-        
     def DeleteProduct(self,company_email,delivery_id):
         try:
             was_deleted = self.product_coll.delete_many({"companyEmail": company_email,"delivery_id": delivery_id})    
@@ -174,23 +177,20 @@ class DeliveryController:
             
             itens_quantidy = 0
             products = []
-            for i in itens:
-                product_data = {
-                    'delivery_id': unique_id,
-                    'id': i['id'],
-                    'productName': i['name'],
-                    'productUnit': i['unit'],
-                    'productQuantidy': i['quantity'],
-                    'companyEmail': company_email,
-                }
-                itens_quantidy += i['quantity']
-                products.append(product_data)
+            
+            
+            """verify the itens to put in the delivery infos"""
+            products, itens_quantidy = self.SplitItensToAdd(itens,unique_id,company_email)
+
+            """indetify if the client is cpf or cpnj"""
             if typeId and clientId:
                 idType = typeId
                 idClient = clientId
             else:
                 idType = 'id'
                 idClient = 'idCliente'
+
+            """datas from the delivery"""
             delivery_data = {
                 'idEntrega':unique_id,
                 'TipoProduto': name,
@@ -202,6 +202,7 @@ class DeliveryController:
                 idType:idClient
                 
             }
+            
             self.delivery_coll.insert_one(delivery_data)
             self.product_coll.insert_many(products)
            

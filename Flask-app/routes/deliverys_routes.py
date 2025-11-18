@@ -175,9 +175,12 @@ def EditDeviveryDatas():
         name = formsData['name']
         clientId = formsData['clientId']
         idType = formsData['typeClientId']
-        
+
+        ProductController().RestoreProductsQuantityFromADeliveryId(datas['company_email'],DeliveryController().GetProductsFromDelivery(datas['company_email'],delivery_id))
         ok = DeliveryController().EditDelivery(datas['company_email'],delivery_id,items,address,date,name,clientId,idType)
         if ok:
+        
+            less_product_quantity =  ProductController().DeleteSomeProductsToAddDelivery(datas['company_email'],formsData['ProductsValidate'])
             return jsonify({'status':'ok'}),200
         return jsonify({'status':'error'}),400
     
@@ -197,7 +200,9 @@ def DeleteDelivery():
             return "Credenciais Invalidas", 401
         
         delivery_id= request.get_json()['delivery_id']
+        ProductController().RestoreProductsQuantityFromADeliveryId(datas['company_email'],DeliveryController().GetProductsFromDelivery(datas['company_email'],delivery_id))
         delivery_was_deleted = DeliveryController().DeleteDelivery(datas['company_email'],delivery_id)
+        
         if delivery_was_deleted:
             products_deleted = DeliveryController().DeleteProduct(datas['company_email'],delivery_id)
             if products_deleted:

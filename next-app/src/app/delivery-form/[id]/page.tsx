@@ -153,9 +153,13 @@ export default function EditDeliveryFormPage() {
       //products_stocks
       //delivery.products
       const productsToAdd = delivery.products.map((product: any) => {
+<<<<<<< HEAD
         const product_selected = products_stocks.find((item:any) => item.id === product.id);
+=======
+        const product_selected = products_stocks.find((item:any)=> item.id === product.id);
+>>>>>>> feat
         if (!product_selected) return null;
-        console.log(product_selected)
+
         return {
           item_id: Date.now() + Math.random(), // para evitar IDs duplicados
           name: product_selected.name || "",
