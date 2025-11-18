@@ -86,12 +86,9 @@ class DeliveryController:
             else:
                 return 0, True
         except Exception as e:
-<<<<<<< HEAD
-            return e
 
-=======
             return e, False
->>>>>>> feat
+
     def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
             has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))
