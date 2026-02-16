@@ -19,7 +19,7 @@ class EmailController :
     def SendRecuperationEmail(self,user_email,new_password):
         try: 
             unique_token_acess = str(uuid.uuid4())
-            ControllerToken().NewRecuperationToken(unique_token_acess,user_email,new_password)
+            ControllerToken().GeneratePasswordRecoveryToken(unique_token_acess,user_email,new_password)
             email_to_user =f"""
                 <html>
                     <body>
