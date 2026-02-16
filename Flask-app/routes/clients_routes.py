@@ -4,7 +4,7 @@ from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from jwt.exceptions import InvalidSignatureError
 import os
-from controllers.client_controller import ClientController
+from domains.costumer.controller import CostumerController 
 from controllers.cripto_controller import CriptographyController
 load_dotenv()
 
@@ -32,7 +32,7 @@ def GetClients():
         if not datas:
             return "Credenciais Invalidas", 401
         
-        status, clients = ClientController().GetClients(datas['company_email'])
+        status, clients = CostumerController().GetClients(datas['company_email'])
         if status:
             
             return jsonify({'status':'ok','clients':clients}),200
@@ -55,7 +55,7 @@ def AddNewClient():
         
 
         clients_datas = request.get_json()  
-        created_client  = ClientController().AddNewClient(datas['company_email'],clients_datas['name'],clients_datas['address'],
+        created_client  = CostumerController().RegisterCostumer(datas['company_email'],clients_datas['name'],clients_datas['address'],
                                                                 clients_datas['document'])
         
         if created_client:
@@ -80,7 +80,7 @@ def GetEspecificDataClients():
         
         clients_datas = request.get_json()['id']
         tipo, client_id = clients_datas.split('&')
-        clients_infos = ClientController().GetEspecicDataFromClient(datas['company_email'],client_id,tipo) 
+        clients_infos = CostumerController().GetEspecicDataFromCostumer(datas['company_email'],client_id,tipo) 
         
         if clients_infos:
             return({'status':'ok','clientInfos':clients_infos}),200
@@ -103,7 +103,7 @@ def DeleteClient():
         client_id = request.get_json()['id']
         client_type = request.get_json()['type']    
 
-        client_deleted = ClientController().DeleteClient(datas['company_email'],client_id,client_type)
+        client_deleted = CostumerController().DeleteCostumer(datas['company_email'],client_id,client_type)
 
         if client_deleted:
             return 'Cliente Excluido', 200

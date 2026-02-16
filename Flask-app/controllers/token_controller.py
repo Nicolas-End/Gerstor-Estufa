@@ -17,7 +17,7 @@ class ControllerToken:
     """
         Cria um novo token para o usuario mudar a senha
     """
-     def GeneratePasswordRecoveryToken(self,token,user_email,new_password):
+    def GeneratePasswordRecoveryToken(self,token,user_email,new_password):
         try:
             
             if not self.collection_name:
