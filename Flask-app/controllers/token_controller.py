@@ -17,39 +17,49 @@ class ControllerToken:
     """
         Cria um novo token para o usuario mudar a senha
     """
-    def NewRecuperationToken(self,token,user_email,newpassword):
+     def GeneratePasswordRecoveryToken(self,token,user_email,new_password):
         try:
             
             if not self.collection_name:
                 raise ValueError("TOKEN_COLLECTION não está configurado no arquivo .env.")
 
-            collection = self.db[self.collection_name]
-
-            # verifica se o email do usuario ja existe no banco de dados
-            if collection.find_one({"company_email":user_email}):
-                collection.delete_one({"company_email":user_email})
-
-            #limita o tempo que o token ficar valido apenas para 3 minutos dps sera apgado
-            collection.create_index(
-                [("date",1)],expireAfterSeconds=180
-            )
+            collection = self.SetColectionWitExpire(user_email)
             
-            hashed_password = bcrypt.hashpw(newpassword.encode('utf-8'), bcrypt.gensalt())
-            hashed_token = bcrypt.hashpw(token.encode('utf-8'), bcrypt.gensalt())
+            token_datas = self.SetTokenDatasWithHashedDatas(user_email,new_password,token)
 
-            token_data = {
-                "company_email":user_email,
-                'new_password':hashed_password,
-                "token":hashed_token,
-                "date":datetime.utcnow()
-            }
-
-            collection.insert_one(token_data)
+            collection.insert_one(token_datas)
             return True
         
         except Exception as e:
             print("Error: ",e)
             return False
+
+    def SetColectionWitExpire(self,user_email):
+
+        collection= self.db[self.collection_name]
+
+        if collection.find_one({"company_email":user_email}):
+                collection.delete_one({"company_email":user_email})
+        
+        collection.create_index(
+                [("date",1)],expireAfterSeconds=180
+            )
+        
+        return collection
+    
+    def SetTokenDatasWithHashedDatas(self,user_email,new_password,token):
+        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        hashed_token = bcrypt.hashpw(token.encode('utf-8'), bcrypt.gensalt())
+
+        token = {
+                "company_email":user_email,
+                'new_password':hashed_password,
+                "token":hashed_token,
+                "date":datetime.utcnow()
+            }
+        
+        return token
+        
 
     """
         Aqui verifica se o token enviado pelo usuario e valido,
