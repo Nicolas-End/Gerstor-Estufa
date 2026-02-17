@@ -15,7 +15,7 @@ export const getClients = async() =>{
 
     switch(response.status){
       case 200:
-        return response.data.clients
+        return response.data.costumer
       case 400:
         return "Credencial Invalida"
       default:

@@ -20,7 +20,6 @@ def GetCostumer():
         datas = CostumerController().GetCostumer(g.datas['company_email'])
     
         if type(datas) == list:
-            print(datas)
             return jsonify({'status':'ok','costumer':datas}),200
         
         return jsonify({'status':'error'}),500
