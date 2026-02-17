@@ -14,16 +14,17 @@ class CostumerController:
         self.coll = self.db[self.client_collection]
     def GetCostumer(self,company_email):
         try:
-            has_costumer = CostumerService().GetAllCompanycostumer(company_email)
-            
-            if has_costumer:
-                dict_costumer = CostumerService().GetAllCompanycostumer(company_email)
+            has_costumer = CostumerService().GetAllCompanyCostumer(company_email)
 
-                return True, dict_costumer
-            return True, []
+            if has_costumer:
+                dict_costumer = CostumerService().GetAllCompanyCostumer(company_email)
+               
+                return dict_costumer
+            return False
         except Exception as e:
             print('Error:',e)
-            return False , 0
+            raise Exception('Error to get costumer ',e)
+            
         
     def RegisterCostumer(self,company_email,name,address,document):
         try:

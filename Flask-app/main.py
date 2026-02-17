@@ -2,7 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
-from routes import clients_routes,deliverys_routes,functionaries_routes,stocks_products_routes,trucks_routes,user_routes
+from routes import deliverys_routes,functionaries_routes,stocks_products_routes,trucks_routes,user_routes
+from domains.costumer import routes as costumer_routes
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ def CreateApp():
     
     app.register_blueprint(functionaries_routes.functionary_bp,url_prefix="/functionary")
     
-    app.register_blueprint(clients_routes.clients_bp,url_prefix="/clients")
+    app.register_blueprint(costumer_routes.costumer_bp,url_prefix="/clients")
     
     app.register_blueprint(trucks_routes.truck_bp,url_prefix='/trucks')
     

@@ -91,6 +91,7 @@ export default function ClientsPage() {
 
 
             const clients: any = await GetAllClients();
+            console.log(clients)
             if (typeof clients === "string") {
                 switch (clients) {
                     case "Credencial Invalida":
@@ -103,12 +104,14 @@ export default function ClientsPage() {
                         return;
                 }
             }
-            setIsLoading(false);
+            
             setHasclient(true)
             setClientsDatas(clients);
             const quantidy: number | undefined = clients?.length
             setClientCount(quantidy || 0);
+            setIsLoading(false);
 
+            return;
 
         } catch (error) {
             showError("Houve um erro tente novamente mais tarde")
@@ -157,6 +160,7 @@ export default function ClientsPage() {
                         </div>
                     </div>
                     <div className={styles.ordersList}>
+                        
                         {hasClient ? clientsDatas.map((client: any, index: any) => (
                             <div className={styles.clientCard} key={index} onDoubleClick={() => router.push(`client/${client.cpf ? 'cpf' : 'cnpj'}&${client.cpf || client.cnpj}`)}>
                                 <FontAwesomeIcon icon={faCircleUser} className={styles.clientIcon} />
