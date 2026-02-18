@@ -61,7 +61,7 @@ export const getEspecificClient = async(id:string) =>{
 
     switch(response.status){
       case 200:
-        return response.data.clientInfos
+        return response.data.costumerInfos
       case 400:
         return "Credenciais Invalidas"
       case 404:

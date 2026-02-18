@@ -38,8 +38,8 @@ def AddNewCostumer():
         
         if created_costumer:
             return jsonify({'status':'ok'}),200
-        else:
-            return jsonify({'status':'ok'}),409
+
+        return jsonify({'status':'ok'}),409
     
 
         
