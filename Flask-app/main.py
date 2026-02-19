@@ -2,9 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
-from routes import deliverys_routes,functionaries_routes,stocks_products_routes,trucks_routes,user_routes
+from routes import functionaries_routes,stocks_products_routes,trucks_routes,user_routes
 from domains.costumer import routes as costumer_routes
-
+from domains.delivery import routes as deliverys_routes
 load_dotenv()
 
 

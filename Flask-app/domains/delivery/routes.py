@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from jwt.exceptions import InvalidSignatureError
 import os
 from controllers.products_controller import ProductController
-from controllers.delivery_controller import DeliveryController
+from domains.delivery.controller import DeliveryController
 from controllers.cripto_controller import CriptographyController
 load_dotenv()
 

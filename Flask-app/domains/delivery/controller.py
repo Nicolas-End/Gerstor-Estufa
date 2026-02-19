@@ -1,5 +1,6 @@
 from config.config import DataBase
 from dotenv import load_dotenv
+from domains.delivery.service import DeliveryService
 import uuid
 import os
 load_dotenv()
@@ -9,82 +10,46 @@ load_dotenv()
     da empresa em questão
 """
 class DeliveryController:
-    def __init__(self):
-        self.delivery_collection = os.getenv('DELIVERY_COLLECTION')
-        self.product_collection = os.getenv('PRODUCTS_COLLECTION')
-        self.db = DataBase().database
-        self.delivery_coll = self.db[self.delivery_collection]
-        self.product_coll = self.db[self.product_collection]
-        
-        
-        
+    def __init__ (self):
+        self.delivery_service = DeliveryService()
+
     def QuantidyDelivery(self, company_email):
         try:
-            deliverys = self.delivery_coll.count_documents({"EmailEntrega": company_email,"status": {"$in": ["pendente", "andamento"]}})
-
-            if deliverys:
-                
-                return deliverys, True
-            else:
-                return 0, True
+            
+            quantity_derlivery = self.delivery_service.CountNotConfirmedDeliverys(company_email);
+        
+            return quantity_derlivery 
+            
         except Exception as e:
             print('Error:', e)
             return 'Error', False
         
     def GetDeliverys(self,company_email):
         try:
+            
+            deliverys = self.delivery_service.GetAllCompanyDelivery(company_email)
 
-            has_deliverys = list(self.delivery_coll.find({
-    "EmailEntrega": company_email,
-    "status": {"$in": ["pendente", "andamento"]}
-}))
-    
-            if has_deliverys:
-                dict_deliverys = []
-                for i in has_deliverys:
-                    deliverys_to_do = {
-                        'id': i['idEntrega'],
-                        'Produto': i['TipoProduto'],
-                        'Quantidade': i['Quantidade'],
-                        'LocalEntrega': i['LocalEntrega'],
-                        'DataEntrega': i['dataParaEntrega'],
-                        'status':i['status']
-                     }
-                    dict_deliverys.append(deliverys_to_do.copy())
+            delivery_list = self.delivery_service.SetDeliveryList(deliverys)
 
-                return dict_deliverys, True
-            else:
-                return 0, True
+            return delivery_list
+        
         except Exception as e:
             print('Error: ', e)
-            return 'Error', False
+            raise Exception('Error to get deliverys')
     
     def GetDeliverysToHistoty(self,company_email):
         try:
-            has_deliverys = list(self.delivery_coll.find({
-    "EmailEntrega": company_email,
-    "status": "concluido"
-}))
-    
-            if has_deliverys:
-                dict_deliverys = []
-                for i in has_deliverys:
-                    deliverys_to_do = {
-                        'id': i['idEntrega'],
-                        'quantidade': i['Quantidade'],
-                        'localEntrega': i['LocalEntrega'],
-                        'dataEntrega': i['dataParaEntrega'],
-                        'status':i['status'],
-                        'cliente':i['TipoProduto'],
-                        "caminhoneiro":i['NomeCaminhoneiro'],
-                     }
-                    dict_deliverys.append(deliverys_to_do.copy())
 
-                return dict_deliverys, True
-            else:
-                return 0, True
+            deliverys = self.delivery_service.GetJustCompletedDeliverys(company_email)
+    
+            
+            delivery_list = self.delivery_service.SetDeliveryList(deliverys)
+
+            return delivery_list
+        
         except Exception as e:
-            return e, False
+            raise Exception('Error to get deliverys to history')
+        
     def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
             has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))
