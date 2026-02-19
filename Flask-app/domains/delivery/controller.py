@@ -52,50 +52,31 @@ class DeliveryController:
         
     def GetProductsFromDelivery(self,company_email,delivery_id):
         try:
-            has_products = list(self.product_coll.find({"companyEmail": company_email,"delivery_id": delivery_id}))
-            
-            if has_products:
-                dict_products = []
-                for i in has_products:
-                    product_to_do = {
-                        'id': i['product_id'],
-                        'name': i['productName'],
-                        'unit': i['productUnit'],
-                        'quantity': i['productQuantidy'],
-                        'total-product':i['totalProducts']
-                     }
-                    dict_products.append(product_to_do.copy())
+            products = self.delivery_service.GetProductsDeliverys(company_email,delivery_id)
 
-                return dict_products
-            else:
-                return 0
+            products_list_seted = self.delivery_service.SetDeliveryList(products)
+
+            return products_list_seted
+        
         except Exception as e:
-            print('Error: ', e)
-            return 'Error', False
+            raise ('Error to get products in delivery')
+        
     def GetEspecificDelivery(self,company_email,product_id):
         try:
             
-            has_deliverys = self.delivery_coll.find_one({"EmailEntrega": company_email, "idEntrega": product_id})
+            delivery = self.delivery_service.GetEspecificCompanyDelivery(company_email, product_id)
 
-            if has_deliverys:
-                if 'cpf' in has_deliverys:
-                    tipoId = 'cpf'
-                    clienteId = has_deliverys['cpf']
-                elif 'cnpj' in has_deliverys:
-                    tipoId = 'cnpj'
-                    clienteId = has_deliverys['cnpj']
-                else: 
-                    tipoId = 'id'
-                    clienteId = 'none'
+            if delivery:
+                costumer_id_datas = self.delivery_service.GetCostumerIdFromEspecificDelivery(delivery)
                 delivery_datas = {
-                    'id' : has_deliverys['idEntrega'],
-                    'produto': has_deliverys['TipoProduto'],
-                    'quantidade': has_deliverys['Quantidade'],
-                    'endereco': has_deliverys['LocalEntrega'],
-                    'data': has_deliverys['dataParaEntrega'],
-                    'nome_cami': has_deliverys['NomeCaminhoneiro'],
-                    'email_cami':has_deliverys['EmailCaminhoneiro'],
-                    tipoId:clienteId
+                    'id' : delivery['idEntrega'],
+                    'produto': delivery['TipoProduto'],
+                    'quantidade': delivery['Quantidade'],
+                    'endereco': delivery['LocalEntrega'],
+                    'data': delivery['dataParaEntrega'],
+                    'nome_cami': delivery['NomeCaminhoneiro'],
+                    'email_cami':delivery['EmailCaminhoneiro'],
+                    costumer_id_datas["type"]:costumer_id_datas['value']
                 }
 
                 return delivery_datas, True
